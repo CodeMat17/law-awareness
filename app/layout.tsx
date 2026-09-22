@@ -17,7 +17,7 @@ const nunito = Nunito({
 });
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://lawawareness.tv";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://lawawareness.org";
 
 const DESCRIPTION =
   "Understand Nigerian law, protect yourself, protect your business, and know when professional legal help may be necessary. A national legal education, awareness and compliance platform.";

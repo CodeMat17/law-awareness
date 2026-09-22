@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getContent } from "@/lib/content/repository";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://lawawareness.tv";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://lawawareness.org";
 
 /**
  * Newest of a set of date strings, or undefined when nothing dates the page.
