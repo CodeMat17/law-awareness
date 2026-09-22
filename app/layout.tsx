@@ -22,6 +22,21 @@ const SITE_URL =
 const DESCRIPTION =
   "Understand Nigerian law, protect yourself, protect your business, and know when professional legal help may be necessary. A national legal education, awareness and compliance platform.";
 
+/**
+ * The brand lockup lives at `app/opengraph-image.jpg`, so Next serves it from
+ * `/opengraph-image.jpg` across the whole tree. Declaring it here as well is
+ * not redundant: the file convention only fills the social tags, while the
+ * Organization logo below needs the same asset as an absolute URL. One
+ * constant means the share card and the schema cannot drift apart.
+ */
+const OG_IMAGE = {
+  url: "/opengraph-image.jpg",
+  width: 1200,
+  height: 800,
+  // Kept in step with app/opengraph-image.alt.txt.
+  alt: "Law Awareness TV — Know the Law. Know Your Rights. Protect What Matters.",
+} as const;
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -104,11 +119,13 @@ export const metadata: Metadata = {
     siteName: "Law Awareness TV",
     title: "Law Awareness TV — Know the Law. Know Your Rights.",
     description: DESCRIPTION,
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Law Awareness TV — Know the Law. Know Your Rights.",
     description: DESCRIPTION,
+    images: [OG_IMAGE],
   },
   robots: {
     index: true,
@@ -145,13 +162,13 @@ const siteSchema = {
       "@id": `${SITE_URL}/#organization`,
       name: "Law Awareness TV",
       url: SITE_URL,
-      // The brand lockup served by the opengraph-image file convention. One
-      // asset, one URL - the schema logo cannot drift from the share card.
+      // The same asset the share card uses, spelled absolute because JSON-LD
+      // has no metadataBase to resolve a relative path against.
       logo: {
         "@type": "ImageObject",
-        url: `${SITE_URL}/opengraph-image.jpg`,
-        width: 1200,
-        height: 800,
+        url: `${SITE_URL}${OG_IMAGE.url}`,
+        width: OG_IMAGE.width,
+        height: OG_IMAGE.height,
       },
       description: DESCRIPTION,
       areaServed: { "@type": "Country", name: "Nigeria" },
