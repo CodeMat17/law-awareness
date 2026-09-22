@@ -3,6 +3,7 @@ import { Nunito } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ConvexClientProvider } from "@/components/convex-client-provider";
+import { OG_IMAGE, SITE_DESCRIPTION, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 /**
@@ -16,34 +17,13 @@ const nunito = Nunito({
   display: "swap",
 });
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://lawawareness.org";
-
-const DESCRIPTION =
-  "Understand Nigerian law, protect yourself, protect your business, and know when professional legal help may be necessary. A national legal education, awareness and compliance platform.";
-
-/**
- * The brand lockup lives at `app/opengraph-image.jpg`, so Next serves it from
- * `/opengraph-image.jpg` across the whole tree. Declaring it here as well is
- * not redundant: the file convention only fills the social tags, while the
- * Organization logo below needs the same asset as an absolute URL. One
- * constant means the share card and the schema cannot drift apart.
- */
-const OG_IMAGE = {
-  url: "/opengraph-image.jpg",
-  width: 1200,
-  height: 800,
-  // Kept in step with app/opengraph-image.alt.txt.
-  alt: "Law Awareness TV — Know the Law. Know Your Rights. Protect What Matters.",
-} as const;
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: "Law Awareness TV — Know the Law. Know Your Rights.",
     template: "%s | Law Awareness TV",
   },
-  description: DESCRIPTION,
+  description: SITE_DESCRIPTION,
   applicationName: "Law Awareness TV",
   /**
    * Keywords carry no ranking weight with Google, but they are still read by
@@ -118,13 +98,13 @@ export const metadata: Metadata = {
     url: "/",
     siteName: "Law Awareness TV",
     title: "Law Awareness TV — Know the Law. Know Your Rights.",
-    description: DESCRIPTION,
+    description: SITE_DESCRIPTION,
     images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Law Awareness TV — Know the Law. Know Your Rights.",
-    description: DESCRIPTION,
+    description: SITE_DESCRIPTION,
     images: [OG_IMAGE],
   },
   robots: {
@@ -170,7 +150,7 @@ const siteSchema = {
         width: OG_IMAGE.width,
         height: OG_IMAGE.height,
       },
-      description: DESCRIPTION,
+      description: SITE_DESCRIPTION,
       areaServed: { "@type": "Country", name: "Nigeria" },
     },
     {
@@ -178,7 +158,7 @@ const siteSchema = {
       "@id": `${SITE_URL}/#website`,
       name: "Law Awareness TV",
       url: SITE_URL,
-      description: DESCRIPTION,
+      description: SITE_DESCRIPTION,
       inLanguage: "en-NG",
       publisher: { "@id": `${SITE_URL}/#organization` },
       // The site search really does live at /search?q=, so the sitelinks

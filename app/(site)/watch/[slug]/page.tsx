@@ -22,6 +22,7 @@ import {
 } from "@/components/site/media";
 import { SaveButton } from "@/components/account/save-button";
 import { getContent } from "@/lib/content/repository";
+import { ogImages } from "@/lib/seo";
 
 // A record created in the CMS after the last build has a slug that was not
 // in `generateStaticParams`. With `dynamicParams = false` that slug 404s until
@@ -48,7 +49,11 @@ export async function generateMetadata(
     openGraph: {
       type: "video.other",
       title: item.title,
+      url: `/watch/${item.slug}`,
       description: item.description,
+      // A page that declares openGraph replaces the root block outright, so the
+      // share card has to be restated here or the route ships without one.
+      images: ogImages(item.source?.posterUrl, item.title),
     },
   };
 }
