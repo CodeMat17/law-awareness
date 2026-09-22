@@ -150,9 +150,9 @@ export function SiteHeader({
               <span className="hidden text-[0.8rem] font-semibold xl:inline">
                 Search
               </span>
-              <kbd className="hidden rounded border border-hairline bg-surface px-1.5 py-0.5 text-[0.65rem] font-bold text-muted-foreground xl:inline">
+              {/* <kbd className="hidden rounded border border-hairline bg-surface px-1.5 py-0.5 text-[0.65rem] font-bold text-muted-foreground xl:inline">
                 ⌘K
-              </kbd>
+              </kbd> */}
             </button>
 
             <ThemeToggle className="" />
@@ -177,7 +177,7 @@ export function SiteHeader({
             >
               <span className="xl:hidden">Ask a Question</span>
               <span className="hidden xl:inline">Ask a Legal Question</span>
-              <ArrowRight className="size-3.5" />
+           
             </Link>
 
             <button
