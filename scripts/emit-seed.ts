@@ -15,6 +15,15 @@
  *   npx jiti scripts/emit-seed.ts <outDir>
  *   for f in <outDir>/batch-*.json; do npx convex run content:seedInternal "$(cat $f)"; done
  *
+ * Naming collections after the directory emits only those:
+ *
+ *   node scripts/run.mjs scripts/emit-seed.ts <outDir> programmes footer-columns
+ *
+ * Every batch is written with `overwrite` on, so emitting the whole seed and
+ * pushing it resets every record an editor has changed. Naming the collections
+ * is how a newly added one is seeded on a live deployment without touching
+ * the rest.
+ *
  * Batches because a Convex mutation is one transaction with a bounded size, and
  * the full seed is several thousand rows. `finalize` is set on the last batch
  * only: it rebuilds the dashboard counters, which is a full read of the table.
@@ -35,15 +44,24 @@ import { collections } from "@/lib/cms/collections";
  */
 const MAX_BATCH_BYTES = 20_000;
 
-const outDir = process.argv[2];
+const [outDir, ...only] = process.argv.slice(2);
 if (!outDir) {
-  console.error("usage: npx jiti scripts/emit-seed.ts <outDir>");
+  console.error("usage: npx jiti scripts/emit-seed.ts <outDir> [collection...]");
+  process.exit(1);
+}
+const unknown = only.filter(
+  (id) => !collections.some((definition) => definition.id === id)
+);
+if (unknown.length > 0) {
+  console.error(`unknown collection: ${unknown.join(", ")}`);
   process.exit(1);
 }
 mkdirSync(outDir, { recursive: true });
 
 const store = buildSeed();
-const records = collections.flatMap((definition) =>
+const records = collections
+  .filter((definition) => only.length === 0 || only.includes(definition.id))
+  .flatMap((definition) =>
   (store.get(definition.id) ?? []).map((record, index) => ({
     collection: definition.id,
     recordId: record.id,

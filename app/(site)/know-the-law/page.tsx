@@ -39,7 +39,7 @@ export default async function KnowTheLawPage() {
         trail={[{ label: "Home", href: "/" }, { label: "Know the Law" }]}
         eyebrow="Know the Law"
         title="A legal library built to be understood"
-        lede="Start from the subject area, or from the explainer you need. Every page separates where the official text lives from our plain-language explanation of it, and says when it was last reviewed."
+        lede="Pick a subject, or go straight to the explainer you need. Every page keeps the official law and our everyday explanation clearly apart, and shows when it was last checked."
       />
 
       <Section className="pt-12 sm:pt-14 lg:pt-16">

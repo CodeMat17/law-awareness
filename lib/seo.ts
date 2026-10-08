@@ -13,7 +13,7 @@ export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://lawawareness.org";
 
 export const SITE_DESCRIPTION =
-  "Understand Nigerian law, protect yourself, protect your business, and know when professional legal help may be necessary. A national legal education, awareness and compliance platform.";
+  "Law Awareness TV is Nigeria's television channel for the law: courtroom and judicial news, law-making, law enforcement, corporate law and your rights, explained in everyday words.";
 
 /**
  * The brand lockup, the same asset `app/opengraph-image.jpg` serves. The

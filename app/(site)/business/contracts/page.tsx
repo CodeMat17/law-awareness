@@ -39,7 +39,7 @@ export default async function ContractsPage() {
         ]}
         eyebrow="Contract Knowledge Centre"
         title="A contract is read when something goes wrong, not when it is signed"
-        lede="Each entry explains what an agreement is for, why it matters, when it is commonly used, the clauses that decide how it behaves under stress, the mistakes people make, and when legal review is appropriate."
+        lede="Each entry explains what the agreement is for, when it is used, the terms that matter most when things go wrong, common mistakes, and when to have a lawyer look at it."
       />
 
       {/* Said up front, because it is the whole editorial position here. */}

@@ -36,8 +36,8 @@ export default async function BusinessGuidesPage() {
           { label: "Before You Do This" },
         ]}
         eyebrow="Before You Do This"
-        title="The moment before the decision is the cheapest place to get it right"
-        lede="Every guide takes one decision a business actually faces and works through it: what the situation is, the legal considerations, the mistakes people make, the red flags, a full checklist, and the point at which a lawyer should be involved."
+        title="Get it right before you decide"
+        lede="Each guide takes one real business decision and walks you through it: what to think about, common mistakes, warning signs, a checklist, and when to bring in a lawyer."
       />
 
       <Section className="pt-12 sm:pt-14 lg:pt-16">

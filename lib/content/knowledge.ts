@@ -4,6 +4,7 @@ import type {
   RightGuide,
   RightSummary,
   SafetyGuide,
+  SafetySeries,
   Taxonomy,
 } from "./types";
 
@@ -42,27 +43,26 @@ const educational = {
  */
 export const lawCategoryDefs: Taxonomy[] = [
   { slug: "constitution", name: "The Constitution", blurb: "The supreme law and the rights it guarantees", icon: "landmark" },
-  { slug: "human-rights", name: "Human Rights", blurb: "Chapter IV rights and how they are enforced", icon: "scale" },
-  { slug: "criminal-law", name: "Criminal Law", blurb: "Offences, procedure and the ACJA 2015", icon: "gavel" },
-  { slug: "civil-law", name: "Civil Law", blurb: "Claims between people and organisations", icon: "file-text" },
+  { slug: "human-rights", name: "Human Rights", blurb: "Your basic rights, and how to defend them", icon: "scale" },
+  { slug: "criminal-law", name: "Criminal Law", blurb: "Crimes, arrests and how criminal cases run", icon: "gavel" },
+  { slug: "civil-law", name: "Civil Law", blurb: "Disputes between people and businesses", icon: "file-text" },
   { slug: "employment", name: "Employment & Labour", blurb: "Contracts, wages, termination, workplace duties", icon: "hard-hat" },
-  { slug: "business-corporate", name: "Business & Corporate", blurb: "CAMA 2020, company duties and governance", icon: "building-2" },
-  { slug: "land-and-property", name: "Land & Property", blurb: "The Land Use Act, title and tenancy", icon: "map" },
-  { slug: "consumer-protection", name: "Consumer Protection", blurb: "The FCCPA 2018 and your purchases", icon: "shopping-bag" },
-  { slug: "digital", name: "Cybercrime & Digital Rights", blurb: "The Cybercrimes Act 2015 and life online", icon: "wifi" },
-  { slug: "data-protection", name: "Data Protection", blurb: "The Nigeria Data Protection Act 2023", icon: "database" },
-  { slug: "family-law", name: "Family Law", blurb: "Marriage, children and succession", icon: "heart" },
+  { slug: "business-corporate", name: "Business & Corporate", blurb: "Registering and running a company", icon: "building-2" },
+  { slug: "land-and-property", name: "Land & Property", blurb: "Owning land, renting and property papers", icon: "map" },
+  { slug: "consumer-protection", name: "Consumer Protection", blurb: "Your rights when you buy things", icon: "shopping-bag" },
+  { slug: "digital", name: "Cybercrime & Digital Rights", blurb: "Staying safe and within the law online", icon: "wifi" },
+  { slug: "data-protection", name: "Data Protection", blurb: "How your personal information must be handled", icon: "database" },
+  { slug: "family-law", name: "Family Law", blurb: "Marriage, children and inheritance", icon: "heart" },
   { slug: "court-process", name: "Court & Legal Process", blurb: "How courts work and what to expect", icon: "book-open" },
   { slug: "police-and-law-enforcement", name: "Police & Law Enforcement", blurb: "Powers, limits and everyday encounters", icon: "siren" },
   { slug: "traffic", name: "Traffic & Road Safety", blurb: "Driving, documents and road-side stops", icon: "car" },
-  { slug: "immigration", name: "Immigration", blurb: "Entry, status, permits and travel documents", icon: "badge-check" },
-  { slug: "tax", name: "Tax", blurb: "Obligations, filings and awareness", icon: "receipt" },
+  { slug: "immigration", name: "Immigration", blurb: "Visas, permits and travel documents", icon: "badge-check" },
+  { slug: "tax", name: "Tax", blurb: "What tax you owe and how to pay it", icon: "receipt" },
   { slug: "financial", name: "Financial Law", blurb: "Banking, lending, payments and consumer finance", icon: "banknote" },
   { slug: "electoral", name: "Electoral Law", blurb: "Registration, voting and election conduct", icon: "users" },
   { slug: "environmental", name: "Environmental Law", blurb: "Pollution, land use and community impact", icon: "umbrella" },
-  { slug: "education", name: "Education", blurb: "Rights, duties and institutional obligations", icon: "graduation-cap" },
-  { slug: "public-health", name: "Public Health", blurb: "Health duties, safety and public obligations", icon: "shield-check" },
-  { slug: "media-entertainment", name: "Media & Entertainment", blurb: "Publishing, broadcasting, defamation and contracts", icon: "video" },
+  { slug: "education", name: "Education", blurb: "Rights and duties in schools", icon: "graduation-cap" },
+  { slug: "public-health", name: "Public Health", blurb: "Health, safety and the public", icon: "shield-check" },
   { slug: "intellectual-property", name: "Intellectual Property", blurb: "Copyright Act 2022, trade marks and brands", icon: "lightbulb" },
 ];
 
@@ -1285,17 +1285,17 @@ export const rightGuides: RightGuide[] = [
     title: "If the police stop you",
     situation: "You are stopped on the road or in a public place",
     summary:
-      "The Constitution protects your dignity and personal liberty during any encounter. Understand what you can ask, what you should carry, and how to keep an ordinary stop from escalating.",
+      "The Constitution protects your dignity and your freedom whenever you deal with the police. Learn what you can ask, what to carry, and how to keep an ordinary stop calm.",
     category: "Police & Law Enforcement",
     protects: [
       "Your dignity: you may not be treated inhumanely or degradingly",
-      "Your liberty: it may only be taken away in circumstances the Constitution allows",
-      "Your privacy, which is why the basis for a search is a fair question",
+      "Your freedom: you can only be held in situations the Constitution allows",
+      "Your privacy, which is why you may fairly ask why you are being searched",
     ],
     steps: [
       {
         title: "Stop safely and stay visible",
-        body: "Pull over where it is safe, keep your hands visible, and keep the exchange calm. Most encounters escalate on tone before they escalate on law.",
+        body: "Pull over where it is safe, keep your hands where they can be seen, and stay calm. Most stops go wrong because tempers rise, not because of the law.",
       },
       {
         title: "Ask, politely, what the stop is about",
@@ -1303,11 +1303,11 @@ export const rightGuides: RightGuide[] = [
       },
       {
         title: "Identify the officers and the location",
-        body: "Names, numbers and the unit, plus the place and time. If a phone is being used to record, say so rather than doing it covertly.",
+        body: "Note their names, numbers and unit, plus the place and time. If you are recording on your phone, say so openly rather than hiding it.",
       },
       {
         title: "Comply now, contest later",
-        body: "The roadside is not where a dispute is resolved. Compliance with a lawful instruction does not waive anything, and a court is the forum for the argument.",
+        body: "The roadside is not the place to argue. Obeying a lawful instruction does not mean you give up any of your rights — you can still complain or go to court afterwards.",
       },
       {
         title: "Tell someone where you are",
@@ -1323,25 +1323,25 @@ export const rightGuides: RightGuide[] = [
     avoid: [
       "Arguing the law at the roadside",
       "Offering or agreeing to pay anything informally",
-      "Handing over your phone unlocked without asking the basis",
+      "Handing over your unlocked phone without asking why",
       "Signing a statement you have not read",
     ],
     misconceptions: [
       {
         myth: "Refusing to answer questions is automatically an offence.",
         reality:
-          "The position depends on what is being asked and on what power is being exercised. A calm question about the basis of the stop is not obstruction.",
+          "It depends on what you are being asked and why. Calmly asking why you have been stopped is not the same as getting in the way of the police.",
       },
       {
         myth: "Recording an encounter is illegal.",
         reality:
-          "There is no blanket prohibition, though location and circumstances matter. Being open about recording lowers the temperature.",
+          "There is no general ban, although where you are and what is happening can matter. Being open about recording helps keep things calm.",
       },
     ],
     whenToSeeALawyer: [
       "You are asked to go to a station and stay there",
       "Property or a phone has been taken from you",
-      "You were injured, threatened or held for an extended period",
+      "You were hurt, threatened or held for a long time",
     ],
     related: {
       laws: ["fundamental-rights-chapter-iv", "how-a-criminal-case-moves"],
@@ -1368,63 +1368,63 @@ export const rightGuides: RightGuide[] = [
     title: "If you or someone you know is arrested",
     situation: "A person has been taken into custody",
     summary:
-      "Section 35 guarantees personal liberty and sets out when a person must be brought before a court. The Administration of Criminal Justice Act 2015 adds procedural safeguards worth understanding before you need them.",
+      "Section 35 of the Constitution protects your freedom and says how soon an arrested person must be taken to court. The Administration of Criminal Justice Act 2015 adds more protections that are worth knowing before you ever need them.",
     category: "Criminal Law",
     protects: [
       "Being told, promptly, why you are being held",
       "Being brought before a court within the time the Constitution allows",
-      "Humane treatment, and access to a legal practitioner",
+      "Being treated humanely, and being able to see a lawyer",
     ],
     steps: [
       {
         title: "Establish where the person is",
-        body: "Station, unit and the officer in charge. This single fact is what everything else depends on.",
+        body: "Find out the police station, the unit and the officer in charge. Everything else depends on knowing this.",
       },
       {
         title: "Find out the stated reason",
-        body: "Ask what the allegation is and whether a charge has been filed. Write down the answer and who gave it.",
+        body: "Ask what the person is accused of and whether they have been formally charged. Write down the answer and who gave it.",
       },
       {
         title: "Get a lawyer involved early",
-        body: "Before a statement is written, not after. A statement is difficult to unwind once signed.",
+        body: "Do this before any statement is written, not after. Once a statement is signed, it is very hard to take back.",
       },
       {
         title: "Track the clock",
-        body: "The Constitution sets time limits for producing a person before a court. Note the hour of arrest precisely.",
+        body: "The Constitution sets time limits for taking an arrested person to court. Write down the exact time of the arrest.",
       },
       {
         title: "Keep every document",
-        body: "Bail forms, property receipts, charge sheets. These are the record on which any later application is built.",
+        body: "Keep bail forms, receipts for anything taken, and charge sheets. Your lawyer will need them later.",
       },
     ],
     doNow: [
       "Write down the time and place of arrest and the officers involved",
       "Ask whether the person needs medication or medical attention",
-      "Instruct a lawyer, and give them the facts in writing",
+      "Get a lawyer, and give them the facts in writing",
       "Keep receipts for anything seized",
     ],
     avoid: [
       "Paying anyone informally to secure a release",
       "Letting a statement be written without a lawyer present",
       "Losing the paperwork you are given",
-      "Publicising the allegation while it is live",
+      "Posting about the accusation publicly while the case is still going on",
     ],
     misconceptions: [
       {
         myth: "A person can be held indefinitely while the police investigate.",
         reality:
-          "The Constitution sets out when a person must be brought before a court, and detention beyond what the law permits is exactly what the rights procedure exists for.",
+          "The Constitution says when a person must be taken to court. Holding someone for longer than the law allows is exactly what you can go to court to challenge.",
       },
       {
         myth: "Family cannot do anything until charges are filed.",
         reality:
-          "An application about liberty can be brought on behalf of a person who cannot come to court themselves.",
+          "Family or a lawyer can go to court on behalf of someone who is being held and cannot go themselves.",
       },
     ],
     whenToSeeALawyer: [
       "Immediately — this is the clearest case for urgent advice",
       "Before any statement is signed",
-      "Where detention has continued beyond the time the Constitution allows",
+      "When someone has been held for longer than the Constitution allows",
     ],
     related: {
       laws: [
@@ -1453,25 +1453,25 @@ export const rightGuides: RightGuide[] = [
     title: "How bail actually works",
     situation: "A person is in custody and release is being discussed",
     summary:
-      "Bail is a conditional release while a case continues. It is decided by an authorised officer or a court, it is not a payment for freedom, and it is not a finding about guilt.",
+      "Bail means being let out, on conditions, while your case goes on. It is decided by the police or a court. It is not a price for your freedom, and it does not mean you are guilty or innocent.",
     category: "Criminal Law",
     protects: [
-      "Liberty while a case is pending, subject to conditions",
-      "The presumption of innocence, which bail reflects rather than contradicts",
-      "Access to a court that can consider bail and revisit it",
+      "Your freedom while the case goes on, as long as you keep to the conditions",
+      "The rule that you are innocent until proven guilty",
+      "The chance to ask a court for bail, and to ask again if things change",
     ],
     steps: [
       {
         title: "Establish who decides",
-        body: "Depending on the offence and the stage, bail may be considered by an authorised officer or by a court. That determines where the application goes.",
+        body: "Depending on the offence and how far the case has gone, bail is decided either by the police or by a court. That tells you who to ask.",
       },
       {
         title: "Understand the conditions",
-        body: "Bail comes with conditions — a surety, an address, reporting requirements. Read them before agreeing to them.",
+        body: "Bail comes with conditions — for example a surety (someone who promises the person will come back), a fixed address, or reporting to the police. Read them before agreeing.",
       },
       {
         title: "Check that a surety can actually comply",
-        body: "A surety takes on a real obligation. Standing in without understanding it creates a second problem.",
+        body: "A surety makes a real promise and can be held to it. Do not agree to be one without understanding what you are taking on.",
       },
       {
         title: "Keep the paperwork",
@@ -1484,7 +1484,7 @@ export const rightGuides: RightGuide[] = [
     ],
     doNow: [
       "Ask what the conditions are, in writing",
-      "Confirm the next court date and diarise it",
+      "Confirm the next court date and write it down",
       "Keep the bail form and any receipt",
       "Tell your lawyer immediately if a condition becomes impossible to meet",
     ],
@@ -1498,17 +1498,17 @@ export const rightGuides: RightGuide[] = [
       {
         myth: "Bail is a fee you pay to be released.",
         reality:
-          "Bail is a conditional release. Where money features it is a security tied to conditions, handled formally — never an informal payment.",
+          "Bail is release on conditions. If money is involved, it is a formal guarantee with a receipt — never a payment to someone on the side.",
       },
       {
         myth: "Getting bail means the case is over.",
         reality:
-          "The case continues. Bail governs liberty while it does.",
+          "The case goes on. Bail only decides whether you are free while it does.",
       },
     ],
     whenToSeeALawyer: [
       "Where bail has been refused or delayed",
-      "Where conditions are unworkable in practice",
+      "When the conditions are impossible to keep in real life",
       "Before standing as a surety for someone else",
     ],
     related: {
@@ -1534,29 +1534,29 @@ export const rightGuides: RightGuide[] = [
     title: "Your privacy and your personal data",
     situation: "An organisation is collecting information about you",
     summary:
-      "Section 37 protects the privacy of citizens, their homes and their correspondence. The Nigeria Data Protection Act 2023 builds on it with duties for anyone processing personal data.",
+      "Section 37 of the Constitution protects your privacy, your home and your messages. The Nigeria Data Protection Act 2023 adds rules for anyone who collects or uses information about you.",
     category: "Data Protection",
     protects: [
       "The privacy of your home, correspondence and communications",
-      "Your say over how organisations process data about you",
-      "Rights of access, correction and — in defined circumstances — deletion",
+      "A say in how organisations use information about you",
+      "The right to see, correct and — in some cases — delete that information",
     ],
     steps: [
       {
         title: "Ask what is being collected and why",
-        body: "A privacy notice should tell you the purpose, the basis and how long the data is kept. If it does not, that is itself informative.",
+        body: "A privacy notice should tell you why your information is needed, what gives them the right to collect it, and how long they will keep it. If it does not, that tells you something.",
       },
       {
-        title: "Check the basis, not just the consent box",
-        body: "Consent is one lawful basis among several. Where consent is relied on, it must be freely given and capable of being withdrawn.",
+        title: "Do not just tick the consent box",
+        body: "Your consent is only one of the reasons the law accepts for collecting your information. Where they rely on it, you must give it freely — and you can take it back.",
       },
       {
-        title: "Exercise a right in writing",
-        body: "Access, correction, deletion and objection are exercised by asking. Put it in writing and keep a copy.",
+        title: "Make your request in writing",
+        body: "To see, correct or delete your information, or to object to how it is used, you simply ask. Put it in writing and keep a copy.",
       },
       {
         title: "Escalate if you are ignored",
-        body: "The Nigeria Data Protection Commission is the regulator. A record of your unanswered request is what makes a complaint work.",
+        body: "The Nigeria Data Protection Commission oversees this. Proof that you asked and got no answer makes your complaint much stronger.",
       },
     ],
     doNow: [
@@ -1575,12 +1575,12 @@ export const rightGuides: RightGuide[] = [
       {
         myth: "Privacy law only restricts the government.",
         reality:
-          "The constitutional right addresses state interference, and the NDP Act 2023 places duties on organisations processing personal data — private ones included.",
+          "The Constitution protects you from the government, and the Data Protection Act 2023 also sets rules for private companies that use your information.",
       },
       {
         myth: "If you consented once, the organisation can do anything with the data.",
         reality:
-          "Purpose limitation still applies, and consent can be withdrawn.",
+          "They can only use it for the reason they gave you, and you can withdraw your consent.",
       },
     ],
     whenToSeeALawyer: [
@@ -1610,17 +1610,17 @@ export const rightGuides: RightGuide[] = [
     title: "Your rights at work",
     situation: "Something has changed about your job or your pay",
     summary:
-      "Your written contract, the Labour Act and workplace policy together shape what your employer may and may not do. Know which document governs which question.",
+      "Your written contract, the Labour Act and your workplace rules together decide what your employer can and cannot do. Know which one answers which question.",
     category: "Employment & Labour",
     protects: [
       "The terms actually agreed in your contract",
-      "Minimum standards where the Labour Act applies to your role",
-      "A fair process where misconduct is alleged",
+      "Basic minimum standards, where the Labour Act covers your kind of job",
+      "A fair process if you are accused of wrongdoing",
     ],
     steps: [
       {
         title: "Find the contract",
-        body: "Start with what you signed, including any handbook it incorporates. Most answers begin there.",
+        body: "Start with what you signed, including any staff handbook it mentions. Most answers are there.",
       },
       {
         title: "Identify the actual change",
@@ -1628,11 +1628,11 @@ export const rightGuides: RightGuide[] = [
       },
       {
         title: "Use the internal process first",
-        body: "Raise it in writing through the grievance route. A documented internal history matters if the dispute goes further.",
+        body: "Raise it in writing through your workplace complaints process. A written record helps if the problem goes further.",
       },
       {
         title: "Keep the record",
-        body: "Payslips, letters, appraisals, messages. Employment disputes turn on documents more than recollection.",
+        body: "Keep payslips, letters, appraisals and messages. Work disputes are usually won on documents, not memory.",
       },
     ],
     doNow: [
@@ -1651,17 +1651,17 @@ export const rightGuides: RightGuide[] = [
       {
         myth: "Everyone in Nigeria is covered by the Labour Act in the same way.",
         reality:
-          "The Act is directed principally at workers in manual and clerical roles. Others rely mainly on their contract and the decisions of the National Industrial Court.",
+          "The Labour Act mainly covers manual and clerical workers. Other employees rely mostly on their contract and on decisions of the National Industrial Court.",
       },
       {
         myth: "An employer can change terms at will.",
         reality:
-          "The contract governs. Unilateral change is a contractual question, not a management prerogative.",
+          "Your contract decides. An employer cannot simply change the terms on its own because it wants to.",
       },
     ],
     whenToSeeALawyer: [
       "Before signing any settlement or release",
-      "Where dismissal is for alleged misconduct",
+      "When you are dismissed for alleged wrongdoing",
       "Where pay or benefits have been withheld",
     ],
     related: {
@@ -1686,12 +1686,12 @@ export const rightGuides: RightGuide[] = [
     title: "Your right to a fair hearing",
     situation: "You are facing a charge, a claim or a disciplinary process",
     summary:
-      "Section 36 guarantees a fair hearing within a reasonable time. It shapes court process, and its principles echo through tribunals and internal proceedings too.",
+      "Section 36 of the Constitution gives you the right to a fair hearing within a reasonable time. It applies in court, and the same ideas of fairness apply in tribunals and workplace disciplinary meetings too.",
     category: "Human Rights",
     protects: [
-      "A hearing before an independent and impartial court or tribunal",
+      "A hearing before a court or panel that is independent and does not take sides",
       "Knowing the case against you, and having the chance to answer it",
-      "The presumption of innocence in a criminal charge",
+      "Being treated as innocent until proven guilty",
     ],
     steps: [
       {
@@ -1700,15 +1700,15 @@ export const rightGuides: RightGuide[] = [
       },
       {
         title: "Ask for time to prepare",
-        body: "A hearing arranged for the same afternoon rarely allows a real answer. Requests for reasonable time should be made in writing.",
+        body: "A hearing called for the same afternoon rarely gives you a real chance to answer. Ask for reasonable time, in writing.",
       },
       {
         title: "Attend and answer",
-        body: "Non-attendance is generally worse than a difficult hearing. Attend, keep it factual, and keep notes.",
+        body: "Staying away is usually worse than a difficult hearing. Go, stick to the facts, and take notes.",
       },
       {
         title: "Ask who is deciding",
-        body: "A person who investigated and will also decide raises an impartiality question worth recording at the time.",
+        body: "If the person who investigated you is also the one deciding, that may not be fair. Point it out, in writing, at the time.",
       },
     ],
     doNow: [
@@ -1718,7 +1718,7 @@ export const rightGuides: RightGuide[] = [
       "Seek advice before a decision is made, not after",
     ],
     avoid: [
-      "Ignoring a summons, notice or invitation",
+      "Ignoring a court summons, notice or invitation to a hearing",
       "Answering off the record",
       "Assuming an internal process cannot affect later legal rights",
       "Waiting for the outcome before recording your objections",
@@ -1727,18 +1727,18 @@ export const rightGuides: RightGuide[] = [
       {
         myth: "Fair hearing only applies in criminal courts.",
         reality:
-          "Section 36 speaks to the determination of civil rights and obligations as well, and its principles inform tribunal and internal processes.",
+          "Section 36 also covers non-criminal cases, and the same ideas of fairness apply to tribunals and workplace processes.",
       },
       {
         myth: "A fair hearing means the outcome must go your way.",
         reality:
-          "It concerns process: notice, an opportunity to be heard, and an impartial decision-maker.",
+          "It is about a fair process: being told the case against you, getting a chance to answer, and a decision-maker who does not take sides.",
       },
     ],
     whenToSeeALawyer: [
       "Where the outcome could affect your livelihood or liberty",
       "Where you have been refused the case against you",
-      "Where the decision-maker also investigated the matter",
+      "When the person deciding also did the investigating",
     ],
     related: {
       laws: ["fundamental-rights-chapter-iv", "how-a-criminal-case-moves"],
@@ -1764,7 +1764,7 @@ export const rightGuides: RightGuide[] = [
     title: "When something you bought is faulty",
     situation: "A product failed or a service was not delivered",
     summary:
-      "The Federal Competition and Consumer Protection Act 2018 sets out consumer protections and establishes the FCCPC. Knowing the route to complain matters as much as the right itself.",
+      "The Federal Competition and Consumer Protection Act 2018 protects buyers and set up the Federal Competition and Consumer Protection Commission (FCCPC). Knowing how to complain matters as much as knowing your rights.",
     category: "Consumer Protection",
     protects: [
       "Information about goods and services in plain, understandable language",
@@ -1778,11 +1778,11 @@ export const rightGuides: RightGuide[] = [
       },
       {
         title: "Complain to the supplier in writing",
-        body: "State the defect, the date, and the remedy you want — repair, replacement or refund. Keep a copy.",
+        body: "Say what is wrong, when it happened, and what you want — a repair, a replacement or a refund. Keep a copy.",
       },
       {
         title: "Give a reasonable deadline",
-        body: "A short, clear deadline turns an open-ended complaint into a record.",
+        body: "A short, clear deadline shows you are serious and gives you proof of when you asked.",
       },
       {
         title: "Escalate to the Commission",
@@ -1805,17 +1805,17 @@ export const rightGuides: RightGuide[] = [
       {
         myth: "Sold as seen removes every protection.",
         reality:
-          "A supplier's notice does not simply displace protections the Act provides.",
+          "A shop's notice cannot simply take away the protections the law gives you.",
       },
       {
         myth: "You must sue to get anywhere.",
         reality:
-          "The ordinary route is the supplier, then the Commission, with a specialist tribunal behind it.",
+          "Usually you go to the seller first, then the Commission. There is also a special tribunal if it goes further.",
       },
     ],
     whenToSeeALawyer: [
       "Where a defect caused injury or significant loss",
-      "Where a contract term is said to exclude your protections",
+      "When the seller says the contract takes away your protections",
       "Where a business is responding to a Commission complaint",
     ],
     related: {
@@ -1855,6 +1855,20 @@ export const featuredRights: RightSummary[] = rightGuides.map(
 
 export const BEFORE_YOU_SIGN = "Before You Sign";
 
+/**
+ * The series featured on /stay-safe, each as a section of its own. Seed for the
+ * "Stay Safe series" collection in the CMS.
+ */
+export const safetySeries: SafetySeries[] = [
+  {
+    id: "safety-series-before-you-sign",
+    name: BEFORE_YOU_SIGN,
+    headline: "The document in front of you is the cheapest place to stop",
+    description:
+      "A recurring series on everyday documents: the clauses that matter, the wording that shifts risk quietly, and the questions that expose an unfair term before you commit.",
+  },
+];
+
 export const safetyGuides: SafetyGuide[] = [
   {
     id: "ss-1",
@@ -1867,29 +1881,29 @@ export const safetyGuides: SafetyGuide[] = [
     area: "Contracts",
     icon: "signature",
     whatToLookFor: [
-      "Who the parties actually are — the legal names, not the trading names",
+      "Who is really signing — their full legal names, not just a business name",
       "What each side must do, by when, and what counts as done",
-      "What happens if something goes wrong: termination, notice, remedies",
+      "What happens if something goes wrong: how either side can end it, the notice needed, and what you can claim",
       "Money: the full amount, the timing, and every charge that can be added",
-      "How the agreement ends, and what survives it",
+      "How the agreement ends, and which promises still apply after it ends",
     ],
     redFlags: [
       "Blank spaces to be filled in after signature",
       "A document referring to schedules or policies you have not been shown",
       "Pressure to sign today for a price that expires tonight",
-      "One-sided termination: they may exit freely, you may not",
+      "One-sided exit rules: they can walk away freely, you cannot",
       "A clause you are told to ignore because 'nobody enforces it'",
     ],
     questionsToAsk: [
       "May I take this away and read it properly?",
-      "Which document controls if this one conflicts with another?",
+      "If this document disagrees with another one, which one wins?",
       "What exactly happens if I need to end this early?",
       "Can you show me every fee that can be charged under this agreement?",
-      "Who signs on your side, and are they authorised to?",
+      "Who signs for your side, and are they allowed to?",
     ],
     stopAndGetHelp: [
-      "The document transfers land, shares or intellectual property",
-      "You are being asked to guarantee someone else's obligation",
+      "The document hands over land, company shares, or rights to creative work or a brand",
+      "You are being asked to promise to pay if someone else does not",
       "The amounts involved would seriously hurt if the deal failed",
       "You do not understand a clause after reading it twice",
     ],
@@ -1907,33 +1921,33 @@ export const safetyGuides: SafetyGuide[] = [
     series: BEFORE_YOU_SIGN,
     risk: "You are about to commit to a home and a year of rent",
     summary:
-      "Tenancy is governed by state law and by the agreement itself. The document decides most of what will happen, and it is signed at the moment tenants have the least leverage.",
+      "Renting is covered by your state's law and by the agreement itself. The agreement decides most of what happens — and you sign it when you have the least bargaining power.",
     area: "Land & Property",
     icon: "home",
     whatToLookFor: [
-      "Whether the person letting the property has authority to let it",
+      "Whether the person renting it to you actually has the right to",
       "The exact term, the rent, and what the rent does and does not include",
       "Who repairs what, and how a repair is requested",
       "Deposit: how much, held by whom, and the conditions for its return",
-      "Renewal, notice periods, and how the tenancy ends",
+      "Renewal, how much notice each side must give, and how the tenancy ends",
     ],
     redFlags: [
       "Cash demanded with no receipt in the landlord's name",
       "No written agreement, or an unsigned photocopy",
       "An agent who will not let you meet the landlord or see proof of ownership",
       "Charges appearing only after you have paid a 'reservation' fee",
-      "A clause allowing entry or eviction without any notice",
+      "A clause that lets the landlord enter or throw you out without any notice",
     ],
     questionsToAsk: [
-      "Can I see proof that you own or are authorised to let this property?",
-      "Which state's tenancy law applies here, and what notice does the agreement require?",
+      "Can I see proof that you own this property or are allowed to rent it out?",
+      "Which state's tenancy law applies, and how much notice does the agreement require?",
       "What is the deposit for, and what deductions can be made from it?",
       "Are service charges fixed, and what do they cover?",
       "What is the procedure for repairs and emergencies?",
     ],
     stopAndGetHelp: [
       "You are asked to pay before seeing any documentation of ownership",
-      "The agreement removes notice rights or allows self-help eviction",
+      "The agreement takes away your right to notice, or lets the landlord evict you without going to court",
       "The property is subject to an ongoing dispute",
       "You are signing on behalf of a business rather than yourself",
     ],
@@ -1954,19 +1968,19 @@ export const safetyGuides: SafetyGuide[] = [
     series: BEFORE_YOU_SIGN,
     risk: "An offer letter has arrived and you want to accept",
     summary:
-      "The offer letter and the contract behind it decide pay, notice, restrictions and what happens if the relationship ends. All of it is easier to negotiate before acceptance.",
+      "The offer letter and the contract behind it decide your pay, notice, restrictions and what happens if the job ends. Everything is easier to negotiate before you accept.",
     area: "Employment",
     icon: "hard-hat",
     whatToLookFor: [
       "Job title, reporting line and the actual scope of the role",
       "Gross pay, deductions, allowances and when they are reviewed",
       "Probation terms and the notice that applies during and after it",
-      "Restrictions: confidentiality, intellectual property, non-solicitation",
-      "Any handbook or policy the letter incorporates by reference",
+      "Restrictions: keeping secrets, who owns what you create, and not poaching clients or staff after you leave",
+      "Any staff handbook or policy the letter says you must follow",
     ],
     redFlags: [
       "A letter that refers to a contract you have not been given",
-      "Notice that runs long against you and short against the employer",
+      "You must give long notice, but the employer only gives you short notice",
       "Ownership of anything you create, including outside work hours",
       "Deductions from salary described in open-ended terms",
       "Pressure to resign from your current role before terms are final",
@@ -1979,8 +1993,8 @@ export const safetyGuides: SafetyGuide[] = [
       "Who owns work I create outside the scope of my role?",
     ],
     stopAndGetHelp: [
-      "You are asked to sign a restraint covering a wide area or long period",
-      "The contract assigns ownership of personal projects",
+      "You are asked to agree not to work in your field across a wide area or for a long time",
+      "The contract gives the employer ownership of your personal projects",
       "You are being moved from employee to contractor status",
       "You are signing a settlement of any kind alongside the offer",
     ],
@@ -2007,13 +2021,13 @@ export const safetyGuides: SafetyGuide[] = [
       "Urgency: a deadline that leaves no time to verify",
       "A login page reached from a link rather than typed by you",
       "Requests for one-time codes, PINs or full card details",
-      "Offers whose returns have no plausible source",
+      "Offers promising returns that are too good to be true",
     ],
     redFlags: [
       "A supplier email with new bank details and a plausible explanation",
       "A caller who already knows some of your details and asks for the rest",
       "Payment demanded through channels that leave no record",
-      "An investment that pays early participants from later deposits",
+      "An investment that pays early members using money from new members (a Ponzi scheme)",
       "A profile impersonating someone you know, asking your contacts for money",
     ],
     questionsToAsk: [
@@ -2051,34 +2065,34 @@ export const safetyGuides: SafetyGuide[] = [
     title: "Buying land or property",
     risk: "A deposit is being requested and the seller is in a hurry",
     summary:
-      "Land losses in Nigeria are rarely sophisticated. They come from paying before verifying — authority to sell, the chain of documents, and the physical land itself.",
+      "Most people who lose money on land in Nigeria were not tricked in clever ways. They paid before checking — who has the right to sell, the history of the papers, and the land itself.",
     area: "Land & Property",
     icon: "map",
     whatToLookFor: [
-      "Who has authority to sell: individual, family, community or company",
-      "The chain of title documents, not a single certificate",
+      "Who has the right to sell: one person, a family, a community or a company",
+      "The full history of ownership papers, not just one certificate",
       "A survey plan that matches the land you were shown",
-      "Whether the Governor's consent will be obtained on transfer",
-      "Any encumbrance, dispute, acquisition or pending claim",
+      "Whether the Governor's consent will be obtained when the land changes hands",
+      "Any loan secured on the land, dispute, government takeover or other claim against it",
     ],
     redFlags: [
       "Only photocopies are ever produced",
       "A price far below the area's ordinary range",
-      "A seller who resists a registry search or an independent surveyor",
+      "A seller who does not want you to check the land registry or bring your own surveyor",
       "Different documents naming different owners",
       "Pressure to pay cash today to 'hold' the land",
     ],
     questionsToAsk: [
-      "May my lawyer conduct a search at the registry before any payment?",
+      "Can my lawyer check the land registry before I pay anything?",
       "Who exactly is selling, and can they show authority to do so?",
-      "Has consent been obtained on previous transfers?",
+      "Was the Governor's consent obtained each time the land was sold before?",
       "Can we appoint an independent surveyor to confirm the location?",
-      "Is any part of this land subject to acquisition or dispute?",
+      "Is any part of this land in dispute, or being taken over by government?",
     ],
     stopAndGetHelp: [
       "Before any deposit — this is the single most valuable moment for advice",
       "Where the land is family, community or inherited land",
-      "Where consent or registration was skipped on an earlier transfer",
+      "When consent or registration was skipped on an earlier sale",
       "Where you are buying to develop or to secure finance",
     ],
     related: {
@@ -2105,8 +2119,8 @@ export const safetyGuides: SafetyGuide[] = [
     icon: "banknote",
     whatToLookFor: [
       "The amount, the schedule, and the total cost including every charge",
-      "What security, if any, is being given, and what happens to it on default",
-      "What default means, and what the lender may do when it happens",
+      "What property, if any, is being pledged, and what happens to it if the loan is not repaid",
+      "What counts as failing to repay, and what the lender can do then",
       "Whether anyone is guaranteeing the debt, and to what extent",
       "How repayments will be recorded and acknowledged",
     ],
@@ -2119,13 +2133,13 @@ export const safetyGuides: SafetyGuide[] = [
     ],
     questionsToAsk: [
       "What is the total I will repay, including all charges?",
-      "What exactly triggers default, and what follows it?",
-      "If I guarantee this, what is the maximum I am exposed to?",
+      "Exactly when will I be treated as failing to repay, and what happens then?",
+      "If I guarantee this, what is the most I could have to pay?",
       "How will each repayment be acknowledged in writing?",
     ],
     stopAndGetHelp: [
       "You are being asked to guarantee a business debt personally",
-      "Property or a vehicle is being offered as security",
+      "Property or a vehicle is being pledged to secure the loan",
       "A lender is threatening or harassing you or your contacts",
       "The sums are large enough to affect your household if things go wrong",
     ],
@@ -2145,7 +2159,7 @@ export const safetyGuides: SafetyGuide[] = [
     series: BEFORE_YOU_SIGN,
     risk: "A partnership is forming on trust and a handshake",
     summary:
-      "Partnership disputes are rarely about the beginning. They are about what nobody wrote down: contribution, control, exit and what happens to the customers.",
+      "Business partners rarely fall out over how things started. They fall out over what nobody wrote down: who put in what, who decides, how someone leaves, and who keeps the customers.",
     area: "Business",
     icon: "briefcase",
     whatToLookFor: [
@@ -2158,7 +2172,7 @@ export const safetyGuides: SafetyGuide[] = [
     redFlags: [
       "'We will sort out the paperwork later'",
       "One partner holding all bank access, registrations and accounts",
-      "Intellectual property registered in one person's personal name",
+      "The brand, name or designs registered in one partner's personal name",
       "No agreement about what happens if a partner stops contributing",
       "Customer relationships held informally by one person",
     ],
@@ -2172,7 +2186,7 @@ export const safetyGuides: SafetyGuide[] = [
     stopAndGetHelp: [
       "Before money or assets move between the partners",
       "Where one party is investing and the other is contributing work",
-      "Where intellectual property is central to the business",
+      "Where the brand, designs, software or creative work is central to the business",
       "Where a partnership is already breaking down",
     ],
     related: {
@@ -2198,11 +2212,11 @@ export const glossaryTerms: GlossaryTerm[] = [
     slug: "bail",
     term: "Bail",
     definition:
-      "A court or authorised officer allowing a person to remain out of custody while their case continues, usually on conditions.",
+      "Being allowed to go home, usually on conditions, while your case continues. A court or the police decides.",
     example:
-      "A person charged with a minor offence is released pending the next hearing, on conditions set by the court.",
+      "A person charged with a minor offence goes home until the next court date, on conditions the court sets.",
     whyItMatters:
-      "Bail is a procedural release, not a finding of innocence and not a payment for freedom.",
+      "Bail does not mean you are innocent, and it is not a price for your freedom.",
     related: {
       rights: ["bail", "arrest-and-detention"],
       laws: ["how-a-criminal-case-moves"],
@@ -2215,7 +2229,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     slug: "affidavit",
     term: "Affidavit",
     definition:
-      "A written statement of facts that the maker swears to be true, used as evidence in a proceeding.",
+      "A written statement that you swear is true, used as evidence.",
     example:
       "Someone confirming their date of birth for an official process swears an affidavit before a commissioner for oaths.",
     whyItMatters:
@@ -2232,7 +2246,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     slug: "injunction",
     term: "Injunction",
     definition:
-      "A court order requiring a party to do something, or to stop doing something.",
+      "A court order telling someone to do something, or to stop doing something.",
     example:
       "A court orders that building work stop until a dispute over the land is decided.",
     whyItMatters:

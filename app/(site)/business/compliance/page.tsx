@@ -57,8 +57,8 @@ export default async function ComplianceCentrePage() {
           { label: "Compliance Centre" },
         ]}
         eyebrow="Company Compliance Centre"
-        title="Compliance is a small number of things, done continuously"
-        lede="Very little of it is complicated. What makes it hard is that each area needs an owner, a record and a rhythm — and the areas without one are the areas that produce the surprise."
+        title="Keeping your business on the right side of the rules"
+        lede="Most of it is not complicated. Each area just needs someone in charge of it, a record of what was done, and a regular routine. The areas nobody looks after are the ones that cause nasty surprises."
       >
         <div className="mt-8 flex flex-wrap gap-2.5">
           <Link
@@ -85,7 +85,7 @@ export default async function ComplianceCentrePage() {
         <Reveal>
           <SectionHeader
             eyebrow="What applies to my company?"
-            title="Describe how the business runs, and we will point you at the reading"
+            title="Tell us how your business works, and we will show you what to read"
             description="This produces a reading list, not a determination. Regulatory obligations depend on your circumstances and should be verified with the relevant authority or a qualified legal practitioner."
           />
         </Reveal>

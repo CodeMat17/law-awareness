@@ -86,7 +86,7 @@ export default async function LegalHelpPage() {
         trail={[{ label: "Home", href: "/" }, { label: "Legal Help" }]}
         eyebrow="Legal Help"
         title="Start from what happened, not from the law"
-        lede="Most people meet the law in the middle of a situation, without the vocabulary for it. These pathways begin where you actually are — and they are honest about the point at which reading stops being enough and you need a lawyer."
+        lede="Most people run into the law in the middle of a problem, without knowing the legal words for it. These guides start from what happened to you — and tell you honestly when reading is no longer enough and you need a lawyer."
       >
         <div className="mt-8">
           <PathwaySpine steps={PATHWAY} />

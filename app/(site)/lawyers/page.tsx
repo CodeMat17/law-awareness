@@ -105,8 +105,8 @@ export default async function LawyerDirectoryPage() {
       <PageHeader
         trail={[{ label: "Home", href: "/" }, { label: "Lawyer directory" }]}
         eyebrow="Lawyer directory"
-        title="Find a legal practitioner by what you need, where you are, and the language you speak"
-        lede="The directory is built around the six things that actually decide whether a practitioner can help you. It does not rank anyone, and it will never tell you who is best — that is not a thing a directory can honestly know."
+        title="Find a lawyer near you, who speaks your language"
+        lede="Search by the kind of help you need, your state and your language. We do not rank lawyers or say who is best — a directory cannot honestly know that."
       >
         <div className="mt-8 flex flex-wrap gap-2.5">
           <Link

@@ -44,7 +44,7 @@ export default async function BusinessPage() {
         trail={[{ label: "Home", href: "/" }, { label: "Business" }]}
         eyebrow="Business & Enterprise"
         title="The legal side of running a business, explained before it costs you"
-        lede="Entrepreneurs, SMEs and corporate teams face the same body of law as everyone else — they just meet it earlier, more often, and with more at stake. This section covers structure, contracts, employment, data, tax awareness, consumer duties and industry regulation, in the order decisions actually arrive."
+        lede="Business owners and company teams deal with the same law as everyone else — just earlier, more often and with more at stake. This section covers setting up, contracts, staff, customer data, tax, customers' rights and industry rules, in the order you are likely to need them."
       >
         <div className="mt-8 flex flex-wrap gap-2.5">
           <Link

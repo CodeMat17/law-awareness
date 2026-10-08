@@ -2,29 +2,44 @@
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Radio, ShieldCheck } from "lucide-react";
+import { ArrowRight, Headphones, Play, Radio } from "lucide-react";
 import { cinematic, ease } from "@/lib/motion";
 import { HeadlineSwash, HeroGrain } from "./hero-backdrop";
 import { HeroEmblems } from "./hero-emblems";
 import type { PlatformStat } from "@/lib/content/types";
 
+/** What the hero's screen shows - derived from the schedule, never invented. */
+export interface HeroScreen {
+  /** `live` only when a session is genuinely on air. */
+  status: "live" | "scheduled" | "latest";
+  title: string;
+  href: string;
+  series?: string;
+  /** Human label for when it airs, e.g. "Thu 12 Nov, 18:00". */
+  when?: string;
+  kind: "video" | "podcast" | "live";
+}
+
+export interface HeroUpNext {
+  id: string;
+  title: string;
+  href: string;
+  /** e.g. "Live · Thu 12 Nov" or "Video · 24 min". */
+  label: string;
+}
+
 interface HeroSectionProps {
   stats: PlatformStat[];
-  liveTitle?: string;
-  /** Whether that session is actually on air, rather than merely scheduled. */
-  liveOnAir?: boolean;
+  screen?: HeroScreen;
+  upNext: HeroUpNext[];
 }
 
 /**
- * The front page of a national knowledge platform: large editorial type set
- * against a field of law emblems, deep vignetting for depth, and layered
- * translucent panels that hint at the library beneath.
+ * The front page of a television channel: large editorial type set against a
+ * field of law emblems, and a screen showing what is on air - or what is next -
+ * with the running order beneath it.
  */
-export function HeroSection({
-  stats,
-  liveTitle,
-  liveOnAir = false,
-}: HeroSectionProps) {
+export function HeroSection({ stats, screen, upNext }: HeroSectionProps) {
   const reduce = useReducedMotion();
 
   const rise = (delay: number) =>
@@ -46,9 +61,9 @@ export function HeroSection({
             {...rise(0)}
             className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5"
           >
-            <ShieldCheck className="size-3.5 text-brand-ink" />
+            <Radio className="size-3.5 text-brand-ink" />
             <span className="text-eyebrow text-brand-ink">
-              Nigerian legal education & awareness
+              Law Awareness TV
             </span>
           </motion.p>
 
@@ -56,12 +71,12 @@ export function HeroSection({
             {...rise(0.08)}
             className="text-5xl sm:text-6xl md:text-7xl font-black mt-4 text-foreground"
           >
-            Know the Law.
+            The Law,
             <br />
-            Know Your Rights.
+            On Your Screen.
             <br />
             <span className="relative inline-block">
-              <span className="text-brand-ink">Protect What Matters.</span>
+              <span className="text-brand-ink">In Plain Words.</span>
               <HeadlineSwash className="absolute -bottom-1 left-0 h-2.5 w-full sm:-bottom-1.5 sm:h-3" />
             </span>
           </motion.h1>
@@ -70,8 +85,9 @@ export function HeroSection({
             {...rise(0.16)}
             className="text-body-lg mt-4 max-w-xl text-muted-foreground"
           >
-            Understand Nigerian law, protect yourself, protect your business,
-            and know when professional legal help may be necessary.
+            Courtroom news, new laws, the police and your rights, and the rules
+            for doing business — Nigerian law on TV, explained so everyone can
+            follow.
           </motion.p>
 
           <motion.div
@@ -79,23 +95,23 @@ export function HeroSection({
             className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
           >
             <Link
-              href="/know-the-law"
+              href="/live"
               className="group inline-flex h-13 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-[0.95rem] font-extrabold text-primary-foreground transition-opacity hover:opacity-90"
             >
-              Explore the Law
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+              <Play className="size-4 fill-current" />
+              Watch Live
             </Link>
             <Link
-              href="/legal-help/problem"
+              href="/programmes"
               className="inline-flex h-13 items-center justify-center gap-2 rounded-xl border border-hairline bg-card px-6 text-[0.95rem] font-extrabold text-foreground transition-colors hover:border-primary/45"
             >
-              I Have a Legal Problem
+              Browse Programmes
             </Link>
             <Link
-              href="/business"
+              href="/your-rights"
               className="inline-flex h-13 items-center justify-center gap-2 rounded-xl px-6 text-[0.95rem] font-extrabold text-foreground transition-colors hover:bg-muted sm:px-4"
             >
-              <span className="link-underline">Protect My Business</span>
+              <span className="link-underline">Know Your Rights</span>
               <ArrowRight className="size-4 text-brand-ink" />
             </Link>
           </motion.div>
@@ -123,9 +139,9 @@ export function HeroSection({
           </motion.dl> */}
         </div>
 
-        <HeroCards
-          liveTitle={liveTitle}
-          liveOnAir={liveOnAir}
+        <HeroScreenPanel
+          screen={screen}
+          upNext={upNext}
           reduce={Boolean(reduce)}
         />
       </div>
@@ -171,116 +187,127 @@ function HeroBackdrop() {
   );
 }
 
-interface HeroCardsProps {
-  liveTitle?: string;
-  liveOnAir?: boolean;
-  reduce: boolean;
-}
+
+const screenBadge: Record<HeroScreen["status"], string> = {
+  live: "On air now",
+  scheduled: "Up next",
+  latest: "New episode",
+};
 
 /**
- * Floating information cards. They preview what the platform actually holds:
- * a constitutional right, a live session, and a business risk signal.
+ * The channel's screen: one large 16:9 frame showing the programme on air (or
+ * the next one, or the newest episode when nothing is scheduled), with the
+ * running order beneath it. The pulsing dot is reserved for a session that is
+ * genuinely live.
  */
-function HeroCards({ liveTitle, liveOnAir, reduce }: HeroCardsProps) {
-  const float = (offset: number, duration: number) =>
-    reduce
-      ? {}
-      : {
-          animate: { y: [0, offset, 0] },
-          transition: {
-            duration,
-            repeat: Infinity,
-            ease: "easeInOut" as const,
-          },
-        };
+function HeroScreenPanel({
+  screen,
+  upNext,
+  reduce,
+}: {
+  screen?: HeroScreen;
+  upNext: HeroUpNext[];
+  reduce: boolean;
+}) {
+  const Glyph = screen?.kind === "podcast" ? Headphones : Play;
+  const isLive = screen?.status === "live";
 
   return (
     <motion.div
       initial={reduce ? false : { opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1, ease, delay: 0.2 }}
-      className="relative mx-auto w-full max-w-md lg:max-w-none"
+      className="relative mx-auto w-full max-w-xl lg:max-w-none"
     >
-      <div className="relative space-y-4">
-        <motion.article
-          {...float(-9, 7)}
-          className="rounded-2xl border border-hairline bg-card/85 p-5 shadow-2xl shadow-foreground/12 ring-1 ring-foreground/5 ring-inset backdrop-blur-xl sm:p-6 lg:-translate-x-6"
+      <div className="rounded-[1.6rem] border border-hairline bg-card/75 p-2.5 shadow-2xl shadow-foreground/15 ring-1 ring-foreground/5 ring-inset backdrop-blur-xl">
+        {/* The screen */}
+        <Link
+          href={screen?.href ?? "/watch"}
+          className="group relative block aspect-video overflow-hidden rounded-[1.1rem] bg-forest text-forest-foreground"
         >
-          <p className="text-eyebrow text-brand-ink">
-            Constitution 1999 · Chapter IV
-          </p>
-          <h2 className="text-h3 mt-3 text-foreground">
-            Every person is entitled to their personal liberty
-          </h2>
-          <p className="mt-2.5 text-[0.86rem] leading-relaxed text-muted-foreground">
-            Section 35 sets out when a person may be deprived of liberty, and
-            what must happen next. We explain it in plain language, and say
-            clearly where the official text ends and our explanation begins.
-          </p>
-          <Link
-            href="/constitution/chapter-iv"
-            className="mt-4 inline-flex items-center gap-1.5 text-[0.84rem] font-bold text-foreground"
-          >
-            <span className="link-underline">
-              Read the plain-language guide
-            </span>
-            <ArrowRight className="size-3.5 text-brand-ink" />
-          </Link>
-        </motion.article>
+          <div
+            aria-hidden
+            className="absolute -top-24 -right-16 size-80 rounded-full bg-primary/30 blur-[90px]"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 [background:radial-gradient(90%_80%_at_50%_40%,transparent_40%,rgb(0_0_0/0.45)_100%)]"
+          />
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <motion.article
-            {...float(7, 6)}
-            className="rounded-2xl border border-hairline bg-forest/92 p-5 text-forest-foreground shadow-xl shadow-foreground/12 ring-1 ring-forest-foreground/10 ring-inset backdrop-blur-xl lg:translate-y-3"
-          >
-            <p className="flex items-center gap-2">
-              {/* The pulsing dot is reserved for a session actually on air. */}
-              {liveOnAir ? (
-                <span className="relative flex size-2">
-                  <span className="absolute inline-flex size-full rounded-full bg-live opacity-75 motion-safe:animate-ping" />
-                  <span className="relative inline-flex size-2 rounded-full bg-live" />
+          {/* Top bar: status and the channel mark */}
+          <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4 sm:p-5">
+            <span
+              className={
+                isLive
+                  ? "inline-flex items-center gap-2 rounded-full bg-live px-2.5 py-1 text-[0.7rem] font-extrabold tracking-wide text-live-foreground uppercase"
+                  : "inline-flex items-center gap-2 rounded-full bg-forest-foreground/15 px-2.5 py-1 text-[0.7rem] font-extrabold tracking-wide text-forest-foreground uppercase"
+              }
+            >
+              {isLive && (
+                <span className="relative flex size-1.5">
+                  <span className="absolute inline-flex size-full rounded-full bg-live-foreground opacity-75 motion-safe:animate-ping" />
+                  <span className="relative inline-flex size-1.5 rounded-full bg-live-foreground" />
                 </span>
-              ) : (
-                <span
-                  aria-hidden
-                  className="inline-flex size-2 rounded-full bg-primary"
-                />
               )}
-              <span className="text-eyebrow text-forest-foreground/80">
-                {liveOnAir ? "Live now" : "Live sessions"}
-              </span>
-            </p>
-            <p className="mt-3 text-[0.92rem] leading-snug font-bold">
-              {liveTitle ?? "Know Your Rights, explained live"}
-            </p>
-            <Link
-              href="/live"
-              className="mt-4 inline-flex items-center gap-1.5 text-[0.8rem] font-bold text-primary"
-            >
-              <Radio className="size-3.5" />
-              {liveOnAir ? "Join the session" : "See the schedule"}
-            </Link>
-          </motion.article>
+              {screen ? screenBadge[screen.status] : "Law Awareness TV"}
+            </span>
+            <span className="text-[0.68rem] font-extrabold tracking-[0.18em] text-forest-foreground/70 uppercase">
+              Law Awareness TV
+            </span>
+          </div>
 
-          <motion.article
-            {...float(-6, 8)}
-            className="rounded-2xl border border-hairline bg-card/85 p-5 shadow-lg shadow-foreground/8 ring-1 ring-foreground/5 ring-inset backdrop-blur-xl lg:translate-x-4"
+          {/* Play */}
+          <span
+            aria-hidden
+            className="absolute top-1/2 left-1/2 inline-flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl shadow-black/30 transition-transform duration-300 group-hover:scale-105 sm:size-20"
           >
-            <p className="text-eyebrow text-muted-foreground">
-              Business signal
+            <Glyph className="size-6 translate-x-px sm:size-7" />
+          </span>
+
+          {/* Lower third */}
+          <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/60 to-transparent p-4 pt-10 sm:p-5 sm:pt-12">
+            {screen?.series && (
+              <p className="text-[0.7rem] font-extrabold tracking-wide text-primary uppercase">
+                {screen.series}
+              </p>
+            )}
+            <p className="mt-1 line-clamp-2 text-[1rem] leading-snug font-extrabold sm:text-[1.15rem]">
+              {screen?.title ?? "Nigerian law, on screen every week"}
             </p>
-            <p className="mt-3 text-[0.92rem] leading-snug font-bold text-foreground">
-              Does the Data Protection Act 2023 apply to your company?
-            </p>
-            <Link
-              href="/business/health-check"
-              className="mt-4 inline-flex items-center gap-1.5 text-[0.8rem] font-bold text-brand-ink"
-            >
-              Run the health check
-              <ArrowRight className="size-3.5" />
-            </Link>
-          </motion.article>
-        </div>
+            {screen?.when && (
+              <p className="mt-1 text-[0.75rem] font-semibold text-forest-foreground/75">
+                {screen.when}
+              </p>
+            )}
+          </div>
+        </Link>
+
+        {/* Running order */}
+        {upNext.length > 0 && (
+          <div className="px-2 pt-4 pb-1.5">
+            <p className="text-eyebrow px-1 text-muted-foreground">Coming up</p>
+            <ul className="mt-2 divide-y divide-hairline">
+              {upNext.map((item) => (
+                <li key={item.id}>
+                  <Link
+                    href={item.href}
+                    className="group flex items-center gap-3 rounded-lg px-1 py-2.5 transition-colors hover:bg-muted/60"
+                  >
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-[0.88rem] font-bold text-foreground">
+                        {item.title}
+                      </span>
+                      <span className="mt-0.5 block text-[0.75rem] font-semibold text-muted-foreground">
+                        {item.label}
+                      </span>
+                    </span>
+                    <ArrowRight className="size-4 shrink-0 text-brand-ink transition-transform group-hover:translate-x-0.5" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </motion.div>
   );

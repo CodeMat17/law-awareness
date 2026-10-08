@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { SaveButton } from "@/components/account/save-button";
 import {
   CaseMetaRow,
   CaseSummaryNotice,
@@ -85,17 +84,6 @@ export default async function CaseDetailPage(
       >
         <div className="mt-7">
           <CaseMetaRow record={record} />
-        </div>
-        <div className="mt-6">
-          <SaveButton
-            target={{
-              kind: "case",
-              title: record.title,
-              summary: record.keyPrinciple,
-              group: `Case law · ${courtShortName(record.court)}`,
-              href: `/cases/${record.slug}`,
-            }}
-          />
         </div>
       </PageHeader>
 

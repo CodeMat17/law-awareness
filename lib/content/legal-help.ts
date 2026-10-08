@@ -52,7 +52,7 @@ export const referralRoutes: ReferralRoute[] = [
     kind: "legal-aid",
     icon: "scale",
     whatItIs:
-      "A federal body established by statute to provide legal aid, advice and access to justice for people who cannot afford a lawyer. It maintains offices across the states and works on criminal defence, defined categories of civil matter, and advice.",
+      "A federal government body set up by law to give free legal help and advice to people who cannot afford a lawyer. It has offices across the states and helps with criminal cases, some kinds of civil cases, and general advice.",
     whoItIsFor: [
       "People facing criminal charges who cannot pay for a defence lawyer",
       "People held in custody who have had no legal representation",
@@ -73,7 +73,7 @@ export const referralRoutes: ReferralRoute[] = [
     ],
     limits: [
       "It has finite capacity and cannot take every matter it is asked to take",
-      "Its remit is set by statute — not every kind of civil dispute falls inside it",
+      "The law limits what it can take on — it cannot help with every kind of civil dispute",
       "Means criteria apply, and the office assesses them, not this platform",
     ],
     howToFind:
@@ -155,7 +155,7 @@ export const referralRoutes: ReferralRoute[] = [
     kind: "public-institution",
     icon: "shield",
     whatItIs:
-      "A statutory commission with a mandate over human rights complaints, including complaints about the conduct of public authorities. It receives complaints, investigates them, and can hold hearings.",
+      "A government commission that deals with human rights complaints, including complaints about how government bodies and officials behave. It takes complaints, investigates them, and can hold hearings.",
     whoItIsFor: [
       "People alleging ill-treatment, unlawful detention or abuse by an authority",
       "People whose complaint concerns the conduct of a public institution",
@@ -188,7 +188,7 @@ export const referralRoutes: ReferralRoute[] = [
     kind: "public-institution",
     icon: "shopping-bag",
     whatItIs:
-      "The Federal Competition and Consumer Protection Commission has a statutory role in consumer complaints under the FCCPA 2018, and individual sectors — banking, telecommunications, insurance, aviation, power — have their own regulators with their own complaint procedures.",
+      "The Federal Competition and Consumer Protection Commission (FCCPC) handles consumer complaints, and some industries — banking, telecoms, insurance, airlines, electricity — have their own regulators with their own ways to complain.",
     whoItIsFor: [
       "People who bought goods or services that failed and got nowhere with the seller",
       "People with a complaint against a regulated provider in a specific sector",
@@ -210,7 +210,7 @@ export const referralRoutes: ReferralRoute[] = [
       "Regulatory processes run on their own timetable, not yours",
     ],
     howToFind:
-      "Identify the regulator for the sector the provider operates in, and use that regulator's own published complaint procedure.",
+      "Find out which regulator oversees that type of business, and follow that regulator's own complaints process.",
     meta,
   },
   {
@@ -291,7 +291,7 @@ export const legalProblems: LegalProblem[] = [
     title: "The police have stopped or are questioning you",
     situation: "You are at a checkpoint, in the street, or at a station being asked questions.",
     summary:
-      "What the Constitution and the Administration of Criminal Justice Act 2015 say about stops, questioning and how an encounter is supposed to run — and how to keep the encounter from getting worse.",
+      "What the law says about police stops and questioning, how a stop should be handled — and how to keep things from getting worse.",
     icon: "siren",
     urgency: "immediate",
     triage: [
@@ -311,7 +311,7 @@ export const legalProblems: LegalProblem[] = [
             value: "no",
             label: "No — I am being held",
             guidance:
-              "Start with the detention material. Being held changes which parts of the law are engaged, including the constitutional provisions on liberty and on being informed of the reason.",
+              "Start with the guides on being held. Once you are held, different parts of the law apply — including your constitutional rights to freedom and to be told why you are being held.",
             urgency: "immediate",
           },
           {
@@ -414,7 +414,7 @@ export const legalProblems: LegalProblem[] = [
     title: "Someone you know is being held at a station",
     situation: "You have heard that a relative, friend or employee is in custody.",
     summary:
-      "The practical order of things when someone is in custody: confirming where they are, what the law says about custody and bail, and which routes actually reach a person inside a station.",
+      "What to do, step by step, when someone is being held: finding out where they are, what the law says about custody and bail, and how to actually get help to them.",
     icon: "lock",
     urgency: "immediate",
     triage: [
@@ -447,7 +447,7 @@ export const legalProblems: LegalProblem[] = [
             value: "no",
             label: "Not yet",
             guidance:
-              "The constitutional provisions on how long a person may be held before being brought before a court are the ones to read.",
+              "Read the parts of the Constitution on how long a person can be held before being taken to court.",
             urgency: "immediate",
           },
           {
@@ -537,7 +537,7 @@ export const legalProblems: LegalProblem[] = [
     title: "You have been charged with an offence",
     situation: "A charge has been brought and the matter is going before a court.",
     summary:
-      "How a criminal case moves under the Administration of Criminal Justice Act 2015, what the fair-hearing provisions of the Constitution guarantee, and why representation stops being optional at this point.",
+      "How a criminal case moves forward, what your right to a fair hearing under the Constitution means, and why you really need a lawyer at this point.",
     icon: "gavel",
     urgency: "time-sensitive",
     triage: [
@@ -613,7 +613,7 @@ export const legalProblems: LegalProblem[] = [
       },
       {
         title: "Understand bail conditions",
-        body: "If you are on bail, the conditions are obligations. Breaking one creates a second problem on top of the first.",
+        body: "If you are on bail, you must keep to the conditions. Breaking one creates a new problem on top of the first.",
       },
       {
         title: "Prepare with your lawyer",
@@ -765,7 +765,7 @@ export const legalProblems: LegalProblem[] = [
     title: "Your landlord wants you out, or the rent is in dispute",
     situation: "You have been asked to leave, given a notice, or told the rent has changed.",
     summary:
-      "Tenancy is governed largely by state law and by the agreement you signed. What the process is supposed to look like, what a notice is, and why self-help eviction is not lawful.",
+      "Renting is mostly covered by your state's law and the agreement you signed. What the eviction process should look like, what a notice is, and why a landlord cannot just throw you out without going to court.",
     icon: "home",
     urgency: "time-sensitive",
     triage: [
@@ -832,7 +832,7 @@ export const legalProblems: LegalProblem[] = [
     steps: [
       {
         title: "Read the agreement",
-        body: "The term, the notice provisions and the rent-review clause decide most of what follows. What is written is where the process starts.",
+        body: "How long the tenancy runs, the notice rules and the rent-increase clause decide most of what happens next. Start with what is written down.",
       },
       {
         title: "Establish what has been served",
@@ -879,7 +879,7 @@ export const legalProblems: LegalProblem[] = [
     title: "Someone is claiming your land",
     situation: "A competing claim, a survey dispute, or people on the land who should not be there.",
     summary:
-      "How land holding works under the Land Use Act 1978, what documents actually establish a claim, and why land matters are the ones to take to a lawyer earliest.",
+      "How land ownership works under the Land Use Act 1978, which papers actually prove your right to land, and why you should see a lawyer about land problems early.",
     icon: "map",
     urgency: "time-sensitive",
     triage: [
@@ -934,7 +934,7 @@ export const legalProblems: LegalProblem[] = [
     rightsInThisSituation: [
       "The Land Use Act 1978 vests land in each state in the Governor, held in trust, and what a holder has is a right of occupancy",
       "Certain transactions require the consent of the Governor, and the absence of consent affects them",
-      "A registered instrument and a documented chain of transactions are what an interest is proved with",
+      "You prove your right to land with registered papers and a clear record of every past sale",
       "Self-help — entering, fencing or building on disputed land — creates its own legal exposure",
     ],
     doNow: [
@@ -1001,7 +1001,7 @@ export const legalProblems: LegalProblem[] = [
     title: "You were dismissed, not paid, or badly treated at work",
     situation: "Your employment has ended, wages are outstanding, or the workplace has become untenable.",
     summary:
-      "What the Labour Act and your contract of employment govern, what the National Industrial Court exists for, and how to build the record an employment claim actually runs on.",
+      "What the Labour Act and your employment contract cover, what the National Industrial Court does, and how to keep the records you will need if you make a claim.",
     icon: "hard-hat",
     urgency: "time-sensitive",
     triage: [
@@ -1089,7 +1089,7 @@ export const legalProblems: LegalProblem[] = [
       },
       {
         title: "Get advice on the forum",
-        body: "Employment matters have their own court and their own procedure. Advice on where a claim belongs saves months.",
+        body: "Work disputes have their own court and their own rules. Getting advice on where to take your case can save months.",
       },
       {
         title: "Consider mediation",
@@ -1127,7 +1127,7 @@ export const legalProblems: LegalProblem[] = [
     title: "A business relationship has broken down",
     situation: "A partner, co-director, supplier or customer relationship has stopped working.",
     summary:
-      "Where the governing documents sit, what CAMA 2020 provides for companies, and why the choice between negotiation, mediation, arbitration and court is made early rather than late.",
+      "Where to find your company's key documents, what company law (CAMA 2020) says, and why you should decide early whether to talk it out, use a mediator or go to court.",
     icon: "briefcase",
     urgency: "considered",
     triage: [
@@ -1239,7 +1239,7 @@ export const legalProblems: LegalProblem[] = [
     title: "The other side is not doing what the agreement says",
     situation: "Work was not delivered, payment did not arrive, or terms are being ignored.",
     summary:
-      "What a contract obliges, what the agreement itself says about failure, and the sequence that gets most contract problems resolved before anyone goes near a court.",
+      "What a contract requires each side to do, what it says happens when someone fails, and the steps that settle most contract problems without going to court.",
     icon: "signature",
     urgency: "considered",
     triage: [
@@ -1300,7 +1300,7 @@ export const legalProblems: LegalProblem[] = [
       "Read the agreement end to end, including the parts nobody reads",
       "Assemble invoices, delivery records, messages and transfers in date order",
       "Write to the other side setting out precisely what is outstanding",
-      "Keep performing your own obligations unless advised otherwise",
+      "Keep doing your own part of the deal unless a lawyer advises otherwise",
       "Note when the problem first arose — limitation runs from somewhere",
     ],
     avoid: [
@@ -1317,7 +1317,7 @@ export const legalProblems: LegalProblem[] = [
       },
       {
         title: "Identify the actual failure",
-        body: "Late, defective, or not at all — the remedy in the agreement usually differs by category.",
+        body: "Late, poor quality, or not at all — the agreement usually gives a different solution for each.",
       },
       {
         title: "Put it in writing",
@@ -1406,7 +1406,7 @@ export const legalProblems: LegalProblem[] = [
       },
     ],
     rightsInThisSituation: [
-      "A debt is a civil obligation — non-payment of an ordinary debt is not itself a criminal offence",
+      "Owing money is a civil matter — not paying an ordinary debt is not, on its own, a crime",
       "Recovery is pursued through the agreement and, where necessary, the courts",
       "The Nigeria Data Protection Act 2023 governs how personal data is used, including by lenders and recovery agents",
       "Threats, intimidation and harassment are not lawful recovery methods",
@@ -1433,7 +1433,7 @@ export const legalProblems: LegalProblem[] = [
       },
       {
         title: "Read the agreement",
-        body: "Interest, default provisions and any security given. Security is what turns a debt into a threat to an asset.",
+        body: "Check the interest, what happens if you miss a payment, and whether you pledged any property. Pledged property is what the lender can go after.",
       },
       {
         title: "Make a written demand or a written dispute",
@@ -1524,9 +1524,9 @@ export const legalProblems: LegalProblem[] = [
       },
     ],
     rightsInThisSituation: [
-      "The FCCPA 2018 establishes consumer protections and a Commission with a statutory role in enforcing them",
+      "The FCCPA 2018 protects consumers and set up a Commission to enforce those protections",
       "Consumers are generally entitled to goods that are fit for purpose and to information that is not misleading",
-      "Sector regulators operate their own complaint procedures alongside the general framework",
+      "Industry regulators (for banks, telecoms and so on) also have their own complaints processes",
       "A written complaint trail is what every one of these routes runs on",
     ],
     doNow: [
@@ -1769,7 +1769,7 @@ export const legalProblems: LegalProblem[] = [
       },
     ],
     rightsInThisSituation: [
-      "Family matters may be governed by statutory, customary or Islamic law, and which applies depends on the circumstances",
+      "Family matters can fall under written law, customary law or Islamic law, depending on the situation",
       "The Child's Rights Act 2003, as adopted in a state, places the best interests of the child at the centre of decisions affecting them",
       "The Violence Against Persons (Prohibition) Act 2015 covers domestic violence and related conduct",
       "The Constitution protects the dignity of the person and family life",
@@ -2245,12 +2245,12 @@ export const publicQuestions: PublicQuestion[] = [
     topic: "Money & debt",
     askedOn: "2026-08-11",
     generalAnswer: [
-      "An ordinary debt is a civil obligation. Failing to pay a debt is not, by itself, a criminal offence, and a lender's remedy for non-payment is a civil one — the agreement, and where necessary the courts.",
+      "Owing money is a civil matter, not a crime. If you do not pay an ordinary debt, the lender can rely on the agreement and, if needed, go to a civil court — not the police.",
       "That is a different question from whether an allegation of fraud has been made, which is a criminal allegation and is treated as one. If you are being told that non-payment alone will result in arrest, that is worth taking to a lawyer rather than acting on.",
       "Separately, threats and contacting a borrower's friends or family about their debt raise issues of their own, including under data protection law.",
     ],
     whatTheLawSays: [
-      "A debt arising from a loan or a contract is a civil obligation enforced through civil process",
+      "Money owed under a loan or contract is recovered through civil courts, not criminal ones",
       "The Nigeria Data Protection Act 2023 governs how personal data is processed, including by lenders and recovery agents",
       "Threats and harassment are not lawful methods of recovery",
     ],
@@ -2276,7 +2276,7 @@ export const publicQuestions: PublicQuestion[] = [
     askedOn: "2026-08-06",
     generalAnswer: [
       "Start with two things: what the contract said about termination, and what the payment record shows. Almost every employment matter turns on those two, and both can be assembled before you take advice.",
-      "The Labour Act governs wages, conditions and termination for the categories of worker it covers, and the contract governs alongside it. The National Industrial Court has jurisdiction over employment matters, but many are resolved by written complaint or mediation long before a claim is filed.",
+      "The Labour Act covers pay, working conditions and dismissal for the workers it applies to, and your contract applies alongside it. Work disputes go to the National Industrial Court, but many are settled by a written complaint or mediation long before anyone goes to court.",
     ],
     whatTheLawSays: [
       "The Labour Act governs wages, working conditions and termination for the categories of worker it covers",

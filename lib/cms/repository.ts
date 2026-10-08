@@ -9,6 +9,12 @@ import { checklistItems, quizQuestions } from "@/lib/content/learning";
 import { courtProfiles } from "@/lib/content/case-law";
 import { constitutionChapters } from "@/lib/content/constitution";
 import { constitutionSections } from "@/lib/content/constitution-sections";
+import { programmeCategories } from "@/lib/content/programmes";
+import {
+  contactPage,
+  donatePage,
+  type LinkedCard,
+} from "@/lib/content/standing-pages";
 import type { LiveEvent, MediaDetail, RelatedRefs } from "@/lib/content/types";
 import type { PageBlock } from "./blocks";
 import {
@@ -179,6 +185,17 @@ function relatedField(related: RelatedRefs | undefined): string {
     ([, value]) => Array.isArray(value) && value.length > 0
   );
   return entries.length > 0 ? JSON.stringify(Object.fromEntries(entries)) : "";
+}
+
+function linkCards(items: LinkedCard[]): string {
+  return serialiseRows(
+    items.map((item) => ({
+      title: item.title,
+      body: item.body,
+      linkLabel: item.linkLabel,
+      href: item.href,
+    }))
+  );
 }
 
 function metaFields(meta: EditorialMeta): Record<string, string> {
@@ -451,6 +468,7 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
         format: item.format,
         series: item.series ?? "",
         seriesSlug: item.seriesSlug ?? "",
+        programme: item.programme ?? "",
         host: item.host ?? "",
         duration: item.duration ?? "",
         season: item.season === undefined ? "" : String(item.season),
@@ -535,6 +553,7 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
         kind: item.kind,
         cadence: item.cadence,
         host: item.host ?? "",
+        programme: item.programme ?? "",
         icon: item.icon,
         slug: item.slug,
         seasons: serialiseRows(
@@ -1118,6 +1137,164 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
             areas: option.areas.join(", "),
           }))
         ),
+      },
+    }))
+  );
+
+  // The structural records below ship published for the same reason `pages`
+  // do: seeding must not take the menu, the footer or a standing page offline
+  // until someone presses publish.
+  store.set(
+    "programmes",
+    programmeCategories.map((item) => ({
+      id: `programme-${item.slug}`,
+      collection: "programmes" as const,
+      title: item.name,
+      subtitle: item.blurb,
+      status: "published" as const,
+      updatedAt: stamp,
+      publicHref: `/programmes/${item.slug}`,
+      fields: {
+        name: item.name,
+        blurb: item.blurb,
+        description: item.description,
+        icon: item.icon,
+        readMoreLabel: item.readMore.label,
+        readMoreHref: item.readMore.href,
+        slug: item.slug,
+      },
+    }))
+  );
+
+  store.set(
+    "footer-columns",
+    seed.footerColumns.map((column) => ({
+      id: column.id,
+      collection: "footer-columns" as const,
+      title: column.heading,
+      subtitle: `${column.links.length} links`,
+      status: "published" as const,
+      updatedAt: stamp,
+      fields: {
+        heading: column.heading,
+        links: serialiseRows(
+          column.links.map((link) => ({ label: link.label, href: link.href }))
+        ),
+      },
+    }))
+  );
+
+  store.set("contact-page", [
+    {
+      id: "contact",
+      collection: "contact-page" as const,
+      title: contactPage.title,
+      subtitle: "/contact",
+      status: "published" as const,
+      updatedAt: stamp,
+      publicHref: "/contact",
+      fields: {
+        eyebrow: contactPage.eyebrow,
+        title: contactPage.title,
+        lede: contactPage.lede,
+        routesEyebrow: contactPage.routes.eyebrow,
+        routesTitle: contactPage.routes.title,
+        routesDescription: contactPage.routes.description,
+        routes: linkCards(contactPage.routes.items),
+        formEyebrow: contactPage.form.eyebrow,
+        formTitle: contactPage.form.title,
+        formDescription: contactPage.form.description,
+        desksHeading: contactPage.desks.heading,
+        desks: linkCards(contactPage.desks.items),
+        metaTitle: contactPage.metaTitle,
+        metaDescription: contactPage.metaDescription,
+      },
+    },
+  ]);
+
+  store.set("donate-page", [
+    {
+      id: "donate",
+      collection: "donate-page" as const,
+      title: donatePage.title,
+      subtitle: "/donate",
+      status: "published" as const,
+      updatedAt: stamp,
+      publicHref: "/donate",
+      fields: {
+        eyebrow: donatePage.eyebrow,
+        title: donatePage.title,
+        lede: donatePage.lede,
+        badges: encodeList(donatePage.badges),
+        whyEyebrow: donatePage.why.eyebrow,
+        whyTitle: donatePage.why.title,
+        whyDescription: donatePage.why.description,
+        whyParagraphs: encodeList(donatePage.why.paragraphs),
+        giveHeading: donatePage.give.heading,
+        giveBody: donatePage.give.body,
+        giveUrl: donatePage.give.url,
+        giveButton: donatePage.give.buttonLabel,
+        givePendingHeading: donatePage.give.pendingHeading,
+        givePendingBody: donatePage.give.pendingBody,
+        givePendingLink: donatePage.give.pendingLinkLabel,
+        giveNote: donatePage.give.note,
+        fundsEyebrow: donatePage.funds.eyebrow,
+        fundsTitle: donatePage.funds.title,
+        fundsDescription: donatePage.funds.description,
+        funds: serialiseRows(
+          donatePage.funds.items.map((item) => ({
+            title: item.title,
+            body: item.body,
+            icon: item.icon,
+          }))
+        ),
+        boundariesEyebrow: donatePage.boundaries.eyebrow,
+        boundariesTitle: donatePage.boundaries.title,
+        boundariesIntro: donatePage.boundaries.intro,
+        boundaries: linkCards(donatePage.boundaries.items),
+        otherWaysEyebrow: donatePage.otherWays.eyebrow,
+        otherWaysTitle: donatePage.otherWays.title,
+        otherWaysDescription: donatePage.otherWays.description,
+        otherWays: linkCards(donatePage.otherWays.items),
+        metaTitle: donatePage.metaTitle,
+        metaDescription: donatePage.metaDescription,
+      },
+    },
+  ]);
+
+  store.set(
+    "fundamental-rights",
+    seed.fundamentalRights.map((item) => ({
+      id: `fundamental-right-${item.section}`,
+      collection: "fundamental-rights" as const,
+      title: item.title,
+      subtitle: `Section ${item.section}`,
+      status: "published" as const,
+      updatedAt: stamp,
+      publicHref: "/constitution",
+      fields: {
+        title: item.title,
+        summary: item.summary,
+        href: item.href ?? "",
+        section: item.section,
+      },
+    }))
+  );
+
+  store.set(
+    "safety-series",
+    seed.safetySeries.map((item) => ({
+      id: item.id,
+      collection: "safety-series" as const,
+      title: item.name,
+      subtitle: item.headline,
+      status: "published" as const,
+      updatedAt: stamp,
+      publicHref: "/stay-safe",
+      fields: {
+        name: item.name,
+        headline: item.headline,
+        description: item.description,
       },
     }))
   );

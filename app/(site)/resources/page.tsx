@@ -61,8 +61,8 @@ export default async function ResourcesPage() {
       <PageHeader
         trail={[{ label: "Home", href: "/" }, { label: "Resource centre" }]}
         eyebrow="Resource centre"
-        title="The things you use, rather than read"
-        lede="Checklists to work through before a decision, the plain-language glossary for the words that get in the way, and the official sources to check before you rely on anything — including us."
+        title="Checklists, word lists and official links"
+        lede="Checklists to go through before a big decision, simple explanations of legal words, and official sources you can check — including against what we say."
       />
 
       <Section className="pt-12 sm:pt-14 lg:pt-16">

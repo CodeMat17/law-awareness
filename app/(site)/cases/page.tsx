@@ -115,8 +115,8 @@ export default async function CasesPage() {
           { label: "Case law" },
         ]}
         eyebrow="Case Law Explorer"
-        title="A judgment is an answer to a question somebody actually asked"
-        lede="Statutes say what the rule is. Judgments say what it meant when it met a real dispute. Search decided Nigerian cases by court, subject, issue and year — each one summarised in plain language, with what it settles and, just as importantly, what it does not."
+        title="Court decisions, explained"
+        lede="A law says what the rule is. A court decision shows what it meant in a real dispute. Search Nigerian cases by court, subject and year — each one explained in everyday words, including what it decided and what it did not."
       />
 
       {/* What this is ------------------------------------------------------- */}

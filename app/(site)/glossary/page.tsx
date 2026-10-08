@@ -32,7 +32,7 @@ export default async function GlossaryPage() {
       <PageHeader
         trail={[{ label: "Home", href: "/" }, { label: "Glossary" }]}
         eyebrow="Law in plain language"
-        title="The words that keep people out of their own case"
+        title="Legal words, explained simply"
         lede="Every entry gives a simple definition, an example from ordinary life, and why the term matters — with links to the law and the guides where it appears."
       />
 

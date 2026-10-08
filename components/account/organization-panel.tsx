@@ -57,7 +57,7 @@ const plans = [
   {
     value: "business" as const,
     name: "Business",
-    body: "Regulatory alerts, compliance resources, checklists, saved resources, the compliance calendar and business legal education.",
+    body: "Regulatory alerts, compliance resources, checklists, the compliance calendar and business legal education.",
   },
   {
     value: "enterprise" as const,
@@ -133,9 +133,9 @@ function CreateOrganization() {
         Set up an organization account
       </h2>
       <p className="mt-3 max-w-2xl text-[0.92rem] leading-relaxed text-muted-foreground">
-        An organization account gives a team one shared library, one set of
-        followed topics, and a place to see the compliance areas that apply to
-        the work it actually does. Nothing you record here is published.
+        An organization account gives a team one set of followed topics and a
+        place to see the compliance areas that apply to the work it actually
+        does. Nothing you record here is published.
       </p>
 
       <form
@@ -286,7 +286,6 @@ function OrganizationDetail({
   topics: AlertTopic[];
 }) {
   const members = useQuery(api.organizations.listMembers, { orgId: org.id });
-  const shared = useQuery(api.library.listOrgBookmarks, { orgId: org.id });
   const orgTopics = useQuery(api.library.listOrgTopics, { orgId: org.id });
   const toggleFollow = useMutation(api.library.toggleTopicFollow);
   const [pendingTopic, setPendingTopic] = useState<string | null>(null);
@@ -425,50 +424,6 @@ function OrganizationDetail({
             );
           })}
         </ul>
-      </section>
-
-      {/* Shared resources --------------------------------------------------- */}
-      <section className="rounded-2xl border border-hairline bg-card p-6 sm:p-8">
-        <h2 className="text-h4 text-foreground">Shared resources</h2>
-        <p className="mt-2 max-w-3xl text-[0.88rem] leading-relaxed text-muted-foreground">
-          What members have saved to the organization rather than to
-          themselves.
-        </p>
-
-        {shared === undefined ? (
-          <p className="mt-4 text-[0.88rem] text-muted-foreground">Loading…</p>
-        ) : shared.length === 0 ? (
-          <div className="mt-5 rounded-xl border border-dashed border-hairline bg-surface p-6 text-center">
-            <p className="text-[0.92rem] font-extrabold text-foreground">
-              Nothing shared yet
-            </p>
-            <p className="mx-auto mt-2 max-w-md text-[0.85rem] leading-relaxed text-muted-foreground">
-              Saved items are private by default. Anything saved to the
-              organization appears here for every member.
-            </p>
-          </div>
-        ) : (
-          <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-            {shared.map((item) => (
-              <li
-                key={item.id}
-                className="rounded-xl border border-hairline bg-surface p-4"
-              >
-                <p className="text-eyebrow text-muted-foreground">
-                  {item.group}
-                </p>
-                <p className="mt-1.5 text-[0.92rem] leading-snug font-extrabold text-foreground">
-                  <Link href={item.href} className="link-underline">
-                    {item.title}
-                  </Link>
-                </p>
-                <p className="mt-1 line-clamp-2 text-[0.83rem] leading-relaxed text-muted-foreground">
-                  {item.summary}
-                </p>
-              </li>
-            ))}
-          </ul>
-        )}
       </section>
     </div>
   );

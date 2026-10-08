@@ -152,36 +152,36 @@ export function MobileMenu({ open, onClose, groups }: MobileMenuProps) {
 
           <div className="shrink-0 space-y-3 border-t border-hairline bg-surface px-5 py-4">
             <Link
-              href="/ask"
+              href="/live"
               onClick={onClose}
               className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary text-[0.95rem] font-extrabold text-primary-foreground transition-opacity hover:opacity-90"
+            >
+              <span className="size-1.5 rounded-full bg-live" aria-hidden />
+              Watch Live
+            </Link>
+            <Link
+              href="/ask"
+              onClick={onClose}
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-hairline bg-card text-[0.9rem] font-extrabold text-foreground transition-colors hover:border-primary/45"
             >
               Ask a Legal Question
               <ArrowRight className="size-4" />
             </Link>
-            <Link
-              href="/donate"
-              onClick={onClose}
-              className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-primary/45 text-[0.9rem] font-extrabold text-brand-ink transition-colors hover:bg-primary/10"
-            >
-              <Heart className="size-4" />
-              Donate
-            </Link>
             <div className="grid grid-cols-2 gap-3">
               <Link
-                href="/business"
+                href="/programmes"
                 onClick={onClose}
                 className="flex h-11 items-center justify-center rounded-xl border border-hairline bg-card text-[0.88rem] font-bold text-foreground transition-colors hover:border-primary/45"
               >
-                Business
+                Programmes
               </Link>
               <Link
-                href="/live"
+                href="/donate"
                 onClick={onClose}
-                className="flex h-11 items-center justify-center gap-2 rounded-xl border border-hairline bg-card text-[0.88rem] font-bold text-foreground transition-colors hover:border-primary/45"
+                className="flex h-11 items-center justify-center gap-2 rounded-xl border border-primary/45 text-[0.88rem] font-extrabold text-brand-ink transition-colors hover:bg-primary/10"
               >
-                <span className="size-1.5 rounded-full bg-live" aria-hidden />
-                Live
+                <Heart className="size-4" />
+                Donate
               </Link>
             </div>
           </div>

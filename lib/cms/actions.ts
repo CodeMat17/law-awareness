@@ -14,6 +14,7 @@ import {
 } from "./collections";
 import {
   indexRoutesFor,
+  layoutCollections,
   publicHrefFor,
   recordIdFrom,
   slugify,
@@ -72,6 +73,9 @@ function revalidateFor(
   for (const route of indexRoutesFor(collectionId, fields)) {
     revalidatePath(route);
   }
+  // The menu and the footer render in the site layout, so they are on every
+  // route at once and no list of routes could name them all.
+  if (layoutCollections.has(collectionId)) revalidatePath("/", "layout");
   // The public read of this collection is cached by tag rather than by route,
   // because the ticker renders in the site layout and a route-based
   // invalidation would have to name every page on the site.

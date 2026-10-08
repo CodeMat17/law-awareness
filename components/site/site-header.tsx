@@ -171,13 +171,16 @@ export function SiteHeader({
               <span className="sr-only xl:hidden">Donate</span>
             </Link>
 
+            {/*
+              The station's own call to action. Asking a question still lives
+              under Legal Help and in the mobile menu.
+            */}
             <Link
-              href="/ask"
-              className="hidden h-9 items-center gap-1.5 rounded-full bg-primary px-3.5 text-[0.83rem] font-extrabold whitespace-nowrap text-primary-foreground transition-opacity hover:opacity-90 lg:inline-flex xl:px-4"
+              href="/live"
+              className="hidden h-9 items-center gap-2 rounded-full bg-primary px-3.5 text-[0.83rem] font-extrabold whitespace-nowrap text-primary-foreground transition-opacity hover:opacity-90 lg:inline-flex xl:px-4"
             >
-              <span className="xl:hidden">Ask a Question</span>
-              <span className="hidden xl:inline">Ask a Legal Question</span>
-           
+              <span aria-hidden className="size-1.5 rounded-full bg-live" />
+              Watch Live
             </Link>
 
             <button

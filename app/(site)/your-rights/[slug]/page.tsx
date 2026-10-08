@@ -14,7 +14,6 @@ import {
   StepList,
   TickList,
 } from "@/components/site/knowledge";
-import { SaveButton } from "@/components/account/save-button";
 import { getContent } from "@/lib/content/repository";
 
 /**
@@ -78,17 +77,6 @@ export default async function RightGuidePage(
         <p className="mt-6 text-[0.85rem] font-semibold text-brand-ink">
           Situation: {guide.situation}
         </p>
-        <div className="mt-6">
-          <SaveButton
-            target={{
-              kind: "right",
-              title: guide.title,
-              summary: guide.summary,
-              group: `Your Rights · ${guide.category}`,
-              href: `/your-rights/${guide.slug}`,
-            }}
-          />
-        </div>
       </PageHeader>
 
       <KnowledgeLayout

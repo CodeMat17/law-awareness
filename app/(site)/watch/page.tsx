@@ -60,8 +60,8 @@ export default async function WatchPage() {
       <PageHeader
         trail={[{ label: "Home", href: "/" }, { label: "Watch" }]}
         eyebrow="Watch"
-        title="Legal education you can sit down with"
-        lede="Explainers, documentaries, interviews and recorded sessions. Each one is chaptered, carries a written record of what it covers, and links to the law behind it."
+        title="Watch Law Awareness TV"
+        lede="Shows, explainers, documentaries and interviews about Nigerian law. Jump to any part with chapters, read a written summary, and follow links to the law behind it."
       />
 
       {/* On air, or what is next — the live hub's own state, surfaced here. */}
@@ -105,9 +105,9 @@ export default async function WatchPage() {
         <Section tone="surface" className="py-14 sm:py-16 lg:py-20">
           <Reveal>
             <SectionHeader
-              eyebrow="Programmes"
-              title={`${series.length} strands to follow`}
-              description="Each series keeps its own running order, so a film sits in a sequence rather than on its own."
+              eyebrow="Shows"
+              title={`${series.length} shows to follow`}
+              description="Each show runs in order, episode by episode."
             />
           </Reveal>
           <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -125,8 +125,8 @@ export default async function WatchPage() {
           <Reveal>
             <SectionHeader
               eyebrow="Trending this month"
-              title="What people are being pointed to"
-              description="Chosen by the editorial desks. The platform publishes no view counts — a number we cannot stand behind is not a recommendation."
+              title="Popular right now"
+              description="Picked by our editors. We do not publish view counts."
             />
           </Reveal>
           <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
@@ -143,13 +143,13 @@ export default async function WatchPage() {
         <Reveal>
           <SectionHeader
             eyebrow="Everything to watch"
-            title={`${videos.length} films and sessions`}
+            title={`${videos.length} shows and films`}
             description="Filter by topic, or search for the subject you are trying to understand."
           />
         </Reveal>
         <Reveal delay={0.06} className="mt-10">
           <FilterGrid
-            label="Search films"
+            label="Search shows"
             placeholder="Search — rights, company, data, court, copyright…"
             filters={[
               { value: "all", label: "All topics" },
@@ -158,7 +158,7 @@ export default async function WatchPage() {
             items={items}
             className="sm:grid-cols-2 xl:grid-cols-3"
             emptyTitle="Nothing matched"
-            emptyBody="Try a broader word, or browse the programmes above."
+            emptyBody="Try a broader word, or browse the shows above."
           />
         </Reveal>
 
@@ -167,8 +167,8 @@ export default async function WatchPage() {
             <div>
               <p className="text-h4 text-foreground">Prefer to listen?</p>
               <p className="mt-2 max-w-xl text-[0.9rem] leading-relaxed text-muted-foreground">
-                The same knowledge base runs as a podcast network — episodes,
-                chapters and written records included.
+                Law Awareness TV is also a podcast, for when you would rather
+                listen than watch.
               </p>
             </div>
             <Link

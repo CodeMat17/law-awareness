@@ -60,6 +60,7 @@ export const mediaSeries: MediaSeries[] = [
   {
     id: "sr-1",
     slug: "the-constitution-plainly",
+    programme: "rights-and-justice",
     kind: "video",
     title: "The Constitution, Plainly",
     tagline: "Chapter IV, one idea at a time",
@@ -96,6 +97,7 @@ export const mediaSeries: MediaSeries[] = [
   {
     id: "sr-2",
     slug: "business-legal-basics",
+    programme: "corporate-law-and-regulation",
     kind: "video",
     title: "Business Legal Basics",
     tagline: "The law a founder meets in the first two years",
@@ -116,6 +118,7 @@ export const mediaSeries: MediaSeries[] = [
   {
     id: "sr-3",
     slug: "in-the-public-interest",
+    programme: "courtroom-and-judicial-news",
     kind: "video",
     title: "In the Public Interest",
     tagline: "Longer films on how the system actually works",
@@ -133,6 +136,7 @@ export const mediaSeries: MediaSeries[] = [
   {
     id: "sr-4",
     slug: "before-you-sign",
+    programme: "everyday-law",
     kind: "podcast",
     title: "Before You Sign",
     tagline: "Read it before it reads you",
@@ -160,6 +164,7 @@ export const mediaSeries: MediaSeries[] = [
   {
     id: "sr-5",
     slug: "everyday-law",
+    programme: "everyday-law",
     kind: "podcast",
     title: "Everyday Law",
     tagline: "The law in the situations you did not plan for",
@@ -180,6 +185,7 @@ export const mediaSeries: MediaSeries[] = [
   {
     id: "sr-6",
     slug: "know-your-rights-live",
+    programme: "rights-and-justice",
     kind: "live",
     title: "Know Your Rights Live",
     tagline: "Open sessions with moderated questions",
@@ -202,6 +208,7 @@ export const videos: MediaDetail[] = [
   {
     id: "md-2",
     slug: "what-cama-changed",
+    programme: "corporate-law-and-regulation",
     kind: "video",
     format: "explainer",
     title: "What CAMA 2020 changed for small companies",
@@ -301,6 +308,7 @@ export const videos: MediaDetail[] = [
   {
     id: "md-3",
     slug: "fair-hearing-explained",
+    programme: "rights-and-justice",
     kind: "video",
     format: "explainer",
     title: "Section 36: what a fair hearing really means",
@@ -394,6 +402,7 @@ export const videos: MediaDetail[] = [
   {
     id: "md-5",
     slug: "police-stop-what-to-do",
+    programme: "law-enforcement",
     kind: "video",
     format: "short",
     title: "Stopped on the road: the first two minutes",
@@ -477,6 +486,7 @@ export const videos: MediaDetail[] = [
   {
     id: "md-6",
     slug: "customer-data-webinar",
+    programme: "corporate-law-and-regulation",
     kind: "video",
     format: "webinar",
     title: "The data you collect without noticing",
@@ -570,6 +580,7 @@ export const videos: MediaDetail[] = [
   {
     id: "md-7",
     slug: "inside-the-court-process",
+    programme: "courtroom-and-judicial-news",
     kind: "video",
     format: "documentary",
     title: "Inside the process: what a case looks like from the door",
@@ -667,6 +678,7 @@ export const videos: MediaDetail[] = [
   {
     id: "md-8",
     slug: "creators-and-copyright",
+    programme: "everyday-law",
     kind: "video",
     format: "interview",
     title: "Creators and the Copyright Act 2022",
@@ -754,6 +766,7 @@ export const podcastEpisodes: MediaDetail[] = [
   {
     id: "md-1",
     slug: "before-you-sign-tenancy",
+    programme: "everyday-law",
     kind: "podcast",
     format: "episode",
     title: "Before You Sign: tenancy agreements",
@@ -851,6 +864,7 @@ export const podcastEpisodes: MediaDetail[] = [
   {
     id: "md-4",
     slug: "consumer-complaint-route",
+    programme: "everyday-law",
     kind: "podcast",
     format: "episode",
     title: "When the seller says no: consumer complaints in practice",
@@ -934,6 +948,7 @@ export const podcastEpisodes: MediaDetail[] = [
   {
     id: "md-9",
     slug: "before-you-sign-offer-letter",
+    programme: "everyday-law",
     kind: "podcast",
     format: "episode",
     title: "Before You Sign: the offer letter",
@@ -1017,6 +1032,7 @@ export const podcastEpisodes: MediaDetail[] = [
   {
     id: "md-10",
     slug: "scams-that-look-official",
+    programme: "crime-and-safety",
     kind: "podcast",
     format: "audio-explainer",
     title: "Scams that look official",
@@ -1099,6 +1115,7 @@ export const podcastEpisodes: MediaDetail[] = [
   {
     id: "md-11",
     slug: "before-you-sign-partnership",
+    programme: "corporate-law-and-regulation",
     kind: "podcast",
     format: "episode",
     title: "Before You Sign: going into business with a friend",
@@ -1189,6 +1206,7 @@ export const liveEvents: LiveEvent[] = [
   {
     id: "md-live",
     slug: "know-your-rights-police-encounters",
+    programme: "law-enforcement",
     kind: "live",
     format: "live-session",
     title: "Know Your Rights: police encounters, explained",
@@ -1297,6 +1315,7 @@ export const liveEvents: LiveEvent[] = [
   {
     id: "md-live-2",
     slug: "hiring-your-first-employee",
+    programme: "corporate-law-and-regulation",
     kind: "live",
     format: "live-session",
     title: "Hiring your first employee: an open clinic",
@@ -1363,6 +1382,7 @@ export const liveEvents: LiveEvent[] = [
   {
     id: "md-live-3",
     slug: "cama-2020-what-changed",
+    programme: "corporate-law-and-regulation",
     kind: "live",
     format: "live-session",
     title: "CAMA 2020: what actually changed for small companies",

@@ -42,7 +42,7 @@ export default async function AmendmentsPage() {
         ]}
         eyebrow="Law versioning"
         title="Laws change. The old version does not stop existing."
-        lede="Every instrument this platform explains has a history: what was enacted, what repealed or altered it, and what is in force today. Nothing here is overwritten when a law changes — a reader holding a copy of a repealed Act needs to see where it sits, not be told it never existed."
+        lede="Every law we explain has a history: when it was passed, what replaced or changed it, and what applies today. We never delete the old version — if you are holding an old copy of a law, you should be able to see where it fits."
       />
 
       {/* Why this exists ---------------------------------------------------- */}

@@ -3,14 +3,15 @@ import type {
   Checklist,
   ComplianceArea,
   EntryPoint,
+  FooterColumn,
   IssueCategory,
 
   NavGroup,
-  NavLink,
   PlatformStat,
   Quiz,
   TickerItem,
 } from "./types";
+import { programmeCategories } from "./programmes";
 
 /**
  * Seed content.
@@ -40,6 +41,7 @@ export {
   lawEntries,
   rightGuides,
   safetyGuides,
+  safetySeries,
 } from "./knowledge";
 
 /**
@@ -102,6 +104,28 @@ const REVIEWED = "2026-08-14";
 /* -------------------------------------------------------------------------- */
 
 export const navigation: NavGroup[] = [
+  // The channel comes first: Law Awareness TV is a station, and the menu reads
+  // like one. The categories are `programmeCategories` in ./programmes.
+  {
+    label: "Programmes",
+    href: "/programmes",
+    links: [
+      { label: "Live TV", href: "/live", description: "What is on air now, and what is next" },
+      { label: "Watch", href: "/watch", description: "Every show and film" },
+      { label: "Listen", href: "/listen", description: "Podcasts" },
+      ...programmeCategories.map((programme) => ({
+        label: programme.name,
+        href: `/programmes/${programme.slug}`,
+        description: programme.blurb,
+      })),
+      {
+        label: "Law & Society",
+        href: "/law-and-society",
+        description: "Legal news and current affairs",
+      },
+      { label: "Quizzes", href: "/quizzes", description: "Test what you know" },
+    ],
+  },
   {
     label: "Know the Law",
     href: "/know-the-law",
@@ -109,7 +133,12 @@ export const navigation: NavGroup[] = [
       {
         label: "The Constitution",
         href: "/constitution",
-        description: "Chapters, sections and plain-language explanation",
+        description: "Nigeria's highest law, explained simply",
+      },
+      {
+        label: "Constitutions of Africa & the USA",
+        href: "/constitutions",
+        description: "Every African constitution, and America's, side by side",
       },
       {
         label: "Criminal & Civil Law",
@@ -134,17 +163,17 @@ export const navigation: NavGroup[] = [
       {
         label: "Case law explorer",
         href: "/cases",
-        description: "Judgments explained in plain language",
+        description: "Court decisions explained in everyday words",
       },
       {
         label: "Amendment tracker",
         href: "/know-the-law/amendments",
-        description: "How each instrument has changed, version by version",
+        description: "How each law has changed over time",
       },
       {
         label: "Plain language glossary",
         href: "/glossary",
-        description: "Legal terms without the Latin",
+        description: "Legal words, explained simply",
       },
       {
         label: "Full law library",
@@ -165,7 +194,7 @@ export const navigation: NavGroup[] = [
       {
         label: "Arrest and detention",
         href: "/your-rights/arrest-and-detention",
-        description: "Personal liberty under section 35",
+        description: "Your freedom when you are held by the police",
       },
       {
         label: "Bail",
@@ -175,7 +204,7 @@ export const navigation: NavGroup[] = [
       {
         label: "Privacy and your data",
         href: "/your-rights/privacy",
-        description: "Section 37 and the NDP Act 2023",
+        description: "Who can use your personal information, and how",
       },
       {
         label: "At work",
@@ -195,7 +224,7 @@ export const navigation: NavGroup[] = [
       {
         label: "Business Legal Health Check",
         href: "/business/health-check",
-        description: "A 15-area readiness assessment",
+        description: "A quick check of how ready your business is",
       },
       {
         label: "Compliance Centre",
@@ -215,12 +244,12 @@ export const navigation: NavGroup[] = [
       {
         label: "Contract Knowledge Centre",
         href: "/business/contracts",
-        description: "Clause-by-clause education",
+        description: "What common contracts mean, term by term",
       },
       {
         label: "Business legal calendar",
         href: "/business/legal-calendar",
-        description: "The compliance rhythm of a business year",
+        description: "What your business must do, and when",
       },
       {
         label: "Industry legal hubs",
@@ -230,7 +259,7 @@ export const navigation: NavGroup[] = [
       {
         label: "Law for CEOs",
         href: "/business/ceo",
-        description: "Strategic legal risk briefings",
+        description: "Short briefings on the biggest legal risks",
       },
     ],
   },
@@ -264,12 +293,12 @@ export const navigation: NavGroup[] = [
       {
         label: "I have a legal problem",
         href: "/legal-help/problem",
-        description: "Guided educational pathway",
+        description: "Step-by-step help, starting from what happened",
       },
       {
         label: "Ask a question",
         href: "/ask",
-        description: "Moderated public Q&A",
+        description: "Ask, and get a public answer in everyday words",
       },
       {
         label: "Lawyer directory",
@@ -289,26 +318,11 @@ export const navigation: NavGroup[] = [
     ],
   },
   {
-    label: "Watch & Listen",
-    href: "/watch",
-    links: [
-      { label: "Watch", href: "/watch", description: "Explainers and documentaries" },
-      { label: "Listen", href: "/listen", description: "The podcast network" },
-      { label: "Live", href: "/live", description: "Scheduled legal education sessions" },
-      {
-        label: "Law & Society",
-        href: "/law-and-society",
-        description: "Legal news and current affairs",
-      },
-      { label: "Quizzes", href: "/quizzes", description: "Test what you know" },
-    ],
-  },
-  {
     label: "About",
     href: "/about",
     links: [
       {
-        label: "About Law TV",
+        label: "About Law Awareness TV",
         href: "/about",
         description: "Who we are and what we are for",
       },
@@ -337,27 +351,35 @@ export const navigation: NavGroup[] = [
   },
 ];
 
-export const footerColumns: { heading: string; links: NavLink[] }[] = [
+/**
+ * The footer's link columns. Seed for the "Footer links" collection in the CMS,
+ * which is what the site renders from once Convex is configured.
+ */
+export const footerColumns: FooterColumn[] = [
   {
+    id: "footer-watch",
+    heading: "Watch",
+    links: [
+      { label: "Live TV", href: "/live" },
+      { label: "Programmes", href: "/programmes" },
+      { label: "Watch", href: "/watch" },
+      { label: "Listen", href: "/listen" },
+      { label: "Law & Society", href: "/law-and-society" },
+    ],
+  },
+  {
+    id: "footer-explore",
     heading: "Explore",
     links: [
       { label: "Know the Law", href: "/know-the-law" },
       { label: "Your Rights", href: "/your-rights" },
       { label: "Business & Enterprise", href: "/business" },
       { label: "Stay Safe", href: "/stay-safe" },
-      { label: "Law & Society", href: "/law-and-society" },
+      { label: "Glossary", href: "/glossary" },
     ],
   },
   {
-    heading: "Media",
-    links: [
-      { label: "Watch", href: "/watch" },
-      { label: "Listen", href: "/listen" },
-      { label: "Live", href: "/live" },
-      { label: "Podcasts", href: "/listen" },
-    ],
-  },
-  {
+    id: "footer-business",
     heading: "Business",
     links: [
       { label: "Legal Health Check", href: "/business/health-check" },
@@ -368,6 +390,7 @@ export const footerColumns: { heading: string; links: NavLink[] }[] = [
     ],
   },
   {
+    id: "footer-help",
     heading: "Help",
     links: [
       { label: "Legal Help", href: "/legal-help" },
@@ -378,6 +401,7 @@ export const footerColumns: { heading: string; links: NavLink[] }[] = [
     ],
   },
   {
+    id: "footer-platform",
     heading: "Platform",
     links: [
       { label: "About", href: "/about" },
@@ -399,7 +423,7 @@ export const tickerItems: TickerItem[] = [
     label: "Legal update",
     tone: "update",
     headline:
-      "Chapter IV of the 1999 Constitution explained, right by right",
+      "Your basic rights under the Constitution, explained one by one",
     href: "/constitution/chapter-iv",
     publishedAt: "2026-09-05",
     status: "published",
@@ -447,7 +471,7 @@ export const tickerItems: TickerItem[] = [
     label: "Compliance",
     tone: "alert",
     headline:
-      "CAMA 2020 basics every registered business should understand",
+      "Company law basics every registered business should know",
     href: "/business/compliance/business-structure-and-registration",
     publishedAt: "2026-08-30",
     status: "published",
@@ -479,7 +503,7 @@ export const entryPoints: EntryPoint[] = [
     id: "ep-3",
     audience: "business",
     eyebrow: "For companies",
-    promise: "Stay aware of regulatory risk",
+    promise: "Keep up with new business rules",
     href: "/business/regulatory-watch",
     icon: "shield-check",
   },
@@ -487,7 +511,7 @@ export const entryPoints: EntryPoint[] = [
     id: "ep-4",
     audience: "professionals",
     eyebrow: "For professionals",
-    promise: "Track legal developments",
+    promise: "Follow legal news",
     href: "/law-and-society",
     icon: "gavel",
   },
@@ -495,7 +519,7 @@ export const entryPoints: EntryPoint[] = [
     id: "ep-5",
     audience: "learners",
     eyebrow: "For learners",
-    promise: "Learn law in plain language",
+    promise: "Learn legal words, simply",
     href: "/glossary",
     icon: "book-open",
   },
@@ -503,7 +527,7 @@ export const entryPoints: EntryPoint[] = [
     id: "ep-6",
     audience: "viewers",
     eyebrow: "For viewers",
-    promise: "Watch and listen",
+    promise: "Watch Law Awareness TV",
     href: "/watch",
     icon: "play",
   },
@@ -512,7 +536,7 @@ export const entryPoints: EntryPoint[] = [
 export const platformStats: PlatformStat[] = [
   {
     id: "st-1",
-    value: "21",
+    value: "20",
     label: "Subject areas",
     detail: "From constitutional rights to intellectual property",
   },
@@ -520,13 +544,13 @@ export const platformStats: PlatformStat[] = [
     id: "st-2",
     value: "Ch. IV",
     label: "Fundamental rights",
-    detail: "Every right in the 1999 Constitution, explained plainly",
+    detail: "Every basic right in the 1999 Constitution, explained simply",
   },
   {
     id: "st-3",
     value: "36 + FCT",
     label: "National coverage",
-    detail: "Federal law with state-level context",
+    detail: "Federal law, with notes on how states differ",
   },
   {
     id: "st-4",
@@ -543,16 +567,16 @@ export const platformStats: PlatformStat[] = [
 export const issueCategories: IssueCategory[] = [
   { slug: "police", name: "Police", blurb: "Stops, questioning, station visits", icon: "siren", href: "/your-rights/police-stop" },
   { slug: "arrest-bail", name: "Arrest & Bail", blurb: "Detention, charges, release", icon: "lock", href: "/your-rights/arrest-and-detention" },
-  { slug: "property", name: "Property", blurb: "Rent, landlords, possession", icon: "home", href: "/know-the-law/land-and-property" },
+  { slug: "property", name: "Property", blurb: "Rent, landlords, eviction", icon: "home", href: "/know-the-law/land-and-property" },
   { slug: "work", name: "Work", blurb: "Pay, dismissal, treatment", icon: "hard-hat", href: "/your-rights/at-work" },
   { slug: "family", name: "Family", blurb: "Marriage, children, inheritance", icon: "heart", href: "/know-the-law/family-law" },
   { slug: "business", name: "Business", blurb: "Registration, partners, disputes", icon: "briefcase", href: "/business" },
-  { slug: "contracts", name: "Contracts", blurb: "Agreements and obligations", icon: "signature", href: "/business/contracts" },
+  { slug: "contracts", name: "Contracts", blurb: "Agreements and what you owe", icon: "signature", href: "/business/contracts" },
   { slug: "online-safety", name: "Online Safety", blurb: "Scams, harassment, fraud", icon: "shield", href: "/stay-safe/online-scams" },
-  { slug: "money-debt", name: "Money & Debt", blurb: "Loans, recovery, guarantees", icon: "banknote", href: "/stay-safe/borrowing" },
+  { slug: "money-debt", name: "Money & Debt", blurb: "Loans, debt collectors, guarantors", icon: "banknote", href: "/stay-safe/borrowing" },
   { slug: "consumer", name: "Consumer Rights", blurb: "Faulty goods, poor service", icon: "shopping-bag", href: "/know-the-law/consumer-protection" },
   { slug: "traffic", name: "Traffic", blurb: "Road stops, fines, accidents", icon: "car", href: "/know-the-law/traffic" },
-  { slug: "land", name: "Land", blurb: "Title, surveys, the Land Use Act", icon: "map", href: "/stay-safe/buying-property" },
+  { slug: "land", name: "Land", blurb: "Land papers, surveys, buying safely", icon: "map", href: "/stay-safe/buying-property" },
   { slug: "court", name: "Court", blurb: "Process, hearings, what to expect", icon: "landmark", href: "/know-the-law/court-process" },
   { slug: "other", name: "Something else", blurb: "Start from a description", icon: "circle-question", href: "/legal-help/problem" },
 ];

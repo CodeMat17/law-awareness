@@ -23,6 +23,7 @@ import type {
   MediaSeries,
   MediaTranscript,
 } from "@/lib/content/types";
+import type { ProgrammeCategory } from "@/lib/content/programmes";
 
 /** Shared card shell, matching `cards.tsx` so media reads as the same system. */
 const cardBase =
@@ -415,7 +416,9 @@ export function MediaStage({ item }: { item: MediaDetail }) {
         ? `Streaming begins ${formatSchedule(item.scheduledFor)}. Nothing plays here before then.`
         : liveStatus === "ended"
           ? "The recording of this session is being prepared for on-demand playback. The chapters and written record below are already complete."
-          : `Playback for this ${item.kind === "podcast" ? "episode" : "film"} is not yet attached to the platform. Everything below - chapters, transcript and related law - is published and readable now.`;
+          : item.kind === "podcast"
+            ? "Audio for this episode is not yet attached to the platform. What it covers and the related law below are published now."
+            : "Playback for this film is not yet attached to the platform. Everything below - chapters, transcript and related law - is published and readable now.";
 
   return (
     <div className="mx-auto w-full overflow-hidden rounded-3xl border border-hairline lg:max-w-3xl">
@@ -564,5 +567,61 @@ export function TopicChips({ topics }: { topics: string[] }) {
         </li>
       ))}
     </ul>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Programmes                                                                  */
+/* -------------------------------------------------------------------------- */
+
+/** One programme category on the channel line-up. */
+export function ProgrammeCard({
+  programme,
+  itemCount,
+  variant = "card",
+}: {
+  programme: ProgrammeCategory;
+  itemCount?: number;
+  /** `tile` is the compact homepage strip; `card` is the /programmes grid. */
+  variant?: "card" | "tile";
+}) {
+  const href = `/programmes/${programme.slug}`;
+  if (variant === "tile") {
+    return (
+      <Link
+        href={href}
+        className="group flex w-full items-center gap-3 rounded-2xl border border-hairline bg-card p-4 transition-colors hover:border-primary/45"
+      >
+        <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-brand-ink">
+          <Icon name={programme.icon} className="size-5" strokeWidth={1.9} />
+        </span>
+        <span className="min-w-0 text-[0.9rem] leading-snug font-extrabold text-foreground">
+          {programme.name}
+        </span>
+        <ArrowUpRight className="ml-auto size-4 shrink-0 text-muted-foreground transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-brand-ink" />
+      </Link>
+    );
+  }
+  return (
+    <article className={cn(cardBase, "p-5 sm:p-6")}>
+      <span className="inline-flex size-11 items-center justify-center rounded-xl bg-primary/15 text-brand-ink">
+        <Icon name={programme.icon} className="size-5" strokeWidth={1.9} />
+      </span>
+      <h3 className="text-h4 mt-4 text-foreground">
+        <Link href={href} className="after:absolute after:inset-0">
+          {programme.name}
+        </Link>
+      </h3>
+      <p className="mt-2.5 text-[0.87rem] leading-relaxed text-muted-foreground">
+        {programme.blurb}
+      </p>
+      {typeof itemCount === "number" && (
+        <p className="mt-5 text-[0.75rem] font-semibold text-muted-foreground">
+          {itemCount === 0
+            ? "New episodes coming soon"
+            : `${itemCount} ${itemCount === 1 ? "episode" : "episodes"}`}
+        </p>
+      )}
+    </article>
   );
 }

@@ -75,7 +75,8 @@ export function MediaPlayer({ item }: { item: MediaDetail }) {
         </video>
       )}
 
-      {item.chapters.length > 0 && (
+      {/* Podcast episodes carry no chapters; audio gets the bare player. */}
+      {item.kind !== "podcast" && item.chapters.length > 0 && (
         <div className="border-t border-hairline p-4 sm:p-5">
           <p className="text-eyebrow text-muted-foreground">Jump to a chapter</p>
           <ul className="mt-3 flex flex-wrap gap-2">

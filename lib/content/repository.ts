@@ -29,12 +29,30 @@ import {
   fetchLawEntries,
   fetchProfileQuestions,
   fetchSafetyGuides,
+  fetchContactPage,
+  fetchDonatePage,
+  fetchFooterColumns,
+  fetchFundamentalRights,
+  fetchProgrammeCategories,
+  fetchSafetySeries,
 } from "./convex-repository";
 import * as seed from "./data";
 import { checklistItems, quizQuestions } from "./learning";
 import { caseRecords, courtProfiles } from "./case-law";
 import { constitutionSections } from "./constitution-sections";
-import { constitutionChapters, type ConstitutionChapter } from "./constitution";
+import {
+  constitutionChapters,
+  fundamentalRights,
+  type ConstitutionChapter,
+  type FundamentalRight,
+} from "./constitution";
+import { programmeCategories, type ProgrammeCategory } from "./programmes";
+import {
+  contactPage,
+  donatePage,
+  type ContactPageContent,
+  type DonatePageContent,
+} from "./standing-pages";
 import { lawHistories } from "./versions";
 import type {
   AlertTopic,
@@ -56,6 +74,7 @@ import type {
   ComplianceTopic,
   ContractType,
   EntryPoint,
+  FooterColumn,
   GlossaryTerm,
   HealthCheckQuestion,
   IndustryHub,
@@ -82,6 +101,7 @@ import type {
   RightGuide,
   RightSummary,
   SafetyGuide,
+  SafetySeries,
   SearchDocument,
   TickerItem,
   WorkflowStatus,
@@ -133,6 +153,14 @@ export interface DirectoryFacets {
  */
 export interface ContentRepository {
   getNavigation(): Promise<NavGroup[]>;
+  getFooterColumns(): Promise<FooterColumn[]>;
+  /** The programme line-up, in the order the channel lists it. */
+  getProgrammeCategories(): Promise<ProgrammeCategory[]>;
+  getProgramme(slug: string): Promise<ProgrammeCategory | null>;
+  /** The wording of the Contact page, or null when it is unpublished. */
+  getContactPage(): Promise<ContactPageContent | null>;
+  /** The wording of the Donate page, or null when it is unpublished. */
+  getDonatePage(): Promise<DonatePageContent | null>;
   getTickerItems(): Promise<TickerItem[]>;
   getEntryPoints(): Promise<EntryPoint[]>;
   getPlatformStats(): Promise<PlatformStat[]>;
@@ -148,6 +176,8 @@ export interface ContentRepository {
   /** Stay Safe guides, optionally narrowed to one series. */
   getSafetyGuides(series?: string): Promise<SafetyGuide[]>;
   getSafetyGuide(slug: string): Promise<SafetyGuide | null>;
+  /** The Stay Safe series featured as sections of their own. */
+  getSafetySeries(): Promise<SafetySeries[]>;
   getBusinessGuides(limit?: number): Promise<BusinessGuide[]>;
   getBusinessGuide(slug: string): Promise<BusinessGuideDetail | null>;
   getComplianceAreas(): Promise<ComplianceArea[]>;
@@ -217,6 +247,8 @@ export interface ContentRepository {
   /** The court hierarchy, ranked. */
   getCourtProfiles(): Promise<CourtProfile[]>;
   getConstitutionChapters(): Promise<ConstitutionChapter[]>;
+  /** The Chapter IV rights at a glance, in section order. */
+  getFundamentalRights(): Promise<FundamentalRight[]>;
   getConstitutionChapter(numeral: string): Promise<ConstitutionChapter | null>;
   /** Sections, optionally narrowed to one chapter, in document order. */
   getConstitutionSections(chapter?: string): Promise<ConstitutionSection[]>;
@@ -274,6 +306,27 @@ function take<T>(items: T[], limit?: number): T[] {
 export class InMemoryContentRepository implements ContentRepository {
   async getNavigation(): Promise<NavGroup[]> {
     return seed.navigation;
+  }
+
+  async getFooterColumns(): Promise<FooterColumn[]> {
+    return seed.footerColumns;
+  }
+
+  async getProgrammeCategories(): Promise<ProgrammeCategory[]> {
+    return programmeCategories;
+  }
+
+  async getProgramme(slug: string): Promise<ProgrammeCategory | null> {
+    const programmes = await this.getProgrammeCategories();
+    return programmes.find((item) => item.slug === slug) ?? null;
+  }
+
+  async getContactPage(): Promise<ContactPageContent | null> {
+    return contactPage;
+  }
+
+  async getDonatePage(): Promise<DonatePageContent | null> {
+    return donatePage;
   }
 
   async getTickerItems(): Promise<TickerItem[]> {
@@ -343,6 +396,10 @@ export class InMemoryContentRepository implements ContentRepository {
   async getSafetyGuide(slug: string): Promise<SafetyGuide | null> {
     const guide = seed.safetyGuides.find((item) => item.slug === slug);
     return guide && isPublished(guide) ? guide : null;
+  }
+
+  async getSafetySeries(): Promise<SafetySeries[]> {
+    return seed.safetySeries;
   }
 
   async getBusinessGuides(limit?: number): Promise<BusinessGuide[]> {
@@ -694,6 +751,10 @@ export class InMemoryContentRepository implements ContentRepository {
 
   async getCourtProfiles(): Promise<CourtProfile[]> {
     return [...courtProfiles].sort((a, b) => a.rank - b.rank);
+  }
+
+  async getFundamentalRights(): Promise<FundamentalRight[]> {
+    return fundamentalRights;
   }
 
   async getConstitutionChapters(): Promise<ConstitutionChapter[]> {
@@ -1398,6 +1459,57 @@ function mediaIcon(item: MediaItem): string {
  *      ./convex-repository.ts.
  */
 class ConvexContentRepository extends InMemoryContentRepository {
+  /**
+   * The menu, with the programme entries taken from the CMS.
+   *
+   * The menu itself is still structure in code (`navigation` in ./data.ts);
+   * only the programme links under it are editorial. Each is matched to its
+   * programme record by the slug in its address, renamed to what the record
+   * says, and left out when the programme is unpublished - so the menu can
+   * never offer a programme the line-up does not.
+   */
+  override async getNavigation(): Promise<NavGroup[]> {
+    const [navigation, programmes] = await Promise.all([
+      super.getNavigation(),
+      this.getProgrammeCategories(),
+    ]);
+    const bySlug = new Map(programmes.map((item) => [item.slug, item]));
+    return navigation.map((group) => ({
+      ...group,
+      links: group.links.flatMap((link) => {
+        if (!link.href.startsWith("/programmes/")) return [link];
+        const programme = bySlug.get(
+          link.href.slice("/programmes/".length) as ProgrammeCategory["slug"]
+        );
+        return programme
+          ? [{ ...link, label: programme.name, description: programme.blurb }]
+          : [];
+      }),
+    }));
+  }
+
+  override async getFooterColumns(): Promise<FooterColumn[]> {
+    return (await fetchFooterColumns()) ?? super.getFooterColumns();
+  }
+
+  override async getProgrammeCategories(): Promise<ProgrammeCategory[]> {
+    const rows = await fetchProgrammeCategories();
+    if (!rows) return super.getProgrammeCategories();
+    return rows.filter((item): item is ProgrammeCategory => item !== null);
+  }
+
+  override async getContactPage(): Promise<ContactPageContent | null> {
+    const rows = await fetchContactPage();
+    if (!rows) return super.getContactPage();
+    return rows[0] ?? null;
+  }
+
+  override async getDonatePage(): Promise<DonatePageContent | null> {
+    const rows = await fetchDonatePage();
+    if (!rows) return super.getDonatePage();
+    return rows[0] ?? null;
+  }
+
   override async getTickerItems(): Promise<TickerItem[]> {
     return (await fetchTickerItems()) ?? super.getTickerItems();
   }
@@ -2062,6 +2174,10 @@ class ConvexContentRepository extends InMemoryContentRepository {
     return series ? rows.filter((guide) => guide.series === series) : rows;
   }
 
+  override async getSafetySeries(): Promise<SafetySeries[]> {
+    return (await fetchSafetySeries()) ?? super.getSafetySeries();
+  }
+
   override async getSafetyGuide(slug: string): Promise<SafetyGuide | null> {
     const rows = await fetchSafetyGuides();
     if (!rows) return super.getSafetyGuide(slug);
@@ -2069,6 +2185,16 @@ class ConvexContentRepository extends InMemoryContentRepository {
   }
 
   /* The Constitution and the courts --------------------------------------- */
+
+  /**
+   * In section order, which is the Constitution's own. Numbers are stored as
+   * strings, so they are compared as numbers here.
+   */
+  override async getFundamentalRights(): Promise<FundamentalRight[]> {
+    const rows = await fetchFundamentalRights();
+    if (!rows) return super.getFundamentalRights();
+    return [...rows].sort((a, b) => Number(a.section) - Number(b.section));
+  }
 
   override async getConstitutionChapters(): Promise<ConstitutionChapter[]> {
     return (await fetchConstitutionChapters()) ?? super.getConstitutionChapters();

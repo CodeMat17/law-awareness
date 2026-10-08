@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Compass, ListChecks, Scale, Users } from "lucide-react";
-import { HeroSection } from "@/components/site/hero-section";
+import {
+  HeroSection,
+  type HeroScreen,
+  type HeroUpNext,
+} from "@/components/site/hero-section";
+import { MissionVision } from "@/components/site/mission-vision";
 import { IssueFinder } from "@/components/site/issue-finder";
 import { HealthCheckPreview } from "@/components/site/health-check-preview";
 import { NewsletterForm } from "@/components/site/newsletter-form";
@@ -14,24 +19,42 @@ import {
   GlossaryCard,
   LawCard,
   LiveCard,
-  MediaCard,
   QuizCard,
   RightsCard,
 } from "@/components/site/cards";
+import {
+  MediaDetailCard,
+  ProgrammeCard,
+  formatLabel,
+  formatSchedule,
+  mediaHref,
+} from "@/components/site/media";
 import {
   Section,
   SectionHeader,
 } from "@/components/site/primitives";
 import { getContent } from "@/lib/content/repository";
+import type { LiveEvent, MediaDetail } from "@/lib/content/types";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "Law Awareness TV — Know the Law. Know Your Rights.",
+    absolute: "Law Awareness TV — Nigeria's law channel",
   },
   description:
-    "Understand Nigerian law, protect yourself, protect your business, and know when professional legal help may be necessary.",
+    "Law Awareness TV: courtroom and judicial news, law-making, law enforcement, corporate law and your rights — Nigerian law on screen, explained in everyday words.",
   alternates: { canonical: "/" },
 };
+
+/** "Live · Thu 12 Nov, 18:00", or "Video · 24 min". */
+function airLabel(item: MediaDetail | LiveEvent): string {
+  if (item.kind === "live") {
+    return item.scheduledFor
+      ? `Live · ${formatSchedule(item.scheduledFor)}`
+      : "Live";
+  }
+  const kind = item.kind === "podcast" ? "Podcast" : formatLabel(item.format);
+  return item.duration ? `${kind} · ${item.duration}` : kind;
+}
 
 export default async function HomePage() {
   const content = getContent();
@@ -46,10 +69,12 @@ export default async function HomePage() {
     guides,
     complianceAreas,
     articles,
-    media,
+    videos,
+    episodes,
     glossary,
     quizzes,
     checklists,
+    programmes,
   ] = await Promise.all([
     content.getPlatformStats(),
     content.getEntryPoints(),
@@ -60,33 +85,154 @@ export default async function HomePage() {
     content.getBusinessGuides(),
     content.getComplianceAreas(),
     content.getLatestArticles(),
-    content.getMediaItems(4),
+    content.getVideos(),
+    content.getPodcastEpisodes(),
     content.getGlossaryTerms(6),
     content.getQuizzes(4),
     content.getChecklists(3),
+    content.getProgrammeCategories(),
   ]);
 
   // The session to put in front of a visitor: whatever is on air, otherwise the
   // next one scheduled. Nothing is invented when the schedule is empty — the
-  // section simply does not render.
+  // screen falls back to the newest episode.
   const featuredSession =
     liveEvents.find((event) => event.liveStatus === "live") ??
     liveEvents.find((event) => event.liveStatus === "scheduled") ??
     null;
+
+  const latest = [...videos, ...episodes].sort((a, b) =>
+    b.publishedAt.localeCompare(a.publishedAt)
+  );
+
+  const screenItem: MediaDetail | undefined = featuredSession ?? latest[0];
+  const screen: HeroScreen | undefined = screenItem && {
+    status:
+      featuredSession?.liveStatus === "live"
+        ? "live"
+        : featuredSession
+          ? "scheduled"
+          : "latest",
+    title: screenItem.title,
+    href: mediaHref(screenItem),
+    series: screenItem.series,
+    when:
+      featuredSession?.liveStatus === "scheduled" && featuredSession.scheduledFor
+        ? formatSchedule(featuredSession.scheduledFor)
+        : undefined,
+    kind: screenItem.kind,
+  };
+
+  // The running order under the screen: further scheduled sessions first,
+  // then the newest episodes.
+  const upNext: HeroUpNext[] = [
+    ...liveEvents.filter((event) => event.liveStatus === "scheduled"),
+    ...latest,
+  ]
+    .filter((item) => item.id !== screenItem?.id)
+    .slice(0, 3)
+    .map((item) => ({
+      id: item.id,
+      title: item.title,
+      href: mediaHref(item),
+      label: airLabel(item),
+    }));
 
   const [featuredRight, ...otherRights] = rights;
   const [leadArticle, ...restArticles] = articles;
 
   return (
     <>
-      <HeroSection
-        stats={stats}
-        liveTitle={featuredSession?.title}
-        liveOnAir={featuredSession?.liveStatus === "live"}
-      />
+      <HeroSection stats={stats} screen={screen} upNext={upNext} />
+
+      <MissionVision />
+
+      {/* The channel line-up */}
+      <Section tone="surface" className="py-12 sm:py-14 lg:py-16">
+        <Reveal>
+          <SectionHeader
+            eyebrow="Programmes"
+            title="What's on Law Awareness TV"
+            action={{ label: "All programmes", href: "/programmes" }}
+          />
+        </Reveal>
+        <RevealGroup className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {programmes.map((programme) => (
+            <RevealItem key={programme.slug} className="flex">
+              <ProgrammeCard programme={programme} variant="tile" />
+            </RevealItem>
+          ))}
+          <RevealItem className="flex">
+            <Link
+              href="/live"
+              className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-primary p-4 text-[0.9rem] font-extrabold text-primary-foreground transition-opacity hover:opacity-90"
+            >
+              <span aria-hidden className="size-1.5 rounded-full bg-live" />
+              Watch Live
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          </RevealItem>
+        </RevealGroup>
+      </Section>
+
+      {/* Latest episodes */}
+      {latest.length > 0 && (
+        <Section>
+          <Reveal>
+            <SectionHeader
+              eyebrow="Just added"
+              title="Latest episodes"
+              description="New shows, explainers and podcasts on the law that affects your daily life."
+              action={{ label: "Watch everything", href: "/watch" }}
+            />
+          </Reveal>
+          <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+            {latest.slice(0, 4).map((item) => (
+              <RevealItem key={item.id} className="flex">
+                <MediaDetailCard item={item} />
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </Section>
+      )}
+
+      {/* Featured session */}
+      {featuredSession && (
+        <Section className={latest.length > 0 ? "pt-0 sm:pt-0 lg:pt-0" : undefined}>
+          <Reveal>
+            <LiveCard event={featuredSession} />
+          </Reveal>
+        </Section>
+      )}
+
+      {/* News desk — editorial lead + rail */}
+      <Section tone="surface">
+        <Reveal>
+          <SectionHeader
+            eyebrow="News desk · Law & Society"
+            title="Legal news from across Nigeria"
+            description="Every story is labelled — news, analysis, explainer or opinion — so you always know what you are reading."
+            action={{ label: "All news", href: "/law-and-society" }}
+          />
+        </Reveal>
+        <div className="mt-10 grid gap-6 lg:grid-cols-[1.25fr_1fr] lg:gap-10">
+          {leadArticle && (
+            <Reveal className="flex">
+              <ArticleCard article={leadArticle} variant="feature" />
+            </Reveal>
+          )}
+          <Reveal delay={0.08}>
+            <div className="rounded-2xl border border-hairline bg-card px-5 sm:px-6">
+              {restArticles.map((article) => (
+                <ArticleCard key={article.id} article={article} variant="row" />
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </Section>
 
       {/* Why should I care? Six audience-specific entry points. */}
-      <Section tone="surface" className="py-12 sm:py-14 lg:py-16">
+      <Section className="py-12 sm:py-14 lg:py-16">
         <Reveal>
           <p className="text-eyebrow text-muted-foreground">
             Start where you are
@@ -107,7 +253,7 @@ export default async function HomePage() {
           <SectionHeader
             eyebrow="Issue finder"
             title="What do you need to know?"
-            description="Most people arrive with a situation, not a statute. Start from what happened and we will take you to the law behind it."
+            description="Start from what happened to you, and we will show you the law behind it — no legal words needed."
           />
         </Reveal>
         <Reveal delay={0.08} className="mt-10">
@@ -115,22 +261,13 @@ export default async function HomePage() {
         </Reveal>
       </Section>
 
-      {/* Featured session */}
-      {featuredSession && (
-        <Section className="pt-0 sm:pt-0 lg:pt-0">
-          <Reveal>
-            <LiveCard event={featuredSession} />
-          </Reveal>
-        </Section>
-      )}
-
       {/* Featured rights — editorial split, not a uniform grid */}
       <Section tone="surface">
         <Reveal>
           <SectionHeader
             eyebrow="Your rights"
-            title="Situation first. Law second."
-            description="Rights matter most in the moment they are tested. These guides start with the situation you are in."
+            title="Know your rights, situation by situation"
+            description="Your rights matter most when someone is testing them. These guides start from what is happening to you."
             action={{ label: "All rights guides", href: "/your-rights" }}
           />
         </Reveal>
@@ -155,8 +292,8 @@ export default async function HomePage() {
         <Reveal>
           <SectionHeader
             eyebrow="Know the law"
-            title="A legal library built to be understood"
-            description="Every subject area of Nigerian law, each separating where the official text lives from the plain-language explanation."
+            title="Nigerian law, in words you understand"
+            description="Every area of Nigerian law, explained simply — with the official law kept clearly apart from our explanation."
             action={{ label: "Open the library", href: "/know-the-law" }}
           />
         </Reveal>
@@ -185,8 +322,8 @@ export default async function HomePage() {
                 Most business legal problems are avoidable
               </h2>
               <p className="mt-3 text-[0.98rem] leading-relaxed text-forest-foreground/80">
-                Not because the law is simple, but because the mistakes repeat.
-                These guides sit at the decision points where they happen.
+                Not because the law is simple, but because the same mistakes keep
+                happening. These guides help at the moments they happen.
               </p>
             </div>
             <Link
@@ -280,34 +417,8 @@ export default async function HomePage() {
         </Reveal>
       </Section>
 
-      {/* Latest legal developments — editorial lead + rail */}
-      <Section tone="surface">
-        <Reveal>
-          <SectionHeader
-            eyebrow="Law & Society"
-            title="Latest legal developments"
-            description="Every story is labelled — news, analysis, explainer, opinion or educational — so you always know what you are reading."
-            action={{ label: "All coverage", href: "/law-and-society" }}
-          />
-        </Reveal>
-        <div className="mt-10 grid gap-6 lg:grid-cols-[1.25fr_1fr] lg:gap-10">
-          {leadArticle && (
-            <Reveal className="flex">
-              <ArticleCard article={leadArticle} variant="feature" />
-            </Reveal>
-          )}
-          <Reveal delay={0.08}>
-            <div className="rounded-2xl border border-hairline bg-card px-5 sm:px-6">
-              {restArticles.map((article) => (
-                <ArticleCard key={article.id} article={article} variant="row" />
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </Section>
-
       {/* Case law + Constitution */}
-      <Section>
+      <Section tone="surface">
         <div className="grid gap-5 lg:grid-cols-2">
           <Reveal className="flex">
             <Link
@@ -324,9 +435,9 @@ export default async function HomePage() {
                   Constitution Explorer
                 </h3>
                 <p className="mt-3 max-w-md text-[0.95rem] leading-relaxed text-muted-foreground">
-                  Search the chapters and sections of the 1999 Constitution,
-                  with the official text and a plain-language explanation held
-                  clearly apart.
+                  Browse the 1999 Constitution chapter by chapter, with the
+                  official text and our everyday explanation kept clearly
+                  apart.
                 </p>
               </div>
               <span className="relative mt-10 inline-flex items-center gap-1.5 text-[0.88rem] font-bold text-foreground">
@@ -351,9 +462,9 @@ export default async function HomePage() {
                   Case Law Explorer
                 </h3>
                 <p className="mt-3 max-w-md text-[0.95rem] leading-relaxed text-muted-foreground">
-                  Filter decisions by court, year, subject and legal issue —
-                  each with the principle it settled and a plain-language
-                  explanation of what it means.
+                  Find court decisions by court, year and subject — each with
+                  what it decided and what it means for you, in everyday
+                  words.
                 </p>
               </div>
               <span className="relative mt-10 inline-flex items-center gap-1.5 text-[0.88rem] font-bold text-foreground">
@@ -365,31 +476,12 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* Watch & Listen */}
-      <Section tone="surface">
-        <Reveal>
-          <SectionHeader
-            eyebrow="Watch & Listen"
-            title="Legal education you can follow like a network"
-            description="Explainers, documentaries, interviews and podcasts — the same knowledge base, in the format that suits you."
-            action={{ label: "Browse all media", href: "/watch" }}
-          />
-        </Reveal>
-        <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-          {media.map((item) => (
-            <RevealItem key={item.id} className="flex">
-              <MediaCard item={item} />
-            </RevealItem>
-          ))}
-        </RevealGroup>
-      </Section>
-
       {/* Law in plain language */}
       <Section>
         <Reveal>
           <SectionHeader
             eyebrow="Law in plain language"
-            title="The words that keep people out of their own case"
+            title="Legal words, explained simply"
             description="Every term with a simple definition, a real example, and why it matters."
             action={{ label: "Full glossary", href: "/glossary" }}
           />
@@ -418,9 +510,9 @@ export default async function HomePage() {
                 When you need more than information
               </h2>
               <p className="mt-4 text-[0.95rem] leading-relaxed text-muted-foreground">
-                We will never diagnose your legal position or present automated
-                guidance as legal advice. What we can do is help you understand
-                the situation and reach the right kind of help.
+                We cannot give you legal advice on your own case. What we can do
+                is help you understand your situation and find the right kind
+                of help.
               </p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:col-span-2">
@@ -428,13 +520,13 @@ export default async function HomePage() {
                 {
                   icon: Compass,
                   title: "I have a legal problem",
-                  body: "A guided pathway: what the law says, what to do, what to avoid, and when to seek qualified help.",
+                  body: "A step-by-step guide: what the law says, what to do, what to avoid, and when to get a lawyer.",
                   href: "/legal-help/problem",
                 },
                 {
                   icon: Users,
-                  title: "Lawyer directory",
-                  body: "Find legal professionals by state, practice area and language, with verification handled administratively.",
+                  title: "Find a lawyer",
+                  body: "Search for lawyers by state, the kind of help you need, and the language you speak.",
                   href: "/lawyers",
                 },
                 {
@@ -480,7 +572,7 @@ export default async function HomePage() {
           <SectionHeader
             eyebrow="Learn"
             title="Find out what you actually know"
-            description="Short, visual quizzes with an explanation and the relevant law behind every answer."
+            description="Short quizzes that explain every answer and the law behind it."
             action={{ label: "All quizzes", href: "/quizzes" }}
           />
         </Reveal>

@@ -16,7 +16,6 @@ import {
   SourcePanel,
   TickList,
 } from "@/components/site/knowledge";
-import { SaveButton } from "@/components/account/save-button";
 import { AmendmentSummary, VersionTimeline } from "@/components/site/law-history";
 import { getContent } from "@/lib/content/repository";
 
@@ -98,17 +97,6 @@ export default async function LawEntryPage(
         <p className="mt-6 text-[0.85rem] font-semibold text-brand-ink">
           {entry.instrument}
         </p>
-        <div className="mt-6">
-          <SaveButton
-            target={{
-              kind: "law",
-              title: entry.title,
-              summary: entry.summary,
-              group: `Know the Law · ${category?.name ?? "Legal explainer"}`,
-              href: `/know-the-law/${entry.category}/${entry.slug}`,
-            }}
-          />
-        </div>
       </PageHeader>
 
       <KnowledgeLayout

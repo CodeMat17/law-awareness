@@ -27,8 +27,8 @@ export default async function CeoPage() {
           { label: "Law for CEOs" },
         ]}
         eyebrow="Law for CEOs"
-        title="The legal risks that reach a board are rarely the exotic ones"
-        lede="They are ordinary obligations that nobody owned until they crystallised. Each briefing sets out what the risk is, where it actually lands in the business, and the questions a board should be asking about it — in a few minutes, not a few hours."
+        title="Legal risks every business leader should know"
+        lede="Most legal trouble in a company starts with an ordinary duty that nobody was looking after. Each short briefing explains the risk, where it shows up in the business, and the questions leaders should ask — in a few minutes."
       />
 
       <Section className="pt-12 sm:pt-14 lg:pt-16">

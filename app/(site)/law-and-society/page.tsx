@@ -36,8 +36,8 @@ export default async function LawAndSocietyPage() {
       <PageHeader
         trail={[{ label: "Home", href: "/" }, { label: "Law & Society" }]}
         eyebrow="Law & Society"
-        title="The law is a current affair"
-        lede="Courtroom news, law making, enforcement and regulation, reported with the same care we give to explaining them — and always with the everyday consequence in view."
+        title="Legal news from across Nigeria"
+        lede="Courtroom news, law-making, policing and business regulation — reported carefully, and always with what it means for you."
       />
 
       {lead && (

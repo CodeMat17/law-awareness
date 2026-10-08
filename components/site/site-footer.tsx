@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { footerColumns } from "@/lib/content/data";
+import type { FooterColumn } from "@/lib/content/types";
 import { ThemeToggle } from "./theme-toggle";
 
 const social = [
@@ -10,7 +10,8 @@ const social = [
   { label: "Instagram", href: "https://instagram.com" },
 ];
 
-export function SiteFooter() {
+/** `columns` come from the "Footer links" collection in the CMS. */
+export function SiteFooter({ columns }: { columns: FooterColumn[] }) {
   const year = new Date().getFullYear();
 
   return (
@@ -33,11 +34,11 @@ export function SiteFooter() {
             
             </Link>
             <p className="mt-2 max-w-xs text-[0.88rem] leading-relaxed text-muted-foreground">
-              A Nigerian digital legal education, awareness, compliance and
-              legal-media platform.
+              Nigeria's law television channel — courtroom news, law-making,
+              law enforcement and your rights, explained in everyday words.
             </p>
             <p className="text-eyebrow mt-6 text-brand-ink">
-              Know · Protect · Act
+              Watch · Know · Act
             </p>
             {/* <div className="mt-6 flex items-center gap-3">
               <ThemeToggle />
@@ -48,12 +49,12 @@ export function SiteFooter() {
           </div>
 
           <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
-            {footerColumns.map((column) => (
-              <div key={column.heading}>
+            {columns.map((column) => (
+              <div key={column.id}>
                 <h2 className="text-eyebrow text-foreground">{column.heading}</h2>
                 <ul className="mt-4 space-y-2.5">
                   {column.links.map((link) => (
-                    <li key={`${column.heading}-${link.href}-${link.label}`}>
+                    <li key={`${column.id}-${link.href}-${link.label}`}>
                       <Link
                         href={link.href}
                         className="text-[0.85rem] text-muted-foreground transition-colors hover:text-foreground"

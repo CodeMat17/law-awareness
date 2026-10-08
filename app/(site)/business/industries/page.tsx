@@ -27,8 +27,8 @@ export default async function IndustriesPage() {
           { label: "Industries" },
         ]}
         eyebrow="Industry legal hubs"
-        title="Most of business law is general. The part that is not is decided by your sector"
-        lede="Every business faces contracts, employment, data and tax. What changes by industry is which permissions you need before you start, which obligations are heightened, and where the risk actually concentrates."
+        title="What changes for your type of business"
+        lede="Every business deals with contracts, staff, customer data and tax. What changes by industry is the licences you need before you start, the extra rules you must follow, and where the biggest risks are."
       />
 
       <Section className="pt-12 sm:pt-14 lg:pt-16">

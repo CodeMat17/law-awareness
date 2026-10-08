@@ -19,7 +19,7 @@ import { getContent } from "@/lib/content/repository";
 export const metadata: Metadata = {
   title: { absolute: "Listen — the Law Awareness TV podcast network" },
   description:
-    "Podcast episodes on Nigerian law: tenancy agreements, offer letters, consumer complaints, online scams and partnerships. Every episode is chaptered and carries a written record.",
+    "Podcast episodes on Nigerian law: tenancy agreements, offer letters, consumer complaints, online scams and partnerships.",
   alternates: { canonical: "/listen" },
 };
 
@@ -55,7 +55,7 @@ export default async function ListenPage() {
         trail={[{ label: "Home", href: "/" }, { label: "Listen" }]}
         eyebrow="Listen"
         title="The law, in your ear, on the way to work"
-        lede="A podcast network covering the agreements people sign and the situations they did not plan for. Every episode is chaptered, and every episode carries a written record of what it covers."
+        lede="Law Awareness TV podcasts on the agreements people sign and the problems they did not plan for."
       />
 
       {featured && (

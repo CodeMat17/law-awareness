@@ -7,6 +7,8 @@
  * `lib/content/repository.ts` changes. No component imports data directly.
  */
 
+import type { ProgrammeSlug } from "./programmes";
+
 /** Editorial workflow state. Every content type carries one. */
 export type WorkflowStatus = "draft" | "review" | "published" | "archived";
 
@@ -247,6 +249,13 @@ export interface NavGroup {
   links: NavLink[];
 }
 
+/** One column of links in the site footer. */
+export interface FooterColumn {
+  id: string;
+  heading: string;
+  links: NavLink[];
+}
+
 /* -------------------------------------------------------------------------- */
 /* Homepage entry points                                                       */
 /* -------------------------------------------------------------------------- */
@@ -400,7 +409,22 @@ export interface RightGuide extends RightSummary {
   related?: RelatedRefs;
 }
 
-/** Practical risk-prevention guide. `series` groups the Before You Sign run. */
+/**
+ * A run of Stay Safe guides featured as a section of its own on /stay-safe.
+ *
+ * Guides join a series by carrying its `name` in their own `series` field, the
+ * same way media items join a series by title.
+ */
+export interface SafetySeries {
+  id: string;
+  /** Spelt exactly as the guides in it spell their `series`. */
+  name: string;
+  /** The section heading on Stay Safe. */
+  headline: string;
+  description: string;
+}
+
+/** Practical risk-prevention guide. `series` names a `SafetySeries`. */
 export interface SafetyGuide {
   id: string;
   slug: string;
@@ -787,6 +811,8 @@ export interface MediaSeries {
   /** How often it lands, in words - never a promised date. */
   cadence: string;
   host?: string;
+  /** The programme category the series is filed under. */
+  programme?: ProgrammeSlug;
   topics: string[];
   seasons?: MediaSeason[];
   related?: RelatedRefs;
@@ -803,6 +829,8 @@ export interface MediaDetail extends MediaItem {
   seriesSlug?: string;
   season?: number;
   episode?: number;
+  /** The programme category the item is filed under. */
+  programme?: ProgrammeSlug;
   topics: string[];
   /** What a viewer or listener leaves knowing. */
   takeaways: string[];

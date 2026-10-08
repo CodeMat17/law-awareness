@@ -29,7 +29,7 @@ export default async function LegalAidPage() {
         ]}
         eyebrow="Where help comes from"
         title="You do not have to be able to pay a lawyer to get legal help"
-        lede="There are institutions in Nigeria whose job is to help people who cannot pay, and there are professional and community routes alongside them. None of them will take every matter — but a person who knows which door to knock on gets much further than one who does not."
+        lede="Some organisations in Nigeria exist to help people who cannot afford a lawyer, and there are professional and community options too. None of them takes every case — but knowing where to go gets you much further."
       >
         <div className="mt-8 flex flex-wrap gap-2.5">
           <Link

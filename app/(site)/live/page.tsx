@@ -33,8 +33,8 @@ export default async function LivePage() {
       <PageHeader
         trail={[{ label: "Home", href: "/" }, { label: "Live" }]}
         eyebrow="Live"
-        title="Open sessions, with the questions asked out loud"
-        lede="A short briefing, then moderated questions from the audience. Sessions are general legal education — they never advise on anyone's individual case — and every one becomes an on-demand page when it ends."
+        title="Law Awareness TV, live"
+        lede="Live broadcasts with a short explanation, then questions from viewers. They explain the law in general — they never advise on anyone's own case — and every broadcast can be watched again after it ends."
       />
 
       <Section className="pt-12 sm:pt-14 lg:pt-16">

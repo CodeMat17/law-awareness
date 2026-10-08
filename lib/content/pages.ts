@@ -159,85 +159,85 @@ function section(data: {
 const about: PageSeed = {
   id: "page-about",
   path: "/about",
-  eyebrow: "About",
-  title: "Africa's first full-fledged law-dedicated television",
-  lede: "The law, in its complex entirety, engagingly captured, dissected, simplified and made accessible to a wide range of the global audience through inclusive and dynamic programmes.",
+  eyebrow: "About Law Awareness TV",
+  title: "Nigeria's television channel for the law",
+  lede: "Law Awareness TV puts Nigerian law on screen — the courts, new laws, the police and the rules for business — and explains it in words everyone can follow.",
   layout: "standard",
-  metaTitle: "About — Africa's first full-fledged law-dedicated television",
+  metaTitle: "About Law Awareness TV — Nigeria's television channel for the law",
   metaDescription:
-    "Law Awareness TV captures, dissects and simplifies the law for a global audience through inclusive, dynamic programming across online, terrestrial and satellite platforms.",
+    "Law Awareness TV is a Nigerian television channel dedicated to the law. It explains courtroom news, law-making, law enforcement and business rules in everyday words, online and on air.",
   blocks: [
     prose({
-      eyebrow: "Our purpose",
-      heading: "Broadening access to a conservative and technical field",
+      eyebrow: "Why we exist",
+      heading: "The law affects everyone, so everyone should understand it",
       description:
-        "The mission of Law Awareness TV is to open up the law through innovation and dynamic programming.",
+        "Our mission is simple: make Nigerian law easy to watch, easy to follow and easy to use.",
       bodyLeft:
-        "Given how integral the law is to society, we believe that making it accessible to a greater number of people holds great promise — not only for the empowerment of individuals and organisations, but for society as a whole.",
+        "The law shapes how we work, rent, buy, do business and deal with the police — yet most of it is written in language only lawyers read. When more Nigerians understand the law, people and businesses can protect themselves, and the whole country benefits.",
       bodyRight:
-        "The media is a powerful tool for fostering meaningful and productive relationships among people, connecting people to opportunities, and uniting people around common ideals. Law TV will play this role in a niche market which it intends not only to dominate, but to define.",
+        "Television is one of the most powerful ways to reach people, start conversations and bring them together around shared ideas. Law Awareness TV uses that power for one subject — the law — and aims to be the channel Nigerians turn to whenever the law is in the news or in their lives.",
     }),
     cards({
-      eyebrow: "What we cover",
-      heading: "Every layer of a widely encompassing field",
+      eyebrow: "Our programmes",
+      heading: "Every part of the law, on one channel",
       description:
-        "From courtroom news and judicial administration reporting to law making, law enforcement, corporate law and regulation, Law TV brings unique and refreshing perspectives to each layer of the law.",
+        "From the courtroom to the National Assembly, from the police station to the boardroom, Law Awareness TV covers the law the way it touches real life.",
       tone: "surface",
       items: [
         {
-          title: "Courtroom news",
-          body: "Proceedings, judgments and the working reality of the courts, reported for people who were never trained to read them.",
+          title: "Courtroom & Judicial News",
+          body: "Important cases, court decisions and how the courts are run — reported for people who have never had to read a judgment.",
         },
         {
-          title: "Judicial administration",
-          body: "How the machinery of justice is run, resourced and reformed — the layer that shapes every case before it is heard.",
+          title: "Law-Making",
+          body: "What lawmakers are debating, how a bill becomes law, and what new laws will change for you.",
         },
         {
-          title: "Law making",
-          body: "Bills, debates and the path an idea travels before it becomes an instrument that binds everyone.",
+          title: "Law Enforcement",
+          body: "What the police and other agencies can and cannot do, and how they are held to account.",
         },
         {
-          title: "Law enforcement",
-          body: "Powers, limits and accountability, covered with the same care on both sides of the badge.",
+          title: "Corporate Law & Regulation",
+          body: "The rules for starting, running and growing a business, and how to deal with regulators.",
         },
         {
-          title: "Corporate law & regulation",
-          body: "The rules that govern how businesses form, trade, disclose and answer to their regulators.",
+          title: "Rights & Justice",
+          body: "The rights the Constitution gives every Nigerian, and what to do when they are not respected.",
         },
         {
-          title: "Sports law & beyond",
-          body: "Ample room for the lesser-known corners of the field, alongside engrossing law-based entertainment.",
+          title: "Everyday Law and Crime & Safety",
+          body: "Renting, work, shopping, scams and fraud — the law in daily life, and how to stay safe.",
         },
       ],
     }),
     labels({
-      eyebrow: "Distribution",
-      heading: "A tripartite content distribution model",
+      eyebrow: "Where to watch",
+      heading: "Online, on terrestrial TV and on satellite",
       description:
-        "Online, terrestrial and satellite. Law TV is billed to become one of the most sought-after TV stations in Africa and the world — dominating its niche, and competing favourably with some of the best names in news globally.",
+        "Law Awareness TV reaches Nigerians in three ways, so the channel is there whether you watch on your phone or on a television at home.",
       items: [
         {
           title: "Online",
-          body: "On-demand programming, live streams and a searchable legal knowledge layer, open wherever the audience already is.",
+          body: "Watch shows on demand, follow live broadcasts and look up the law on this website, wherever you are.",
         },
         {
           title: "Terrestrial",
-          body: "Broadcast reach into homes that the internet has not yet reached, and never on its own terms alone.",
+          body: "Free-to-air broadcast for homes across Nigeria, including places the internet does not yet reach well.",
         },
         {
           title: "Satellite",
-          body: "Continental and global distribution, carrying the niche well past the borders it started in.",
+          body: "Nationwide satellite coverage, so the channel reaches every state.",
         },
       ],
     }),
     cta({
       eyebrow: "Start watching",
-      heading: "The programming is the point",
-      body: "Everything here begins as something to watch, listen to or follow live. The knowledge layer exists to carry it further.",
-      primaryLabel: "Watch",
-      primaryHref: "/watch",
-      secondaryLabel: "Live",
-      secondaryHref: "/live",
+      heading: "Tune in to Law Awareness TV",
+      body: "Watch the latest shows, catch a live broadcast, or browse the programmes. The guides and explainers on this site are there to help you go further.",
+      primaryLabel: "Watch Live",
+      primaryHref: "/live",
+      secondaryLabel: "Browse programmes",
+      secondaryHref: "/programmes",
     }),
   ],
 };
@@ -583,7 +583,7 @@ const accessibility: PageSeed = {
     section({
       heading: "Media",
       paragraphs: [
-        "Our programming spans video, audio and live streams. We are working towards captions on all recorded video, transcripts for podcast episodes, and meaningful descriptions for images that carry information. Not all of our back catalogue has caught up with that standard yet, and we will say so on items that have not.",
+        "Our programming spans video, audio and live streams. We are working towards captions on all recorded video and meaningful descriptions for images that carry information. Not all of our back catalogue has caught up with that standard yet, and we will say so on items that have not.",
       ],
     }),
     section({

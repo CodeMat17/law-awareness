@@ -59,6 +59,20 @@ export function publicHrefFor(
       return "/business/health-check";
     case "profile-questions":
       return "/business-account";
+    case "programmes":
+      return slug ? `/programmes/${slug}` : undefined;
+    // Each of these is one part of a single standing page.
+    case "contact-page":
+      return "/contact";
+    case "donate-page":
+      return "/donate";
+    case "fundamental-rights":
+      return "/constitution";
+    case "safety-series":
+      return "/stay-safe";
+    // The footer is on every page and has no address of its own.
+    case "footer-columns":
+      return undefined;
     // A live strand is indexed by the schedule at /live rather than by a
     // series page of its own.
     case "media-series":
@@ -205,6 +219,19 @@ export function indexRoutesFor(
     case "calendar-entries":
     case "health-check":
     case "profile-questions":
+    case "contact-page":
+    case "donate-page":
+    case "fundamental-rights":
+    case "safety-series":
+      return [];
+
+    // A programme is listed on the line-up and on the homepage. The menu it
+    // also appears in is the site layout - see `layoutCollections`.
+    case "programmes":
+      return ["/programmes", "/"];
+
+    // The footer is in the site layout, which the caller revalidates whole.
+    case "footer-columns":
       return [];
 
     case "legal-problems":
@@ -213,36 +240,58 @@ export function indexRoutesFor(
       return ["/legal-help/legal-aid", "/legal-help"];
 
     // A media item is indexed by its hub and, when it belongs to one, by its
-    // series page. The homepage carries the latest of these too.
+    // series page and its programme. The homepage carries the latest of these
+    // too.
     case "media": {
       const seriesSlug = fields.seriesSlug?.trim();
+      const programme = programmeRoutes(fields.programme);
       if (fields.kind === "podcast") {
         return [
           "/listen",
           "/",
+          ...programme,
           ...(seriesSlug ? [`/listen/series/${seriesSlug}`] : []),
         ];
       }
-      if (fields.kind === "live") return ["/live", "/"];
+      if (fields.kind === "live") return ["/live", "/", ...programme];
       return [
         "/watch",
         "/",
+        ...programme,
         ...(seriesSlug ? [`/watch/series/${seriesSlug}`] : []),
       ];
     }
 
-    // A series is listed on its hub. Its own page is the `publicHrefFor` one,
-    // except for live strands, which have none.
-    case "media-series":
-      if (fields.kind === "live") return ["/live"];
-      if (fields.kind === "podcast") return ["/listen"];
-      return ["/watch"];
+    // A series is listed on its hub and its programme. Its own page is the
+    // `publicHrefFor` one, except for live strands, which have none.
+    case "media-series": {
+      const programme = programmeRoutes(fields.programme);
+      if (fields.kind === "live") return ["/live", ...programme];
+      if (fields.kind === "podcast") return ["/listen", ...programme];
+      return ["/watch", ...programme];
+    }
   }
 
   // Exhaustive above; this keeps a newly added collection honest rather than
   // silently indexing nowhere.
   void slug;
   return [];
+}
+
+/**
+ * Collections rendered in the site layout - the menu and the footer - and so
+ * on every route at once. Saving any record in one has to revalidate the whole
+ * layout, not a list of routes.
+ */
+export const layoutCollections: ReadonlySet<CollectionId> = new Set([
+  "programmes",
+  "footer-columns",
+]);
+
+/** The programme index, plus the one programme page a record is filed under. */
+function programmeRoutes(programme: string | undefined): string[] {
+  const slug = programme?.trim();
+  return ["/programmes", ...(slug ? [`/programmes/${slug}`] : [])];
 }
 
 /**

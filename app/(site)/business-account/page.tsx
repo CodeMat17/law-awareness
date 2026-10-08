@@ -12,9 +12,9 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/site/reveal";
 import { getContent } from "@/lib/content/repository";
 
 export const metadata: Metadata = {
-  title: "Business account — one library, one watch list, one team",
+  title: "Business account — one watch list, one team",
   description:
-    "An organization account for teams: a shared resource library, shared topic monitoring, team members, and the compliance areas that apply to the work you actually do.",
+    "An organization account for teams: shared topic monitoring, team members, and the compliance areas that apply to the work you actually do.",
   alternates: { canonical: "/business-account" },
   robots: { index: false, follow: false },
 };
@@ -40,7 +40,6 @@ const tiers = [
     includes: [
       "Regulatory alerts on followed topics",
       "Compliance resources and checklists",
-      "A shared resource library",
       "The compliance calendar",
       "Business legal education",
     ],
@@ -66,8 +65,8 @@ export default async function BusinessAccountPage() {
       <PageHeader
         trail={[{ label: "Home", href: "/" }, { label: "Business account" }]}
         eyebrow="Business account"
-        title="One library, one watch list, one team"
-        lede="An organization account keeps the legal awareness of a team in one place: what it has saved, what it is monitoring, and who is on it. Nothing recorded here is published, and nothing here is a compliance certification."
+        title="One watch list, one team"
+        lede="A team account keeps the topics your team is following in one place, along with who is on the team. Nothing here is published, and it is not a certificate that your business follows the law."
       />
 
       <Section className="pt-12 sm:pt-14 lg:pt-16">

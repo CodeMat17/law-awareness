@@ -20,7 +20,7 @@ const nunito = Nunito({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Law Awareness TV — Know the Law. Know Your Rights.",
+    default: "Law Awareness TV — Nigeria's law channel",
     template: "%s | Law Awareness TV",
   },
   description: SITE_DESCRIPTION,
@@ -97,13 +97,13 @@ export const metadata: Metadata = {
     locale: "en_NG",
     url: "/",
     siteName: "Law Awareness TV",
-    title: "Law Awareness TV — Know the Law. Know Your Rights.",
+    title: "Law Awareness TV — Nigeria's law channel",
     description: SITE_DESCRIPTION,
     images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Law Awareness TV — Know the Law. Know Your Rights.",
+    title: "Law Awareness TV — Nigeria's law channel",
     description: SITE_DESCRIPTION,
     images: [OG_IMAGE],
   },

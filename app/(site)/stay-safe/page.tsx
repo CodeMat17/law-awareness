@@ -9,7 +9,6 @@ import {
   Section,
   SectionHeader,
 } from "@/components/site/primitives";
-import { BEFORE_YOU_SIGN } from "@/lib/content/data";
 import { getContent } from "@/lib/content/repository";
 
 export const metadata: Metadata = {
@@ -21,10 +20,20 @@ export const metadata: Metadata = {
 
 export default async function StaySafePage() {
   const content = getContent();
-  const [guides, series] = await Promise.all([
+  const [guides, allSeries] = await Promise.all([
     content.getSafetyGuides(),
-    content.getSafetyGuides(BEFORE_YOU_SIGN),
+    content.getSafetySeries(),
   ]);
+
+  // Each series from the CMS, with the guides that name it. A series nobody
+  // has filed a guide under yet has nothing to show, so it is left out rather
+  // than drawn as a heading over an empty grid.
+  const featured = allSeries
+    .map((series) => ({
+      series,
+      guides: guides.filter((guide) => guide.series === series.name),
+    }))
+    .filter((entry) => entry.guides.length > 0);
 
   const areas = Array.from(new Set(guides.map((guide) => guide.area))).sort();
 
@@ -40,27 +49,38 @@ export default async function StaySafePage() {
       <PageHeader
         trail={[{ label: "Home", href: "/" }, { label: "Stay Safe" }]}
         eyebrow="Stay Safe"
-        title="Most legal problems are cheapest to solve before they start"
-        lede="Practical prevention for the moments where people lose money and position: signing, buying, borrowing, hiring and going online. What to look for, the red flags, the questions to ask, and the point at which to stop and get professional advice."
+        title="Avoid legal trouble before it starts"
+        lede="Practical tips for the moments when people most often lose money: signing, buying, borrowing, hiring and going online. What to look for, the warning signs, the questions to ask, and when to stop and get a lawyer."
       />
 
-      <Section className="pt-12 sm:pt-14 lg:pt-16">
-        <Reveal>
-          <SectionHeader
-            eyebrow={`Series · ${BEFORE_YOU_SIGN}`}
-            title="The document in front of you is the cheapest place to stop"
-            description="A recurring series on everyday documents: the clauses that matter, the wording that shifts risk quietly, and the questions that expose an unfair term before you commit."
-            action={{ label: "Start the series", href: "/stay-safe/before-you-sign" }}
-          />
-        </Reveal>
-        <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {series.map((guide) => (
-            <RevealItem key={guide.id} className="flex">
-              <SafetyCard guide={guide} />
-            </RevealItem>
-          ))}
-        </RevealGroup>
-      </Section>
+      {featured.length > 0 && (
+        <Section className="pt-12 sm:pt-14 lg:pt-16">
+          <div className="space-y-16">
+            {featured.map(({ series, guides: inSeries }) => (
+              <div key={series.id}>
+                <Reveal>
+                  <SectionHeader
+                    eyebrow={`Series · ${series.name}`}
+                    title={series.headline}
+                    description={series.description || undefined}
+                    action={{
+                      label: "Start the series",
+                      href: `/stay-safe/${inSeries[0].slug}`,
+                    }}
+                  />
+                </Reveal>
+                <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                  {inSeries.map((guide) => (
+                    <RevealItem key={guide.id} className="flex">
+                      <SafetyCard guide={guide} />
+                    </RevealItem>
+                  ))}
+                </RevealGroup>
+              </div>
+            ))}
+          </div>
+        </Section>
+      )}
 
       <Section tone="surface">
         <Reveal>

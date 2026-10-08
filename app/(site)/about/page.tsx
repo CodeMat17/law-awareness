@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { CmsPage, cmsPageMetadata } from "@/components/site/cms-page";
+import { MissionVision } from "@/components/site/mission-vision";
 
 /**
  * Composed in the CMS. Everything this page says - its header, its sections
@@ -22,5 +23,5 @@ export function generateMetadata(): Promise<Metadata> {
 }
 
 export default function AboutPage() {
-  return <CmsPage path="/about" />;
+  return <CmsPage path="/about" intro={<MissionVision />} />;
 }

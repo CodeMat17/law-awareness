@@ -41,8 +41,8 @@ export default async function QuizzesPage() {
       <PageHeader
         trail={[{ label: "Home", href: "/" }, { label: "Quizzes" }]}
         eyebrow="Quizzes"
-        title="Recognising the law is not the same as knowing it"
-        lede="Short quizzes with an explanation behind every answer — including the ones you get right. Nothing is stored, nothing is scored against you, and no answer here is advice about your own situation."
+        title="Test what you know about the law"
+        lede="Short quizzes with an explanation for every answer — even the ones you get right. Nothing is saved, and no answer here is advice about your own situation."
       />
 
       {levels.map((level, index) => {

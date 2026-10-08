@@ -54,7 +54,7 @@ export default async function RegulatoryWatchPage(
         ]}
         eyebrow="Regulatory Watch"
         title="What changed, who it affects, and what it actually means"
-        lede="Every entry answers the same questions in the same order, and keeps two things visibly apart: an account of what changed, and our explanation of what it means. The first is reporting. The second is legal education — and neither is advice about your situation."
+        lede="Each update answers the same questions in the same order, and keeps two things clearly apart: what actually changed, and our explanation of what it means. Neither is advice about your own situation."
       />
 
       <Section className="pt-12 sm:pt-14 lg:pt-16">

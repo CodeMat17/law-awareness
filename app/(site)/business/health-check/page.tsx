@@ -45,7 +45,7 @@ export default async function HealthCheckPage() {
         ]}
         eyebrow="Business legal health check"
         title={`${questions.length} questions about how your business actually runs`}
-        lede="Answer honestly and you get a readiness picture across each area, the topics worth understanding, and a clear signal about where a qualified professional should be involved. It takes a few minutes, nothing is stored, and it is not a legal opinion."
+        lede="Answer a few honest questions and see how ready your business is in each area, what to read next, and where you may need a lawyer. It takes a few minutes, nothing is saved, and it is not legal advice."
       />
 
       <Section className="pt-12 sm:pt-14 lg:pt-16">

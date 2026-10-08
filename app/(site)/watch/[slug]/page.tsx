@@ -20,7 +20,6 @@ import {
   TopicChips,
   formatLabel,
 } from "@/components/site/media";
-import { SaveButton } from "@/components/account/save-button";
 import { getContent } from "@/lib/content/repository";
 import { ogImages } from "@/lib/seo";
 
@@ -106,19 +105,7 @@ export default async function WatchDetailPage(
         title={item.title}
         lede={item.description}
         meta={<CredibilityRow meta={item.meta} kind="Video" />}
-      >
-        <div className="mt-6">
-          <SaveButton
-            target={{
-              kind: "media",
-              title: item.title,
-              summary: item.description,
-              group: item.series ? `Watch · ${item.series}` : "Watch",
-              href: `/watch/${item.slug}`,
-            }}
-          />
-        </div>
-      </PageHeader>
+      />
 
       <div className="rail pt-10 sm:pt-12">
         <MediaStage item={item} />

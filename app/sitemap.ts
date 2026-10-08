@@ -50,10 +50,12 @@ const routes = [
   { path: "/stay-safe", priority: 0.8, changeFrequency: "weekly" as const },
   { path: "/law-and-society", priority: 0.8, changeFrequency: "daily" as const },
   { path: "/constitution", priority: 0.8, changeFrequency: "monthly" as const },
+  { path: "/constitutions", priority: 0.6, changeFrequency: "monthly" as const },
   { path: "/cases", priority: 0.7, changeFrequency: "weekly" as const },
   { path: "/know-the-law/amendments", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/glossary", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/search", priority: 0.5, changeFrequency: "monthly" as const },
+  { path: "/programmes", priority: 0.9, changeFrequency: "weekly" as const },
   { path: "/watch", priority: 0.7, changeFrequency: "weekly" as const },
   { path: "/listen", priority: 0.7, changeFrequency: "weekly" as const },
   { path: "/live", priority: 0.7, changeFrequency: "daily" as const },
@@ -105,6 +107,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     cases,
     chapters,
     histories,
+    programmes,
   ] = await Promise.all([
     content.getLawCategories(),
     content.getLawEntries(),
@@ -130,9 +133,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     content.getCases(),
     content.getConstitutionChapters(),
     content.getLawHistories(),
+    content.getProgrammeCategories(),
   ]);
 
   const detail: MetadataRoute.Sitemap = [
+    ...programmes.map((programme) => ({
+      url: `${SITE_URL}/programmes/${programme.slug}`,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    })),
     ...cases.map((record) => ({
       url: `${SITE_URL}/cases/${record.slug}`,
       lastModified: dateOf(record.meta.lastReviewed),

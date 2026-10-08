@@ -12,15 +12,12 @@ import {
   TickList,
 } from "@/components/site/knowledge";
 import {
-  ChapterList,
   ContributorList,
   EpisodeRow,
   MediaStage,
   TopicChips,
-  Transcript,
   formatLabel,
 } from "@/components/site/media";
-import { SaveButton } from "@/components/account/save-button";
 import { getContent } from "@/lib/content/repository";
 import { ogImages } from "@/lib/seo";
 
@@ -76,14 +73,14 @@ export default async function ListenDetailPage(
 
   const more = seriesItems.filter((entry) => entry.id !== item.id).slice(0, 4);
 
+  // A podcast episode is listened to, not read: no chapters and no transcript,
+  // even when the record still carries them.
   // Each entry must match a block that actually renders: an anchor pointing at
   // a section that was skipped for having no content scrolls nowhere.
   const sections = [
     ...(item.takeaways.length > 0 || item.topics.length > 0
       ? [{ id: "about", label: "What it covers" }]
       : []),
-    ...(item.chapters.length > 0 ? [{ id: "chapters", label: "Chapters" }] : []),
-    { id: "transcript", label: "Transcript" },
     ...(item.contributors.length > 0
       ? [{ id: "credits", label: "Credits" }]
       : []),
@@ -114,19 +111,7 @@ export default async function ListenDetailPage(
         title={item.title}
         lede={item.description}
         meta={<CredibilityRow meta={item.meta} kind="Podcast episode" />}
-      >
-        <div className="mt-6">
-          <SaveButton
-            target={{
-              kind: "media",
-              title: item.title,
-              summary: item.description,
-              group: item.series ? `Listen · ${item.series}` : "Listen",
-              href: `/listen/${item.slug}`,
-            }}
-          />
-        </div>
-      </PageHeader>
+      />
 
       <div className="rail pt-10 sm:pt-12">
         <MediaStage item={item} />
@@ -155,20 +140,6 @@ export default async function ListenDetailPage(
             </div>
           </ContentBlock>
         )}
-
-        {item.chapters.length > 0 && (
-          <ContentBlock
-            id="chapters"
-            title="Chapters"
-            description="Where each part of the episode begins."
-          >
-            <ChapterList chapters={item.chapters} />
-          </ContentBlock>
-        )}
-
-        <ContentBlock id="transcript" title="Transcript">
-          <Transcript transcript={item.transcript} />
-        </ContentBlock>
 
         {item.contributors.length > 0 && (
           <ContentBlock id="credits" title="Credits">

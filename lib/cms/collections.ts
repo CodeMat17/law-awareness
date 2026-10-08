@@ -1,5 +1,6 @@
 import type { WorkflowStatus } from "@/lib/content/types";
 import type { RowColumn } from "./rows";
+import { programmeCategories } from "@/lib/content/programmes";
 
 /**
  * Collection registry.
@@ -41,7 +42,13 @@ export type CollectionId =
   | "alert-topics"
   | "calendar-entries"
   | "health-check"
-  | "profile-questions";
+  | "profile-questions"
+  | "programmes"
+  | "footer-columns"
+  | "contact-page"
+  | "donate-page"
+  | "fundamental-rights"
+  | "safety-series";
 
 /**
  * The part of the public site a collection feeds.
@@ -56,12 +63,12 @@ export type CollectionId =
  * lib/content/data.ts, which is the menu readers actually see.
  */
 export type SiteSection =
+  | "watch-listen"
   | "news"
   | "know-the-law"
   | "your-rights"
   | "business"
   | "legal-help"
-  | "watch-listen"
   | "learn"
   | "site";
 
@@ -70,6 +77,12 @@ export const siteSections: {
   label: string;
   description: string;
 }[] = [
+  {
+    id: "watch-listen",
+    label: "Programmes — Watch, Listen & Live",
+    description:
+      "The channel itself: videos, podcasts, live sessions and the shows they belong to.",
+  },
   {
     id: "news",
     label: "News & the front page",
@@ -97,11 +110,6 @@ export const siteSections: {
     description: "Where a reader in trouble is pointed next.",
   },
   {
-    id: "watch-listen",
-    label: "Watch & Listen",
-    description: "Video, podcasts and live sessions.",
-  },
-  {
     id: "learn",
     label: "Learn & resources",
     description: "Quizzes and the printable material in the resource centre.",
@@ -110,7 +118,7 @@ export const siteSections: {
     id: "site",
     label: "The site itself",
     description:
-      "Standing pages that are not part of a content library - About and the platform documents.",
+      "The parts of the site that are not a content library: About and the platform documents, Contact, Donate and the footer.",
   },
 ];
 
@@ -269,6 +277,28 @@ export const workflowOptions: { value: WorkflowStatus; label: string }[] = [
 const REVIEW_GROUP = "Credibility & review";
 const BODY_GROUP = "What the page says";
 const PLACEMENT_GROUP = "Where it belongs";
+
+/**
+ * The programme category - the channel line-up a viewer browses at
+ * /programmes. A select, never free text: the categories are the station's
+ * structure and a typed one would file the item under a page that does not
+ * exist.
+ *
+ * The option labels are the names in lib/content/programmes.ts, because the
+ * registry is static. A programme renamed in the CMS still files correctly -
+ * the stored value is the slug - but this list shows its original name.
+ */
+const programmeField: FieldDefinition = {
+  name: "programme",
+  label: "Programme category",
+  kind: "select",
+  group: PLACEMENT_GROUP,
+  help: "Which programme this belongs to on Programmes (/programmes). Leave empty and it still shows on Watch, Listen or Live, but not under any programme.",
+  options: [
+    { value: "", label: "None" },
+    ...programmeCategories.map((item) => ({ value: item.slug, label: item.name })),
+  ],
+};
 const FILE_GROUP = "The file readers play";
 /**
  * Fields that wire a record to another part of the site by its internal name.
@@ -282,6 +312,73 @@ const FILE_GROUP = "The file readers play";
 const WIRING_GROUP = "Links to other parts of the site — leave unless you know";
 /** How the page is described on Google and when someone shares the link. */
 const SEO_GROUP = "How it looks in Google & shared links";
+
+/**
+ * Columns of a card that sends the reader somewhere else on the site - the
+ * routes on Contact, the desks beside its form, the ways to help on Donate.
+ */
+const linkCardColumns: RowColumn[] = [
+  { name: "title", label: "Title" },
+  { name: "body", label: "What it says", multiline: true },
+  { name: "linkLabel", label: "Link wording" },
+  { name: "href", label: "Link goes to", help: "A page on this site, e.g. /ask." },
+];
+
+const seoFields: FieldDefinition[] = [
+  {
+    name: "metaTitle",
+    label: "Search-result title",
+    kind: "text",
+    group: SEO_GROUP,
+    help: "The title shown in search results and social cards.",
+  },
+  {
+    name: "metaDescription",
+    label: "Search-result description",
+    kind: "textarea",
+    group: SEO_GROUP,
+    help: "Around 150 characters. This is what a stranger reads before deciding to click.",
+  },
+];
+
+/** The title block every standing page opens with. */
+const pageHeaderFields: FieldDefinition[] = [
+  {
+    name: "eyebrow",
+    label: "Small label above the title",
+    kind: "text",
+    required: true,
+    help: "One or two words. It is also the last step of the trail at the top of the page.",
+  },
+  { name: "title", label: "Title", kind: "text", required: true },
+  {
+    name: "lede",
+    label: "Introduction under the title",
+    kind: "textarea",
+    help: "One or two sentences, set larger than the body text.",
+  },
+];
+
+/** A section's small label, heading and standfirst, under one form group. */
+function sectionHeadingFields(
+  prefix: string,
+  group: string,
+  withDescription = true
+): FieldDefinition[] {
+  const fields: FieldDefinition[] = [
+    { name: `${prefix}Eyebrow`, label: "Small label above the heading", kind: "text", group },
+    { name: `${prefix}Title`, label: "Heading", kind: "text", group },
+  ];
+  if (withDescription) {
+    fields.push({
+      name: `${prefix}Description`,
+      label: "Line under the heading",
+      kind: "textarea",
+      group,
+    });
+  }
+  return fields;
+}
 
 /** Fields shared by every reviewable content type. */
 const editorialFields: FieldDefinition[] = [
@@ -406,6 +503,178 @@ export const collections: CollectionDefinition[] = [
         kind: "textarea",
         group: SEO_GROUP,
         help: "Around 150 characters. This is what a stranger reads before deciding to click.",
+      },
+    ],
+  },
+  {
+    id: "contact-page",
+    label: "Contact page",
+    singular: "Contact page",
+    description:
+      "Every word on the Contact page. The layout and the message form stay as they are; what changes here is what the page says.",
+    icon: "info",
+    appearsOn: "The Contact page (/contact), linked from the footer.",
+    section: "site",
+    fixed: true,
+    hasReviewMeta: false,
+    fields: [
+      ...pageHeaderFields,
+      ...sectionHeadingFields("routes", "Faster than a message — the cards at the top"),
+      {
+        name: "routes",
+        label: "Cards",
+        kind: "rows",
+        group: "Faster than a message — the cards at the top",
+        addLabel: "Add a card",
+        help: "Each card points the reader at a page that answers faster than a message would.",
+        columns: linkCardColumns,
+      },
+      ...sectionHeadingFields("form", "Above the message form"),
+      {
+        name: "desksHeading",
+        label: "Heading",
+        kind: "text",
+        group: "Beside the form — who picks it up",
+      },
+      {
+        name: "desks",
+        label: "Desks",
+        kind: "rows",
+        group: "Beside the form — who picks it up",
+        addLabel: "Add a desk",
+        columns: linkCardColumns,
+      },
+      ...seoFields,
+    ],
+  },
+  {
+    id: "donate-page",
+    label: "Donate page",
+    singular: "Donate page",
+    description:
+      "Every word on the Donate page, and the link the Donate button goes to.",
+    icon: "heart",
+    appearsOn: "The Donate page (/donate), linked from the footer.",
+    section: "site",
+    fixed: true,
+    hasReviewMeta: false,
+    fields: [
+      ...pageHeaderFields,
+      {
+        name: "badges",
+        label: "Badges under the introduction",
+        kind: "list",
+        help: "Short promises, one per line, e.g. No paywall. The first is highlighted.",
+      },
+      ...sectionHeadingFields("why", "Why it needs funding"),
+      {
+        name: "whyParagraphs",
+        label: "Paragraphs",
+        kind: "list",
+        group: "Why it needs funding",
+        help: "One paragraph per line.",
+      },
+      {
+        name: "giveHeading",
+        label: "Heading",
+        kind: "text",
+        group: "The giving box",
+      },
+      { name: "giveBody", label: "What it says", kind: "textarea", group: "The giving box" },
+      {
+        name: "giveUrl",
+        label: "Donation link",
+        kind: "text",
+        group: "The giving box",
+        help: "The full web address of the payment page, e.g. https://… Leave empty until a real one exists — the box then asks readers to get in touch instead. Never publish a link you cannot stand behind.",
+      },
+      { name: "giveButton", label: "Button wording", kind: "text", group: "The giving box" },
+      {
+        name: "givePendingHeading",
+        label: "While there is no link: heading",
+        kind: "text",
+        group: "The giving box",
+      },
+      {
+        name: "givePendingBody",
+        label: "While there is no link: what it says",
+        kind: "textarea",
+        group: "The giving box",
+      },
+      {
+        name: "givePendingLink",
+        label: "While there is no link: wording of the link to Contact",
+        kind: "text",
+        group: "The giving box",
+      },
+      {
+        name: "giveNote",
+        label: "Small print",
+        kind: "textarea",
+        group: "The giving box",
+      },
+      ...sectionHeadingFields("funds", "Where it goes"),
+      {
+        name: "funds",
+        label: "Costs",
+        kind: "rows",
+        group: "Where it goes",
+        addLabel: "Add a cost",
+        columns: [
+          { name: "title", label: "Title" },
+          { name: "body", label: "What it says", multiline: true },
+          { name: "icon", label: "Icon", help: "e.g. scale, video, shield, circle-question." },
+        ],
+      },
+      ...sectionHeadingFields("boundaries", "What it does not buy", false),
+      {
+        name: "boundariesIntro",
+        label: "Paragraph beside the heading",
+        kind: "textarea",
+        group: "What it does not buy",
+      },
+      {
+        name: "boundaries",
+        label: "Limits",
+        kind: "rows",
+        group: "What it does not buy",
+        addLabel: "Add a limit",
+        columns: linkCardColumns,
+      },
+      ...sectionHeadingFields("otherWays", "Other ways to help"),
+      {
+        name: "otherWays",
+        label: "Cards",
+        kind: "rows",
+        group: "Other ways to help",
+        addLabel: "Add a card",
+        columns: linkCardColumns,
+      },
+      ...seoFields,
+    ],
+  },
+  {
+    id: "footer-columns",
+    label: "Footer links",
+    singular: "Footer column",
+    description:
+      "The columns of links at the bottom of every page. Each record is one column: a heading and the links under it, in order.",
+    icon: "map",
+    appearsOn: "The footer, at the bottom of every page of the site. Columns appear left to right in the order they were added.",
+    section: "site",
+    hasReviewMeta: false,
+    fields: [
+      { name: "heading", label: "Column heading", kind: "text", required: true },
+      {
+        name: "links",
+        label: "Links",
+        kind: "rows",
+        addLabel: "Add a link",
+        help: "Top to bottom, as they appear in the column.",
+        columns: [
+          { name: "label", label: "Wording" },
+          { name: "href", label: "Goes to", help: "A page on this site, e.g. /watch, or a full address starting https://." },
+        ],
       },
     ],
   },
@@ -721,6 +990,63 @@ export const collections: CollectionDefinition[] = [
     ],
   },
   {
+    id: "programmes",
+    label: "Programme categories",
+    singular: "Programme category",
+    description:
+      "The channel's line-up: Courtroom & Judicial News, Law-Making and the rest. Change what each programme is called and how it is described here. The set of programmes is part of the site's structure, so programmes cannot be added or removed here.",
+    icon: "radio",
+    appearsOn: "Programmes (/programmes), each programme's own page, the line-up on the homepage and the Programmes menu.",
+    section: "watch-listen",
+    fixed: true,
+    hasReviewMeta: false,
+    fields: [
+      { name: "name", label: "Name", kind: "text", required: true },
+      {
+        name: "blurb",
+        label: "One-line description",
+        kind: "text",
+        required: true,
+        help: "Shown on the programme's card and under its name in the menu.",
+      },
+      {
+        name: "description",
+        label: "Introduction",
+        kind: "textarea",
+        required: true,
+        help: "A short paragraph at the top of the programme's own page.",
+      },
+      {
+        name: "icon",
+        label: "Icon",
+        kind: "text",
+        help: "e.g. gavel, landmark, siren, briefcase, scale, home, shield.",
+      },
+      {
+        name: "readMoreLabel",
+        label: "Read-more link wording",
+        kind: "text",
+        group: "The read-more link on the programme's page",
+        help: "e.g. Court decisions explained.",
+      },
+      {
+        name: "readMoreHref",
+        label: "Read-more link goes to",
+        kind: "text",
+        group: "The read-more link on the programme's page",
+        help: "A page on this site, e.g. /cases. Leave empty for no link.",
+      },
+      {
+        name: "slug",
+        label: "Web address",
+        kind: "text",
+        required: true,
+        locked: true,
+        help: "Fixed. Every video, episode and series filed under this programme points at it by this name, and it is the page's address under /programmes.",
+      },
+    ],
+  },
+  {
     id: "media",
     label: "Watch, Listen & Live",
     singular: "Media item",
@@ -759,6 +1085,7 @@ export const collections: CollectionDefinition[] = [
           { value: "live-session", label: "Live session" },
         ],
       },
+      programmeField,
       {
         name: "series",
         label: "Series",
@@ -820,7 +1147,7 @@ export const collections: CollectionDefinition[] = [
         kind: "rows",
         group: BODY_GROUP,
         addLabel: "Add a chapter",
-        help: "Lets a reader jump into the middle of a long item. Start times are in seconds from the beginning.",
+        help: "Video and live only - podcast episodes never show chapters. Lets a viewer jump into the middle of a long item. Start times are in seconds from the beginning.",
         columns: [
           { name: "startSeconds", label: "Starts at (seconds)" },
           { name: "title", label: "Title" },
@@ -837,7 +1164,7 @@ export const collections: CollectionDefinition[] = [
           { value: "in-progress", label: "Being written" },
           { value: "unavailable", label: "Not available" },
         ],
-        help: "Set this to Published only when the cues below are actually complete - the page tells readers which of the three is true.",
+        help: "Video and live only - podcast episodes never show a transcript. Set this to Published only when the cues below are actually complete - the page tells readers which of the three is true.",
       },
       {
         name: "transcriptCues",
@@ -922,6 +1249,7 @@ export const collections: CollectionDefinition[] = [
         help: "How often it lands, in words. Do not promise a publication date the desk cannot keep.",
       },
       { name: "host", label: "Host", kind: "text" },
+      programmeField,
       { name: "icon", label: "Icon", kind: "text" },
       {
         name: "artwork",
@@ -1419,9 +1747,31 @@ export const collections: CollectionDefinition[] = [
       { name: "redFlags", label: "Red flags", kind: "list", group: BODY_GROUP, help: "One per line." },
       { name: "questionsToAsk", label: "Questions to ask", kind: "list", group: BODY_GROUP, help: "One per line." },
       { name: "stopAndGetHelp", label: "Stop and get help", kind: "list", group: BODY_GROUP, help: "The points at which a reader should stop and get a lawyer. One per line." },
-      { name: "series", label: "Series", kind: "text", group: PLACEMENT_GROUP, help: "Groups this guide with others on the Stay Safe index. Leave empty if it stands alone." },
+      { name: "series", label: "Series", kind: "text", group: PLACEMENT_GROUP, help: "The name of a Stay Safe series, spelt exactly as it is on the series record, e.g. Before You Sign. The guide then also appears in that series' section on Stay Safe. Leave empty if it stands alone." },
       relatedField,
       ...editorialFields,
+    ],
+  },
+  {
+    id: "safety-series",
+    label: "Stay Safe series",
+    singular: "Stay Safe series",
+    description:
+      "Runs of Stay Safe guides featured as a section of their own, such as Before You Sign. A guide joins a series by naming it in its own Series field.",
+    icon: "folder",
+    appearsOn: "Stay Safe (/stay-safe) — each published series is a section near the top of the page, showing the guides in it. Its 'Start the series' link opens the first of those guides.",
+    section: "your-rights",
+    hasReviewMeta: false,
+    fields: [
+      {
+        name: "name",
+        label: "Series name",
+        kind: "text",
+        required: true,
+        help: "Shown above the heading. Guides join the series by having exactly this in their Series field, so if you rename it, rename it on its guides too.",
+      },
+      { name: "headline", label: "Heading", kind: "text", required: true },
+      { name: "description", label: "Line under the heading", kind: "textarea" },
     ],
   },
   {
@@ -1460,6 +1810,42 @@ export const collections: CollectionDefinition[] = [
       { name: "qualifications", label: "Qualifications", kind: "list", group: BODY_GROUP, help: "The limits and exceptions the Constitution itself attaches, in general terms. One per line. Omitting these makes a right look wider than it is." },
       { name: "chapter", label: "Chapter", kind: "text", required: true, group: WIRING_GROUP, help: "The Roman numeral of the chapter this section sits in. It must match a Constitution chapter." },
       relatedField,
+    ],
+  },
+  {
+    id: "fundamental-rights",
+    label: "Fundamental rights list",
+    singular: "Fundamental right",
+    description:
+      "The at-a-glance list of the rights in Chapter IV, one entry per section from 33 to 46. The sections are the Constitution's own, so entries cannot be added or removed - only their wording changed.",
+    icon: "scale",
+    appearsOn: "The Constitution page (/constitution), under 'The rights, section by section'.",
+    section: "know-the-law",
+    fixed: true,
+    hasReviewMeta: false,
+    fields: [
+      { name: "title", label: "Right", kind: "text", required: true },
+      {
+        name: "summary",
+        label: "In a sentence",
+        kind: "textarea",
+        required: true,
+        help: "What the section protects, in general terms. Never present this as the wording of the Constitution itself.",
+      },
+      {
+        name: "href",
+        label: "Guide link",
+        kind: "text",
+        help: "A rights guide or explainer on this site that covers this right, e.g. /your-rights/privacy. Shown as 'Read the guide'. Leave empty if there is none.",
+      },
+      {
+        name: "section",
+        label: "Section number",
+        kind: "text",
+        required: true,
+        locked: true,
+        help: "Fixed. As the Constitution numbers it. It also links to the section's explanation in Chapter IV.",
+      },
     ],
   },
   {
@@ -1624,6 +2010,12 @@ const titleField: Record<CollectionId, string> = {
   "calendar-entries": "title",
   "health-check": "prompt",
   "profile-questions": "label",
+  programmes: "name",
+  "footer-columns": "heading",
+  "contact-page": "title",
+  "donate-page": "title",
+  "fundamental-rights": "title",
+  "safety-series": "name",
 };
 
 export function titleFieldFor(collection: CollectionId): string {

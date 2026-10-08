@@ -11,7 +11,6 @@ import {
 } from "@/components/site/knowledge";
 import { Section, SectionHeader } from "@/components/site/primitives";
 import { Reveal, RevealGroup, RevealItem } from "@/components/site/reveal";
-import { SaveButton } from "@/components/account/save-button";
 import { getContent } from "@/lib/content/repository";
 
 /** Published articles are prerendered, so an unknown slug is a real 404. */
@@ -99,17 +98,6 @@ export default async function ArticlePage(
           </time>{" "}
           · {article.readingMinutes} min read
         </p>
-        <div className="mt-6">
-          <SaveButton
-            target={{
-              kind: "article",
-              title: article.title,
-              summary: article.standfirst,
-              group: `Law & Society · ${article.category}`,
-              href: `/law-and-society/${article.slug}`,
-            }}
-          />
-        </div>
       </PageHeader>
 
       <KnowledgeLayout

@@ -50,8 +50,8 @@ export default async function LegalCalendarPage() {
           { label: "Legal calendar" },
         ]}
         eyebrow="Business legal calendar"
-        title="A compliance rhythm, not a list of dates"
-        lede="Most compliance failures are timing failures: an obligation that had no owner and no cadence. This calendar names what recurs, what starts the clock and what to have ready — so you can build it into your own year."
+        title="Your business year, from a legal point of view"
+        lede="Many businesses get into trouble simply by missing something that comes round regularly. This calendar shows what repeats, what sets it off, and what to have ready — so you can plan it into your year."
       />
 
       {/* The reason there are no dates. Stated first, not buried. */}

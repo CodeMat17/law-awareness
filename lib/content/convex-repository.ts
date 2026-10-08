@@ -58,9 +58,17 @@ import type {
   QuizQuestion,
   RelatedRefs,
   SafetyGuide,
+  SafetySeries,
+  FooterColumn,
   TranscriptStatus,
 } from "./types";
-import type { ConstitutionChapter } from "./constitution";
+import type { ConstitutionChapter, FundamentalRight } from "./constitution";
+import { isProgrammeSlug, type ProgrammeCategory } from "./programmes";
+import type {
+  ContactPageContent,
+  DonatePageContent,
+  LinkedCard,
+} from "./standing-pages";
 
 /**
  * Convex readers for the public site.
@@ -179,6 +187,12 @@ export const siteBackedCollections: ReadonlySet<string> = new Set([
   "calendar-entries",
   "health-check",
   "profile-questions",
+  "programmes",
+  "footer-columns",
+  "contact-page",
+  "donate-page",
+  "fundamental-rights",
+  "safety-series",
 ]);
 
 /**
@@ -415,6 +429,7 @@ function toMediaRecord(row: ContentRow): MediaCmsRecord {
     format: MEDIA_FORMATS.includes(format) ? format : "explainer",
     series: f.series?.trim() || undefined,
     seriesSlug: f.seriesSlug?.trim() || undefined,
+    programme: isProgrammeSlug(f.programme) ? f.programme : undefined,
     host: f.host?.trim() || undefined,
     duration: f.duration?.trim() || undefined,
     publishedAt: f.publishedAt ?? "",
@@ -565,6 +580,7 @@ function toSeriesRecord(row: ContentRow): MediaSeriesCmsRecord {
     icon: f.icon?.trim() || "video",
     cadence: f.cadence ?? "",
     host: f.host?.trim() || undefined,
+    programme: isProgrammeSlug(f.programme) ? f.programme : undefined,
     artwork: f.artwork?.trim() || undefined,
     // A series with no seasons listed is one that does not run in seasons -
     // which the series page renders differently from a season with no items.
@@ -1412,4 +1428,159 @@ export const fetchProfileQuestions = collectionReader<ProfileQuestion>(
         .filter(Boolean),
     })),
   })
+);
+
+/* -------------------------------------------------------------------------- */
+/* The channel's structure and the standing pages                              */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The programme line-up.
+ *
+ * The set of programmes is fixed in code (`PROGRAMME_SLUGS`): media items are
+ * filed under a programme by its slug, and the slug is locked in the admin. A
+ * row whose slug is not one of them could only ever be a page with nothing
+ * filed under it, so it reads as null and is dropped by the repository.
+ */
+export const fetchProgrammeCategories = collectionReader<ProgrammeCategory | null>(
+  "programmes",
+  (row) => {
+    const slug = row.fields.slug?.trim();
+    if (!isProgrammeSlug(slug)) return null;
+    return {
+      slug,
+      name: row.fields.name || row.title,
+      blurb: row.fields.blurb ?? "",
+      description: row.fields.description ?? "",
+      icon: row.fields.icon?.trim() || "play",
+      readMore: {
+        label: row.fields.readMoreLabel?.trim() ?? "",
+        href: row.fields.readMoreHref?.trim() ?? "",
+      },
+    };
+  }
+);
+
+export const fetchFooterColumns = collectionReader<FooterColumn>(
+  "footer-columns",
+  (row) => ({
+    id: row.recordId,
+    heading: row.fields.heading || row.title,
+    links: rowsOf(row.fields.links)
+      .map((link) => ({
+        label: link.label?.trim() ?? "",
+        href: link.href?.trim() ?? "",
+      }))
+      // A link with no wording or no destination renders as nothing a reader
+      // can use, so it is left out rather than drawn as an empty line.
+      .filter((link) => link.label && link.href),
+  })
+);
+
+export const fetchFundamentalRights = collectionReader<FundamentalRight>(
+  "fundamental-rights",
+  (row) => ({
+    section: row.fields.section ?? "",
+    title: row.fields.title || row.title,
+    summary: row.fields.summary ?? "",
+    href: row.fields.href?.trim() || undefined,
+  })
+);
+
+export const fetchSafetySeries = collectionReader<SafetySeries>(
+  "safety-series",
+  (row) => ({
+    id: row.recordId,
+    name: row.fields.name?.trim() || row.title,
+    headline: row.fields.headline ?? "",
+    description: row.fields.description ?? "",
+  })
+);
+
+function toLinkCards(value: string | undefined): LinkedCard[] {
+  return rowsOf(value).map((entry) => ({
+    title: entry.title ?? "",
+    body: entry.body ?? "",
+    href: entry.href?.trim() ?? "",
+    linkLabel: entry.linkLabel ?? "",
+  }));
+}
+
+export const fetchContactPage = collectionReader<ContactPageContent>(
+  "contact-page",
+  (row) => {
+    const f = row.fields;
+    return {
+      eyebrow: f.eyebrow ?? "",
+      title: f.title || row.title,
+      lede: f.lede ?? "",
+      metaTitle: f.metaTitle ?? "",
+      metaDescription: f.metaDescription ?? "",
+      routes: {
+        eyebrow: f.routesEyebrow ?? "",
+        title: f.routesTitle ?? "",
+        description: f.routesDescription ?? "",
+        items: toLinkCards(f.routes),
+      },
+      form: {
+        eyebrow: f.formEyebrow ?? "",
+        title: f.formTitle ?? "",
+        description: f.formDescription ?? "",
+      },
+      desks: { heading: f.desksHeading ?? "", items: toLinkCards(f.desks) },
+    };
+  }
+);
+
+export const fetchDonatePage = collectionReader<DonatePageContent>(
+  "donate-page",
+  (row) => {
+    const f = row.fields;
+    return {
+      eyebrow: f.eyebrow ?? "",
+      title: f.title || row.title,
+      lede: f.lede ?? "",
+      badges: decodeList(f.badges),
+      metaTitle: f.metaTitle ?? "",
+      metaDescription: f.metaDescription ?? "",
+      why: {
+        eyebrow: f.whyEyebrow ?? "",
+        title: f.whyTitle ?? "",
+        description: f.whyDescription ?? "",
+        paragraphs: decodeList(f.whyParagraphs),
+      },
+      give: {
+        heading: f.giveHeading ?? "",
+        body: f.giveBody ?? "",
+        url: f.giveUrl?.trim() ?? "",
+        buttonLabel: f.giveButton?.trim() || "Donate now",
+        pendingHeading: f.givePendingHeading ?? "",
+        pendingBody: f.givePendingBody ?? "",
+        pendingLinkLabel: f.givePendingLink?.trim() || "Get in touch to give",
+        note: f.giveNote ?? "",
+      },
+      funds: {
+        eyebrow: f.fundsEyebrow ?? "",
+        title: f.fundsTitle ?? "",
+        description: f.fundsDescription ?? "",
+        items: rowsOf(f.funds).map((entry) => ({
+          title: entry.title ?? "",
+          body: entry.body ?? "",
+          icon: entry.icon?.trim() || "sparkles",
+        })),
+      },
+      boundaries: {
+        eyebrow: f.boundariesEyebrow ?? "",
+        title: f.boundariesTitle ?? "",
+        intro: f.boundariesIntro ?? "",
+        items: toLinkCards(f.boundaries),
+      },
+      otherWays: {
+        eyebrow: f.otherWaysEyebrow ?? "",
+        title: f.otherWaysTitle ?? "",
+        description: f.otherWaysDescription ?? "",
+        items: toLinkCards(f.otherWays),
+      },
+    };
+  }
 );

@@ -38,7 +38,7 @@ export default async function AskPage() {
         trail={[{ label: "Home", href: "/" }, { label: "Ask a Question" }]}
         eyebrow="Ask a Question"
         title="Ask about the law, and get an answer everyone can read"
-        lede="Questions here are answered as general legal information, in public, with the instruments named. That is a genuine limit rather than a caution: it means we can answer what the law provides, and it means we cannot tell you what to do about your own case."
+        lede="We answer questions in public, in everyday words, and name the law behind each answer. Because the answers are general, we can explain what the law says — but we cannot tell you what to do in your own case."
       />
 
       {/* Ask ---------------------------------------------------------------- */}

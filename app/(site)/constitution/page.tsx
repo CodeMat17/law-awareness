@@ -19,7 +19,6 @@ import {
 } from "@/components/site/primitives";
 import { Reveal, RevealGroup, RevealItem } from "@/components/site/reveal";
 import { getContent } from "@/lib/content/repository";
-import { fundamentalRights } from "@/lib/content/constitution";
 
 export const metadata: Metadata = {
   title: "Constitution Explorer — chapters, sections and plain language",
@@ -30,9 +29,10 @@ export const metadata: Metadata = {
 
 export default async function ConstitutionPage() {
   const content = getContent();
-  const [chapters, sections] = await Promise.all([
+  const [chapters, sections, fundamentalRights] = await Promise.all([
     content.getConstitutionChapters(),
     content.getConstitutionSections(),
+    content.getFundamentalRights(),
   ]);
 
   const countFor = (numeral: string) =>
@@ -71,7 +71,7 @@ export default async function ConstitutionPage() {
         ]}
         eyebrow="Constitution Explorer"
         title="The document every other Nigerian law answers to"
-        lede="The Constitution of the Federal Republic of Nigeria 1999 (as amended) is supreme: where another law is inconsistent with it, the Constitution prevails. Search it by chapter and by section — each one paired with a plain-language explanation that is labelled as ours, never presented as the text."
+        lede="The 1999 Constitution (as amended) is Nigeria's highest law: if any other law disagrees with it, the Constitution wins. Browse it chapter by chapter and section by section — each with an explanation in everyday words, clearly marked as ours and kept apart from the official text."
       />
 
       {/* Search ------------------------------------------------------------- */}
@@ -129,48 +129,50 @@ export default async function ConstitutionPage() {
           />
         </Reveal>
 
-        <Reveal delay={0.06} className="mt-10">
-          <div className="overflow-hidden rounded-2xl border border-hairline bg-card">
-            <ul>
-              {fundamentalRights.map((right) => (
-                <li
-                  key={right.section}
-                  className="border-b border-hairline last:border-b-0"
-                >
-                  <div className="flex flex-col gap-2 p-5 sm:flex-row sm:gap-6 sm:p-6">
-                    <p className="text-eyebrow w-24 shrink-0 text-brand-ink">
-                      Section {right.section}
-                    </p>
-                    <div className="min-w-0">
-                      <h3 className="text-[0.98rem] font-extrabold text-foreground">
-                        {right.title}
-                      </h3>
-                      <p className="mt-1.5 text-[0.88rem] leading-relaxed text-muted-foreground">
-                        {right.summary}
+        {fundamentalRights.length > 0 && (
+          <Reveal delay={0.06} className="mt-10">
+            <div className="overflow-hidden rounded-2xl border border-hairline bg-card">
+              <ul>
+                {fundamentalRights.map((right) => (
+                  <li
+                    key={right.section}
+                    className="border-b border-hairline last:border-b-0"
+                  >
+                    <div className="flex flex-col gap-2 p-5 sm:flex-row sm:gap-6 sm:p-6">
+                      <p className="text-eyebrow w-24 shrink-0 text-brand-ink">
+                        Section {right.section}
                       </p>
-                      <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1">
-                        <Link
-                          href={`${chapterHref("IV")}#s-${right.section}`}
-                          className="inline-flex text-[0.83rem] font-bold text-foreground link-underline"
-                        >
-                          Explain section {right.section}
-                        </Link>
-                        {right.href && (
+                      <div className="min-w-0">
+                        <h3 className="text-[0.98rem] font-extrabold text-foreground">
+                          {right.title}
+                        </h3>
+                        <p className="mt-1.5 text-[0.88rem] leading-relaxed text-muted-foreground">
+                          {right.summary}
+                        </p>
+                        <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1">
                           <Link
-                            href={right.href}
+                            href={`${chapterHref("IV")}#s-${right.section}`}
                             className="inline-flex text-[0.83rem] font-bold text-foreground link-underline"
                           >
-                            Read the guide
+                            Explain section {right.section}
                           </Link>
-                        )}
+                          {right.href && (
+                            <Link
+                              href={right.href}
+                              className="inline-flex text-[0.83rem] font-bold text-foreground link-underline"
+                            >
+                              Read the guide
+                            </Link>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Reveal>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
+        )}
 
         <Reveal delay={0.1} className="mt-10">
           <ConstitutionNotice />
@@ -190,6 +192,12 @@ export default async function ConstitutionPage() {
               className="inline-flex h-11 items-center gap-2 rounded-xl border border-hairline bg-card px-5 text-[0.88rem] font-extrabold text-foreground transition-colors hover:border-primary/45"
             >
               Case Law Explorer
+            </Link>
+            <Link
+              href="/constitutions"
+              className="inline-flex h-11 items-center gap-2 rounded-xl border border-hairline bg-card px-5 text-[0.88rem] font-extrabold text-foreground transition-colors hover:border-primary/45"
+            >
+              Constitutions of Africa &amp; the USA
             </Link>
             <Link
               href="/know-the-law"

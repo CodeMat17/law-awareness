@@ -49,8 +49,8 @@ export function RequireAccount({
           </p>
           <p className="mt-3 max-w-2xl text-[0.86rem] leading-relaxed text-muted-foreground">
             An account is optional. Everything this platform publishes is
-            readable without one — an account only remembers what you have
-            saved and what you have chosen to follow.
+            readable without one — an account only remembers the topics you
+            have chosen to follow.
           </p>
           <div className="mt-6 flex flex-wrap gap-2.5">
             <Link

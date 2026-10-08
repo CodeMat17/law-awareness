@@ -58,7 +58,13 @@ export async function cmsPageMetadata(path: string): Promise<Metadata> {
   };
 }
 
-function StandardPage({ page }: { page: ResolvedPage }) {
+function StandardPage({
+  page,
+  intro,
+}: {
+  page: ResolvedPage;
+  intro?: React.ReactNode;
+}) {
   return (
     <>
       <PageHeader
@@ -67,6 +73,7 @@ function StandardPage({ page }: { page: ResolvedPage }) {
         title={page.title}
         lede={page.lede || undefined}
       />
+      {intro}
       <PageBlocks blocks={page.blocks} />
     </>
   );
@@ -80,7 +87,14 @@ function StandardPage({ page }: { page: ResolvedPage }) {
  * there is nothing at it, and saying so is better than rendering an empty
  * shell.
  */
-export async function CmsPage({ path }: { path: string }) {
+export async function CmsPage({
+  path,
+  intro,
+}: {
+  path: string;
+  /** Fixed content shown between the page header and its CMS blocks. */
+  intro?: React.ReactNode;
+}) {
   const page = await getPage(path);
   if (!page) notFound();
 
@@ -99,5 +113,5 @@ export async function CmsPage({ path }: { path: string }) {
     );
   }
 
-  return <StandardPage page={page} />;
+  return <StandardPage page={page} intro={intro} />;
 }

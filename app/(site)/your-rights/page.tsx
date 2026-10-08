@@ -35,8 +35,8 @@ export default async function YourRightsPage() {
       <PageHeader
         trail={[{ label: "Home", href: "/" }, { label: "Your Rights" }]}
         eyebrow="Your Rights"
-        title="Situation first. Law second."
-        lede="Rights matter most in the moment they are tested. Each guide starts from what is happening, sets out what the law protects, and says plainly when the situation needs a qualified lawyer."
+        title="Know your rights, situation by situation"
+        lede="Your rights matter most when someone is testing them. Each guide starts from what is happening to you, explains what the law protects, and tells you plainly when you need a lawyer."
       />
 
       <Section className="pt-12 sm:pt-14 lg:pt-16">

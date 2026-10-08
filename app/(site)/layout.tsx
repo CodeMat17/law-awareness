@@ -11,9 +11,10 @@ import { buildSearchIndex, searchSuggestions } from "@/lib/search-index";
  */
 export default async function SiteLayout({ children }: LayoutProps<"/">) {
   const content = getContent();
-  const [navigation, ticker, searchEntries] = await Promise.all([
+  const [navigation, ticker, footerColumns, searchEntries] = await Promise.all([
     content.getNavigation(),
     content.getTickerItems(),
+    content.getFooterColumns(),
     buildSearchIndex(),
   ]);
 
@@ -51,7 +52,7 @@ export default async function SiteLayout({ children }: LayoutProps<"/">) {
       <main id="main" className="min-w-0 flex-1 overflow-x-clip">
         {children}
       </main>
-      <SiteFooter />
+      <SiteFooter columns={footerColumns} />
     </>
   );
 }
