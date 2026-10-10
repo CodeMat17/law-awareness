@@ -55,7 +55,7 @@ export default async function NewRecordPage({
         </p>
       </header>
 
-      <div className="mt-8 grid gap-6 xl:grid-cols-[1.6fr_1fr] xl:items-start">
+      <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-[1.6fr_1fr] xl:items-start">
         <RecordCreator
           collectionId={definition.id}
           singular={definition.singular}

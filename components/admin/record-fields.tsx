@@ -23,6 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type { FieldDefinition } from "@/lib/cms/collections";
 import type { RowColumn } from "@/lib/cms/rows";
 import { MediaUploadField } from "./media-upload-field";
+import { RichTextField } from "./rich-text-field";
 import { RowsField } from "./rows-field";
 
 /**
@@ -57,7 +58,7 @@ export function Field({ field, defaultValue }: FieldProps) {
   return (
     <div>
       <Label
-        htmlFor={field.kind === "rows" ? undefined : id}
+        htmlFor={field.kind === "rows" || field.kind === "richtext" ? undefined : id}
         className="text-[0.82rem] font-bold text-foreground"
       >
         {field.label}
@@ -137,6 +138,18 @@ function Control({
   describedBy,
   defaultValue,
 }: FieldProps & { id: string; describedBy?: string }) {
+  if (field.kind === "richtext") {
+    return (
+      <RichTextField
+        id={id}
+        name={field.name}
+        label={field.label}
+        defaultValue={defaultValue}
+        describedBy={describedBy}
+      />
+    );
+  }
+
   if (field.kind === "image" || field.kind === "video") {
     return (
       <MediaUploadField

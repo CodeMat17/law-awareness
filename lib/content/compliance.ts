@@ -1,27 +1,18 @@
 import type {
   AlertTopic,
-  CalendarEntry,
   ComplianceTopic,
-  HealthCheckQuestion,
   ProfileQuestion,
 } from "./types";
 import { businessMeta } from "./business-meta";
 
 /**
- * Business & Enterprise seed content, part 2: the Compliance Centre, the health
- * check, the profiler, alert topics and the business legal calendar
- * (spec sections 18, 19, 21, 23 and 24).
+ * Business & Enterprise seed content, part 2: the Compliance Centre, the
+ * profiler and alert topics (spec sections 18, 21 and 23).
  *
- * `areaId` on a topic, a question and a calendar entry all point at the same
- * `ComplianceArea` ids in `./data`, so the Compliance Centre, the health check
- * and the calendar are three views of one spine rather than three lists that
- * can drift apart.
+ * `areaId` on a topic points at the same `ComplianceArea` ids in `./data`
+ * that the profiler maps its answers to, so the two cannot drift apart.
  *
- * See `./business.ts` for the editorial rules this file also follows. The point
- * that matters most here: NO calendar entry carries a date. Spec section 24
- * forbids hard-coding legal deadlines without a maintained source and review
- * process, so an entry describes a cadence and the trigger that starts the
- * clock, and the UI tells readers to confirm actual dates with the regulator.
+ * See `./business.ts` for the editorial rules this file also follows.
  */
 
 /* -------------------------------------------------------------------------- */
@@ -71,7 +62,6 @@ export const complianceTopics: ComplianceTopic[] = [
     related: {
       guides: ["before-entering-a-partnership"],
       compliance: ["corporate-governance", "record-keeping"],
-      briefings: ["governance-essentials"],
     },
     meta: businessMeta({ label: "Companies and Allied Matters Act 2020" }),
   },
@@ -214,7 +204,6 @@ export const complianceTopics: ComplianceTopic[] = [
     ],
     related: {
       compliance: ["record-keeping"],
-      briefings: ["five-risks-to-monitor"],
     },
     meta: businessMeta(),
   },
@@ -262,7 +251,6 @@ export const complianceTopics: ComplianceTopic[] = [
       guides: ["before-collecting-customer-data"],
       rights: ["privacy"],
       contracts: ["privacy-policy"],
-      briefings: ["what-a-data-regulation-means"],
     },
     meta: businessMeta({ label: "Nigeria Data Protection Act 2023" }),
   },
@@ -355,7 +343,6 @@ export const complianceTopics: ComplianceTopic[] = [
     related: {
       guides: ["before-launching-an-online-business"],
       contracts: ["terms-and-conditions"],
-      industries: ["retail", "hospitality"],
     },
     meta: businessMeta({
       label: "Federal Competition and Consumer Protection Act 2018",
@@ -401,7 +388,6 @@ export const complianceTopics: ComplianceTopic[] = [
       "You are entering a regulated sector by acquisition or partnership.",
     ],
     related: {
-      industries: ["financial-services", "healthcare", "hospitality"],
       compliance: ["record-keeping"],
     },
     meta: businessMeta({
@@ -495,7 +481,6 @@ export const complianceTopics: ComplianceTopic[] = [
     related: {
       guides: ["before-entering-a-partnership"],
       contracts: ["shareholder-agreement"],
-      briefings: ["governance-essentials"],
     },
     meta: businessMeta({ label: "Companies and Allied Matters Act 2020" }),
   },
@@ -585,105 +570,8 @@ export const complianceTopics: ComplianceTopic[] = [
     ],
     related: {
       compliance: ["employment-and-payroll", "dispute-prevention"],
-      briefings: ["five-risks-to-monitor"],
     },
     meta: businessMeta({ label: "Employee's Compensation Act 2010" }),
-  },
-];
-
-/* -------------------------------------------------------------------------- */
-/* Health check (spec section 19)                                              */
-/* -------------------------------------------------------------------------- */
-
-/**
- * One question per compliance area, phrased so that a confident yes is a
- * genuine signal. Questions ask about evidence a business either has or does
- * not - never about a legal conclusion the reader is not equipped to draw.
- */
-export const healthCheckQuestions: HealthCheckQuestion[] = [
-  {
-    id: "hq-1",
-    areaId: "ca-1",
-    prompt:
-      "Is the business registered in the form you intended, with its particulars currently accurate?",
-    help: "Directors, address, shareholding and ownership as recorded should match reality today.",
-  },
-  {
-    id: "hq-2",
-    areaId: "ca-2",
-    prompt:
-      "Do you have a signed written agreement with every significant customer and supplier?",
-    help: "Signed by both sides, complete with annexes, and findable within a few minutes.",
-  },
-  {
-    id: "hq-3",
-    areaId: "ca-3",
-    prompt:
-      "Does everyone who works in the business have written terms matching how they are actually engaged?",
-    help: "Including whether people treated as contractors are managed as employees in practice.",
-  },
-  {
-    id: "hq-4",
-    areaId: "ca-4",
-    prompt:
-      "Is the business registered with the relevant tax authority, with bookkeeping kept current?",
-    help: "Current means monthly, not reconstructed once a year.",
-  },
-  {
-    id: "hq-5",
-    areaId: "ca-5",
-    prompt:
-      "Can you list every place personal data is stored, why you hold it, and how long you keep it?",
-    help: "Customer, employee and supplier data, including third-party tools.",
-  },
-  {
-    id: "hq-6",
-    areaId: "ca-6",
-    prompt:
-      "Does the business own, or properly license, its brand, content, code and designs?",
-    help: "Including written assignments from every freelancer and agency.",
-  },
-  {
-    id: "hq-7",
-    areaId: "ca-7",
-    prompt:
-      "Can you substantiate every claim you publish, and is your refund position written down?",
-    help: "Including prices displayed with all unavoidable charges.",
-  },
-  {
-    id: "hq-8",
-    areaId: "ca-8",
-    prompt:
-      "Have you confirmed with the regulator what authorisation your specific activity requires?",
-    help: "Company registration is not the same as authorisation to carry on an activity.",
-  },
-  {
-    id: "hq-9",
-    areaId: "ca-9",
-    prompt:
-      "Are your company, financial and employment records complete, backed up and controlled by the business?",
-    help: "Controlled by the business means not sitting in an individual's personal account.",
-  },
-  {
-    id: "hq-10",
-    areaId: "ca-10",
-    prompt:
-      "Are significant decisions recorded, with conflicts declared and authority to sign defined?",
-    help: "Minutes, resolutions, and a written rule about who may commit the business.",
-  },
-  {
-    id: "hq-11",
-    areaId: "ca-11",
-    prompt:
-      "Are variations, approvals and important conversations confirmed in writing as they happen?",
-    help: "This is the evidence a dispute is decided on.",
-  },
-  {
-    id: "hq-12",
-    areaId: "ca-12",
-    prompt:
-      "Does your insurance match what the business actually does, and any cover your contracts require?",
-    help: "Check the exclusions, not only the policy title.",
   },
 ];
 
@@ -844,200 +732,5 @@ export const alertTopics: AlertTopic[] = [
     label: "Real Estate",
     description: "Land, title, tenancy and property transactions.",
     icon: "home",
-  },
-];
-
-/* -------------------------------------------------------------------------- */
-/* Business legal calendar (spec section 24)                                   */
-/* -------------------------------------------------------------------------- */
-
-/**
- * NO ENTRY CARRIES A DATE.
- *
- * Spec section 24 forbids hard-coding legal deadlines without a maintained
- * source and review process. Each entry therefore states the cadence and the
- * event that starts the clock, and the calendar page tells readers in terms to
- * confirm actual dates with the relevant authority.
- */
-export const calendarEntries: CalendarEntry[] = [
-  {
-    id: "cal-1",
-    title: "Annual returns and company filings",
-    cadence: "annual",
-    trigger: "Your company's annual return cycle under CAMA 2020",
-    timing:
-      "Once a year, on the cycle that applies to your entity. Confirm your own due date with the Corporate Affairs Commission.",
-    summary:
-      "Companies and registered entities are expected to file annual returns and keep registered particulars current.",
-    areaId: "ca-1",
-    icon: "building-2",
-    whatToPrepare: [
-      "Current details of directors, shareholders and the registered address.",
-      "Any changes made during the year that were not filed at the time.",
-      "The statutory registers, updated to match.",
-    ],
-    meta: businessMeta({ label: "Companies and Allied Matters Act 2020" }),
-  },
-  {
-    id: "cal-2",
-    title: "Payroll deductions and remittances",
-    cadence: "monthly",
-    trigger: "Each pay run",
-    timing:
-      "Every pay period, on the schedule set by the relevant authority. Confirm current dates with the tax authority and scheme administrators.",
-    summary:
-      "Pay-as-you-earn deductions, and pension and employee-compensation contributions where they apply, follow each pay run.",
-    areaId: "ca-3",
-    icon: "users",
-    whatToPrepare: [
-      "Payroll register for the period, with each deduction shown.",
-      "Payslips issued to every employee.",
-      "Evidence of remittance, filed with the payroll records.",
-    ],
-    meta: businessMeta({ label: "Pension Reform Act 2014" }),
-  },
-  {
-    id: "cal-3",
-    title: "Tax returns and bookkeeping close",
-    cadence: "annual",
-    trigger: "Your accounting year end",
-    timing:
-      "Annually, following your financial year end, with periodic filings in between. Confirm the filing calendar that applies to you with the tax authority.",
-    summary:
-      "Preparing a return is straightforward when the books were kept as the year went along, and painful when they were not.",
-    areaId: "ca-4",
-    icon: "receipt",
-    whatToPrepare: [
-      "Complete books for the period, reconciled to the bank.",
-      "Invoices, receipts and remittance evidence.",
-      "A qualified tax professional engaged before, not after, the deadline.",
-    ],
-    meta: businessMeta(),
-  },
-  {
-    id: "cal-4",
-    title: "Data protection review",
-    cadence: "annual",
-    trigger: "A fixed month you choose and keep",
-    timing:
-      "At least annually, and whenever you add a system, a tool or a new kind of data. Confirm any filing or audit duty with the Nigeria Data Protection Commission.",
-    summary:
-      "Re-walk your data inventory: what you hold, why, where it sits, who can reach it, and what should now be deleted.",
-    areaId: "ca-5",
-    icon: "database",
-    whatToPrepare: [
-      "The current data inventory and retention schedule.",
-      "A list of processors and the terms you hold with them.",
-      "Access lists, with leavers removed.",
-    ],
-    meta: businessMeta({ label: "Nigeria Data Protection Act 2023" }),
-  },
-  {
-    id: "cal-5",
-    title: "Contract renewal and notice review",
-    cadence: "quarterly",
-    trigger: "Renewal and notice windows in your agreements",
-    timing:
-      "Quarterly, against the dates in your own contracts. The only reliable source for these is the agreements themselves.",
-    summary:
-      "Auto-renewals and notice windows are missed because nobody owns them, not because they are hard to meet.",
-    areaId: "ca-2",
-    icon: "signature",
-    whatToPrepare: [
-      "A register of agreements with their renewal and notice dates.",
-      "The decision on each: renew, renegotiate or exit.",
-      "Notice served in the form the contract requires.",
-    ],
-    meta: businessMeta(),
-  },
-  {
-    id: "cal-6",
-    title: "Licence and permit renewals",
-    cadence: "event-driven",
-    trigger: "The expiry date on each permit you hold",
-    timing:
-      "As each authorisation falls due. Dates vary by regulator and by activity - confirm each one with the issuing body.",
-    summary:
-      "A lapsed permit can stop an activity entirely, and is usually harder to restore than to renew.",
-    areaId: "ca-8",
-    icon: "badge-check",
-    whatToPrepare: [
-      "A register of every permit, its expiry and a named owner.",
-      "Renewal requirements checked with the regulator ahead of time.",
-      "Evidence of continuing conditions, where the authorisation imposes them.",
-    ],
-    meta: businessMeta(),
-  },
-  {
-    id: "cal-7",
-    title: "Insurance review",
-    cadence: "annual",
-    trigger: "Your policy renewal",
-    timing:
-      "At each renewal, and whenever the business changes what it does.",
-    summary:
-      "Cover bought for the business you were is rarely right for the business you have become.",
-    areaId: "ca-12",
-    icon: "umbrella",
-    whatToPrepare: [
-      "A current description of activities, premises, people and assets.",
-      "Insurance requirements from your contracts.",
-      "The exclusions on your existing policies, read properly.",
-    ],
-    meta: businessMeta({ label: "Employee's Compensation Act 2010" }),
-  },
-  {
-    id: "cal-8",
-    title: "Board and governance cycle",
-    cadence: "quarterly",
-    trigger: "Your governance calendar",
-    timing:
-      "Quarterly for most companies, alongside any meeting your constitution requires.",
-    summary:
-      "Decisions taken as decisions, minuted and retained, are what make governance evidenceable later.",
-    areaId: "ca-10",
-    icon: "landmark",
-    whatToPrepare: [
-      "An agenda, and papers circulated in advance.",
-      "Declarations of interest for anything conflicted.",
-      "Minutes written up and retained with the company records.",
-    ],
-    meta: businessMeta({ label: "Companies and Allied Matters Act 2020" }),
-  },
-  {
-    id: "cal-9",
-    title: "Records and retention housekeeping",
-    cadence: "ongoing",
-    trigger: "Your retention schedule",
-    timing:
-      "Continuous, with a scheduled review at least once a year.",
-    summary:
-      "Delete what has reached the end of its retention period, and confirm the records you must keep are actually recoverable.",
-    areaId: "ca-9",
-    icon: "folder",
-    whatToPrepare: [
-      "The retention schedule, and what has now aged out.",
-      "A restore test from backup - not just a backup report.",
-      "Confirmation that the business, not an individual, controls each account.",
-    ],
-    meta: businessMeta(),
-  },
-  {
-    id: "cal-10",
-    title: "Employment policy and terms review",
-    cadence: "annual",
-    trigger: "A fixed month you choose and keep",
-    timing:
-      "Annually, and whenever you change how people are engaged or paid.",
-    summary:
-      "Check that written terms, the disciplinary procedure and the handbook still describe how the business actually runs.",
-    areaId: "ca-3",
-    icon: "users",
-    whatToPrepare: [
-      "Signed terms on file for everyone currently working in the business.",
-      "The disciplinary and grievance procedure as last applied.",
-      "Any role that has changed enough to need new terms.",
-    ],
-    meta: businessMeta({ label: "Labour Act, Cap L1 LFN 2004" }),
   },
 ];

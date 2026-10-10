@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 const suggestions = [
   { label: "Know the Law", href: "/know-the-law" },
-  { label: "Your Rights", href: "/your-rights" },
+  { label: "Your Rights", href: "/know-the-law/your-rights" },
   { label: "Business & Enterprise", href: "/business" },
   { label: "Legal Help", href: "/legal-help" },
 ];

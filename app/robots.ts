@@ -10,7 +10,7 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "*",
         allow: "/",
         // The CMS and account areas are never indexed.
-        disallow: ["/admin", "/admin/", "/business-account"],
+        disallow: ["/admin", "/admin/"],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

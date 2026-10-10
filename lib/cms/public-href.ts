@@ -22,9 +22,10 @@ export function publicHrefFor(
       return fields.path?.trim() || undefined;
     case "ticker":
       return fields.href?.trim() || undefined;
+    // A law's history is shown on that law's own page.
     case "law-histories":
-      return fields.lawSlug?.trim()
-        ? `/know-the-law/amendments#${fields.lawSlug.trim()}`
+      return fields.lawSlug?.trim() && fields.category?.trim()
+        ? `/know-the-law/${fields.category.trim()}/${fields.lawSlug.trim()}#history`
         : undefined;
 
     // A law entry sits under the category it is filed in, so its route needs
@@ -47,18 +48,12 @@ export function publicHrefFor(
         ? `/constitution/chapter-${fields.chapter.trim().toLowerCase()}#s-${fields.number?.trim() ?? ""}`
         : undefined;
 
-    // These four furnish pages rather than having pages. A court appears on
-    // every case; a calendar entry, a health-check question and a profile
-    // question each make up part of one standing tool.
-    case "courts":
+    // These furnish pages rather than having pages. Profile questions make up
+    // the business profiler on the Compliance Centre.
     case "alert-topics":
       return undefined;
-    case "calendar-entries":
-      return "/business/legal-calendar";
-    case "health-check":
-      return "/business/health-check";
     case "profile-questions":
-      return "/business-account";
+      return "/business/compliance";
     case "programmes":
       return slug ? `/programmes/${slug}` : undefined;
     // Each of these is one part of a single standing page.
@@ -69,7 +64,11 @@ export function publicHrefFor(
     case "fundamental-rights":
       return "/constitution";
     case "safety-series":
-      return "/stay-safe";
+      return "/know-the-law/stay-safe";
+    case "leadership":
+      return "/about";
+    case "san-of-the-week":
+      return slug ? `/san-of-the-week/${slug}` : undefined;
     // The footer is on every page and has no address of its own.
     case "footer-columns":
       return undefined;
@@ -95,23 +94,16 @@ export function publicHrefFor(
   if (!slug) return undefined;
 
   const prefixes: Partial<Record<CollectionId, string>> = {
-    articles: "/law-and-society",
-    rights: "/your-rights",
+    articles: "/news",
+    rights: "/know-the-law/your-rights",
     laws: "/know-the-law",
-    cases: "/cases",
     "business-guides": "/business/guides",
-    glossary: "/glossary",
-    quizzes: "/quizzes",
-    checklists: "/resources",
     "compliance-topics": "/business/compliance",
     contracts: "/business/contracts",
-    industries: "/business/industries",
-    "ceo-briefings": "/business/ceo",
     "regulatory-updates": "/business/regulatory-watch",
     "legal-problems": "/legal-help/problem",
-    "lawyer-listings": "/lawyers",
     questions: "/ask",
-    "safety-guides": "/stay-safe",
+    "safety-guides": "/know-the-law/stay-safe",
   };
 
   // Referral routes are anchors on a single page, not pages of their own.
@@ -125,8 +117,8 @@ export function publicHrefFor(
  * The public routes that *list* a record, as opposed to the one that shows it.
  *
  * Publishing has to reach both. A record's own route is revalidated from its
- * `publicHrefFor`, but the hub that indexes it - /watch for a video, /glossary
- * for a term - is a separately cached page, and invalidating the data tag the
+ * `publicHrefFor`, but the hub that indexes it - /watch for a video, /ask
+ * for a question - is a separately cached page, and invalidating the data tag the
  * hub reads does not re-render it: the tag governs the fetch, the page's own
  * `revalidate` governs the HTML. Without this, a newly published record sits
  * at a working URL that nothing links to until the hub's window expires.
@@ -152,24 +144,12 @@ export function indexRoutesFor(
 
     // The homepage carries the latest strip for these, so it is an index too.
     case "articles":
-      return ["/law-and-society", "/"];
+      return ["/news", "/"];
     case "rights":
-      return ["/your-rights", "/"];
+      return ["/know-the-law/your-rights", "/"];
 
     case "laws":
       return ["/know-the-law"];
-    case "cases":
-      return ["/cases"];
-    case "law-histories":
-      return ["/know-the-law/amendments"];
-    case "glossary":
-      return ["/glossary"];
-    case "quizzes":
-      return ["/quizzes"];
-    case "checklists":
-      return ["/resources"];
-    case "lawyer-listings":
-      return ["/lawyers"];
     case "questions":
       return ["/ask"];
 
@@ -180,10 +160,6 @@ export function indexRoutesFor(
       return ["/business/compliance", "/business"];
     case "contracts":
       return ["/business/contracts", "/business"];
-    case "industries":
-      return ["/business/industries", "/business"];
-    case "ceo-briefings":
-      return ["/business/ceo", "/business"];
     case "regulatory-updates":
       return ["/business/regulatory-watch", "/business"];
 
@@ -198,7 +174,7 @@ export function indexRoutesFor(
     }
     // Stay Safe guides show on the homepage strip as well as their own hub.
     case "safety-guides":
-      return ["/stay-safe", "/"];
+      return ["/know-the-law/stay-safe", "/"];
 
     // A section is rendered inside its chapter, and the chapter list above it
     // shows what each chapter covers - so both are stale when one changes.
@@ -206,29 +182,27 @@ export function indexRoutesFor(
     case "constitution-sections":
       return ["/constitution"];
 
-    // A court is named on every case page and is a filter on the explorer.
-    // Only the explorer is listed: revalidating every case page to rename a
-    // court would be the whole collection, and the name a case shows comes
-    // from a tagged read that the write already invalidates.
-    case "courts":
-      return ["/cases"];
-
     // These have no index above them - each is one standing page, which is
     // already the route `publicHrefFor` returns.
     case "alert-topics":
-    case "calendar-entries":
-    case "health-check":
+    case "law-histories":
     case "profile-questions":
     case "contact-page":
     case "donate-page":
     case "fundamental-rights":
     case "safety-series":
+    case "leadership":
       return [];
 
     // A programme is listed on the line-up and on the homepage. The menu it
     // also appears in is the site layout - see `layoutCollections`.
     case "programmes":
       return ["/programmes", "/"];
+
+    // The current feature leads the hub, which also carries the archive, and
+    // the homepage shows it too.
+    case "san-of-the-week":
+      return ["/san-of-the-week", "/"];
 
     // The footer is in the site layout, which the caller revalidates whole.
     case "footer-columns":

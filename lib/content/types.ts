@@ -18,6 +18,12 @@ export type WorkflowStatus = "draft" | "review" | "published" | "archived";
  */
 export type ReviewStatus = "educational" | "reviewed" | "updated" | "archived";
 
+/**
+ * Which desk a News story comes from. Most are law; the channel also carries
+ * sport and entertainment news, which has no legal review behind it.
+ */
+export type NewsDesk = "law" | "sports" | "entertainment";
+
 /** Distinguishes reporting from explanation from opinion. */
 export type ContentKind =
   | "news"
@@ -104,19 +110,6 @@ export interface IssueCategory extends Taxonomy {
   href: string;
 }
 
-export interface GlossaryTerm {
-  id: string;
-  slug: string;
-  term: string;
-  definition: string;
-  example: string;
-  whyItMatters: string;
-  /** Other wording a reader may meet for the same idea. */
-  alsoKnownAs?: string[];
-  related?: RelatedRefs;
-  meta: EditorialMeta;
-}
-
 /* -------------------------------------------------------------------------- */
 /* Editorial + business                                                        */
 /* -------------------------------------------------------------------------- */
@@ -131,6 +124,8 @@ export interface Article {
   id: string;
   slug: string;
   kind: ContentKind;
+  /** Absent means "law", which is every story written before the other desks. */
+  desk?: NewsDesk;
   title: string;
   standfirst: string;
   category: string;
@@ -139,8 +134,12 @@ export interface Article {
   /** Optional lead image path under /public. */
   image?: string;
   audiences: Audience[];
-  /** Full piece. Absent while only the standfirst has been written. */
-  body?: ArticleSection[];
+  /**
+   * The full piece as HTML from the CMS rich-text editor. Sanitised when it is
+   * saved and again when it is rendered (lib/cms/rich-text.ts). Absent while
+   * only the standfirst has been written.
+   */
+  body?: string;
   related?: RelatedRefs;
   meta: EditorialMeta;
 }
@@ -191,47 +190,6 @@ export interface MediaItem {
 /* -------------------------------------------------------------------------- */
 /* Learning                                                                    */
 /* -------------------------------------------------------------------------- */
-
-export interface Quiz {
-  id: string;
-  slug: string;
-  title: string;
-  description: string;
-  questionCount: number;
-  minutes: number;
-  level: "starter" | "core" | "advanced";
-  meta: EditorialMeta;
-}
-
-/** One multiple-choice question in a quiz. */
-export interface QuizQuestion {
-  id: string;
-  prompt: string;
-  options: string[];
-  /** Index into `options`. */
-  answer: number;
-  /** Why that answer is right - shown after the reader has chosen. */
-  explanation: string;
-}
-
-/** One line of a checklist, grouped into a stage of the task. */
-export interface ChecklistItem {
-  id: string;
-  /** Stage heading this line sits under. */
-  group: string;
-  label: string;
-  detail: string;
-}
-
-export interface Checklist {
-  id: string;
-  slug: string;
-  title: string;
-  description: string;
-  itemCount: number;
-  audience: Audience;
-  meta: EditorialMeta;
-}
 
 /* -------------------------------------------------------------------------- */
 /* Navigation                                                                  */
@@ -292,19 +250,15 @@ export interface RelatedRefs {
   guides?: string[];
   articles?: string[];
   media?: string[];
-  terms?: string[];
   /* Phase 3 — business & enterprise */
   compliance?: string[];
   contracts?: string[];
-  industries?: string[];
-  briefings?: string[];
   updates?: string[];
   /* Phase 5 — legal help */
   problems?: string[];
   questions?: string[];
   referrals?: string[];
   /* Phase 6 — professional/advanced */
-  cases?: string[];
   /** Constitution section numbers, e.g. ["35", "36"]. */
   sections?: string[];
 }
@@ -316,16 +270,12 @@ export type RelatedKind =
   | "guide"
   | "article"
   | "media"
-  | "term"
   | "compliance"
   | "contract"
-  | "industry"
-  | "briefing"
   | "update"
   | "problem"
   | "question"
   | "referral"
-  | "case"
   | "section";
 
 /** A resolved cross-reference, ready to render. */
@@ -410,7 +360,7 @@ export interface RightGuide extends RightSummary {
 }
 
 /**
- * A run of Stay Safe guides featured as a section of its own on /stay-safe.
+ * A run of Stay Safe guides featured as a section of its own on /know-the-law/stay-safe.
  *
  * Guides join a series by carrying its `name` in their own `series` field, the
  * same way media items join a series by title.
@@ -454,18 +404,11 @@ export type SearchType =
   | "guide"
   | "article"
   | "media"
-  | "term"
-  | "quiz"
-  | "resource"
   | "compliance"
   | "contract"
-  | "industry"
-  | "briefing"
   | "update"
   | "problem"
   | "question"
-  | "lawyer"
-  | "case"
   | "section";
 
 export interface SearchDocument {
@@ -583,38 +526,6 @@ export interface AlertTopic {
   icon: string;
 }
 
-/* Business legal calendar -------------------------------------------------- */
-
-export type CalendarCadence =
-  | "annual"
-  | "quarterly"
-  | "monthly"
-  | "ongoing"
-  | "event-driven";
-
-/**
- * A business legal calendar entry (spec section 24).
- *
- * The spec forbids hard-coding legal deadlines without a maintained source and
- * review process, so an entry carries a **cadence and a trigger**, not a date.
- * `timing` describes when the obligation typically arises in words; the UI
- * states plainly that readers must confirm actual dates with the regulator.
- */
-export interface CalendarEntry {
-  id: string;
-  title: string;
-  cadence: CalendarCadence;
-  /** What starts the clock, e.g. "Your company's financial year end". */
-  trigger: string;
-  /** Timing in general terms. Never a specific invented deadline. */
-  timing: string;
-  summary: string;
-  areaId: string;
-  icon: string;
-  whatToPrepare: string[];
-  meta: EditorialMeta;
-}
-
 /* Contract Knowledge Centre ------------------------------------------------ */
 
 /** An educational contract explainer (spec section 25). */
@@ -642,46 +553,7 @@ export interface ContractClause {
   whatToCheck: string;
 }
 
-/* Industry hubs ------------------------------------------------------------ */
-
-/** An industry legal hub (spec section 27). */
-export interface IndustryHub {
-  id: string;
-  slug: string;
-  name: string;
-  blurb: string;
-  icon: string;
-  /** Why the industry's legal profile differs from the general case. */
-  overview: string[];
-  /** Regulatory themes in general terms — no invented licensing regimes. */
-  regulatoryThemes: string[];
-  complianceTopics: string[];
-  related?: RelatedRefs;
-  meta: EditorialMeta;
-}
-
-/* Law for CEOs ------------------------------------------------------------- */
-
-/** An executive briefing (spec section 26): concise, strategic, decision-led. */
-export interface CeoBriefing {
-  id: string;
-  slug: string;
-  title: string;
-  /** The strategic question the briefing answers. */
-  question: string;
-  summary: string;
-  readingMinutes: number;
-  /** The three-to-five points an executive needs. */
-  keyPoints: string[];
-  /** What the board or exec team should be asking. */
-  questionsForTheBoard: string[];
-  /** Where the risk actually lands in the business. */
-  whereRiskLands: string[];
-  related?: RelatedRefs;
-  meta: EditorialMeta;
-}
-
-/* Business profiler + health check ----------------------------------------- */
+/* Business profiler -------------------------------------------------------- */
 
 /** One question in the "What laws apply to my business?" profiler. */
 export interface ProfileQuestion {
@@ -698,16 +570,6 @@ export interface ProfileOption {
   label: string;
   /** Compliance area ids this answer makes relevant. */
   areas: string[];
-}
-
-export type ReadinessBand = "strong" | "attention" | "high-attention";
-
-/** One health-check question, scoped to a compliance area. */
-export interface HealthCheckQuestion {
-  id: string;
-  areaId: string;
-  prompt: string;
-  help?: string;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -969,43 +831,6 @@ export interface ReferralRoute {
 }
 
 /**
- * Whether a directory listing has been through the verification process.
- *
- * `sample` exists because spec rule 23 forbids inventing professional
- * credentials and spec section 36 requires verification to be backed by an
- * actual administrative process. Until that process runs, the directory carries
- * structured sample listings — practice-and-location shaped, never a person —
- * so the architecture is real without anybody's credentials being fabricated.
- */
-export type ListingStatus = "sample" | "pending-verification" | "verified";
-
-export type ListingAvailability = "accepting" | "waitlist" | "not-accepting";
-
-export type ExperienceBand = "1-5" | "6-10" | "11-20" | "20+";
-
-/** One entry in the lawyer directory (spec section 36). */
-export interface LawyerListing {
-  id: string;
-  slug: string;
-  /** Practice-and-location descriptor while `listingStatus` is `sample`. */
-  displayName: string;
-  listingStatus: ListingStatus;
-  focus: string;
-  practiceAreas: string[];
-  state: string;
-  city: string;
-  languages: string[];
-  experienceBand: ExperienceBand;
-  availability: ListingAvailability;
-  /** How consultations are typically arranged. Never a fee. */
-  consultation: string;
-  about: string[];
-  /** Empty until a named practitioner has been verified. */
-  credentials: string[];
-  meta: EditorialMeta;
-}
-
-/**
  * A moderated public question (spec section 37).
  *
  * A question never becomes public automatically. `askedBy` is pseudonymous by
@@ -1027,86 +852,6 @@ export interface PublicQuestion {
   whatToDoNext: string[];
   /** Present only where a named practitioner has actually responded. */
   lawyerNote?: string;
-  related?: RelatedRefs;
-  meta: EditorialMeta;
-}
-
-/* -------------------------------------------------------------------------- */
-/* Case law — Phase 6                                                          */
-/* -------------------------------------------------------------------------- */
-
-/**
- * The court that decided a case, as a stable key rather than free text, so the
- * explorer can order results by authority instead of alphabetically.
- */
-export type CourtLevel =
-  | "supreme-court"
-  | "court-of-appeal"
-  | "federal-high-court"
-  | "state-high-court"
-  | "national-industrial-court"
-  | "tribunal";
-
-/** A court in the hierarchy, used for the explorer facet and the ladder. */
-export interface CourtProfile {
-  id: CourtLevel;
-  name: string;
-  /** Where it sits, 0 being the final court. */
-  rank: number;
-  jurisdiction: string;
-  bindingEffect: string;
-}
-
-/**
- * Whether a decision still stands, in the terms lawyers actually use. Never
- * inferred — it is only set where the position is settled and well known.
- */
-export type CaseStanding =
-  | "followed"
-  | "distinguished"
-  | "overtaken-by-statute"
-  | "position-not-stated";
-
-/**
- * A decided case (spec section 29).
- *
- * EDITORIAL RULE, enforced by the shape of this type: there is no `citation`
- * field and no `judge` field, because a law-report volume and page, and the
- * composition of a panel, are precisely the details that cannot be reproduced
- * from memory without risking a citation that leads nowhere. `whereToFindIt`
- * says how to locate the reported decision instead, and every rendered case
- * carries a notice that the summary is editorial and must be checked against
- * the report. Nothing here states a holding that the decision did not make.
- */
-export interface CaseRecord {
-  id: string;
-  slug: string;
-  /** The case as it is universally cited, e.g. "Garba v. University of Maiduguri". */
-  title: string;
-  court: CourtLevel;
-  /** The year the decision is known by. */
-  year: number;
-  /** Subject slug, matching a `LawCategory` where one exists. */
-  subject: string;
-  /** The question the court had to answer, in one line. */
-  legalIssue: string;
-  /** A short label for the issue, used as an explorer facet. */
-  issueTag: string;
-  /** What the dispute was about. */
-  background: string[];
-  /** What the court decided. */
-  decision: string[];
-  /** The principle the case is cited for — stated narrowly. */
-  keyPrinciple: string;
-  /** What it means for an ordinary reader. */
-  plainLanguage: string[];
-  /** What the decision does *not* settle. Required: every case has one. */
-  doesNotSettle: string[];
-  standing: CaseStanding;
-  /** How to locate the reported judgment. Never a fabricated citation. */
-  whereToFindIt: string;
-  /** Instruments the decision turned on, named generally. */
-  instruments: string[];
   related?: RelatedRefs;
   meta: EditorialMeta;
 }
@@ -1172,7 +917,7 @@ export interface LawVersion {
 
 /**
  * The version history of one instrument, keyed to the law entry that explains
- * it. Rendered as a timeline on the law page and on the amendment tracker.
+ * it. Rendered as a timeline on the law page.
  */
 export interface LawHistory {
   id: string;

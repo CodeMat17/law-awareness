@@ -138,7 +138,7 @@ export function UserRoles({ currentUserId }: { currentUserId: string }) {
         ))}
       </ul>
 
-      <dl className="mt-6 grid gap-2 text-[0.82rem] text-muted-foreground sm:grid-cols-2">
+      <dl className="mt-6 grid grid-cols-1 gap-2 text-[0.82rem] text-muted-foreground sm:grid-cols-2">
         {ROLES.map((role) => (
           <div key={role.value}>
             <dt className="inline font-bold text-foreground">{role.label}:</dt>{" "}

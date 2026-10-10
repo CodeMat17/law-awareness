@@ -2,23 +2,17 @@ import Link from "next/link";
 import {
   ArrowRight,
   ArrowUpRight,
-  BadgeCheck,
-  CircleAlert,
   Clock,
   Info,
   MapPin,
   MessageSquare,
-  ShieldQuestion,
 } from "lucide-react";
 import { cn } from "cn";
 import { Icon } from "@/lib/icons";
 import { IconBadge, Pill, ReviewBadge } from "./primitives";
 import { TickList } from "./knowledge";
 import type {
-  LawyerListing,
   LegalProblem,
-  ListingAvailability,
-  ListingStatus,
   ProblemUrgency,
   PublicQuestion,
   ReferralRoute,
@@ -220,7 +214,7 @@ export function ReferralDetail({ route }: { route: ReferralRoute }) {
         {route.whatItIs}
       </p>
 
-      <div className="mt-7 grid gap-7 sm:grid-cols-2">
+      <div className="mt-7 grid grid-cols-1 gap-7 sm:grid-cols-2">
         <div>
           <p className="text-caption text-foreground">Who it is for</p>
           <div className="mt-3">
@@ -276,7 +270,7 @@ export function FindHelpPanel({ routes }: { routes: ReferralRoute[] }) {
         has its own criteria and its own limits, and none of them is guaranteed
         to take your matter.
       </p>
-      <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+      <ul className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {routes.map((route) => (
           <li key={route.id}>
             <Link
@@ -307,192 +301,12 @@ export function FindHelpPanel({ routes }: { routes: ReferralRoute[] }) {
           <ArrowRight className="size-4" />
         </Link>
         <Link
-          href="/lawyers"
+          href="/ask"
           className="inline-flex h-11 items-center gap-2 rounded-xl border border-hairline bg-card px-5 text-[0.88rem] font-extrabold text-foreground transition-colors hover:border-primary/45"
         >
-          Open the directory
+          Ask a question
         </Link>
       </div>
-    </div>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
-/* Lawyer directory                                                            */
-/* -------------------------------------------------------------------------- */
-
-const listingStatusCopy: Record<
-  ListingStatus,
-  { label: string; className: string }
-> = {
-  sample: {
-    label: "Sample listing",
-    className: "bg-muted text-muted-foreground",
-  },
-  "pending-verification": {
-    label: "Pending verification",
-    className: "bg-chart-1/15 text-foreground",
-  },
-  verified: { label: "Verified", className: "bg-primary/18 text-brand-ink" },
-};
-
-const availabilityCopy: Record<
-  ListingAvailability,
-  { label: string; dot: string }
-> = {
-  accepting: { label: "Accepting enquiries", dot: "bg-chart-2" },
-  waitlist: { label: "Waiting list", dot: "bg-chart-1" },
-  "not-accepting": { label: "Not accepting", dot: "bg-muted-foreground" },
-};
-
-/**
- * Whether a listing has been through the verification process.
- *
- * Rendered on every card and on every profile, never only once on the page.
- * A reader who arrives at a profile from search has not seen the hub's notice.
- */
-export function ListingStatusBadge({
-  status,
-  className,
-}: {
-  status: ListingStatus;
-  className?: string;
-}) {
-  const copy = listingStatusCopy[status];
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.68rem] font-extrabold tracking-wide uppercase",
-        copy.className,
-        className
-      )}
-    >
-      {status === "verified" && <BadgeCheck className="size-3" aria-hidden />}
-      {copy.label}
-    </span>
-  );
-}
-
-export function AvailabilityLabel({
-  availability,
-}: {
-  availability: ListingAvailability;
-}) {
-  const copy = availabilityCopy[availability];
-  return (
-    <span className="flex items-center gap-2 text-[0.78rem] font-semibold text-muted-foreground">
-      <span
-        aria-hidden
-        className={cn("inline-block size-2 rounded-full", copy.dot)}
-      />
-      {copy.label}
-    </span>
-  );
-}
-
-export function ListingCard({ listing }: { listing: LawyerListing }) {
-  return (
-    <article className={cn(cardBase, "p-5 sm:p-6")}>
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <Pill tone="outline">
-          {listing.city}, {listing.state}
-        </Pill>
-        <ListingStatusBadge status={listing.listingStatus} />
-      </div>
-      <h3 className="text-h4 mt-5 text-foreground">
-        <Link
-          href={`/lawyers/${listing.slug}`}
-          className="after:absolute after:inset-0"
-        >
-          {listing.displayName}
-        </Link>
-      </h3>
-      <p className="mt-3 text-[0.88rem] leading-relaxed text-muted-foreground">
-        {listing.focus}
-      </p>
-      <div className="mt-5 flex flex-wrap gap-1.5">
-        {listing.practiceAreas.map((area) => (
-          <span
-            key={area}
-            className="rounded-full border border-hairline px-2.5 py-1 text-[0.7rem] font-bold text-muted-foreground"
-          >
-            {area}
-          </span>
-        ))}
-      </div>
-      <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 pt-6 text-[0.75rem] font-semibold text-muted-foreground">
-        <AvailabilityLabel availability={listing.availability} />
-        <span>{listing.languages.join(" · ")}</span>
-      </div>
-    </article>
-  );
-}
-
-/**
- * Why the directory carries no practitioners yet.
- *
- * Spec section 36 requires verification to be backed by an actual
- * administrative process; spec rule 23 forbids inventing credentials. Saying so
- * plainly is the only honest way to ship the directory before that process
- * exists — and it is more useful to a reader than a page of invented names.
- */
-export function VerificationPanel({ className }: { className?: string }) {
-  return (
-    <div
-      className={cn(
-        "rounded-2xl border border-hairline bg-surface p-5 sm:p-7",
-        className
-      )}
-    >
-      <div className="flex items-center gap-3">
-        <ShieldQuestion className="size-5 shrink-0 text-brand-ink" />
-        <p className="text-caption text-foreground">
-          How verification will work
-        </p>
-      </div>
-      <p className="mt-4 text-[0.9rem] leading-relaxed text-muted-foreground">
-        No listing here is a real practitioner. We will not publish a person, a
-        photograph or a credential until an administrative process has actually
-        confirmed it — and until that process runs, the honest thing is to say
-        so rather than to fill the page.
-      </p>
-      <div className="mt-6 grid gap-6 sm:grid-cols-2">
-        <div>
-          <p className="text-eyebrow text-muted-foreground">
-            What a verified listing will require
-          </p>
-          <div className="mt-3">
-            <TickList
-              items={[
-                "Confirmation of enrolment and current standing as a legal practitioner",
-                "Confirmation of the practice location and how enquiries reach it",
-                "A named person accountable for what the listing says",
-                "Re-confirmation on a defined cycle, not once at sign-up",
-              ]}
-            />
-          </div>
-        </div>
-        <div>
-          <p className="text-eyebrow text-muted-foreground">
-            What the directory will never do
-          </p>
-          <div className="mt-3">
-            <TickList
-              items={[
-                "Rank practitioners, or suggest one is better than another",
-                "Predict what any practitioner will achieve for you",
-                "Publish a credential we have not confirmed ourselves",
-                "Charge a practitioner for a verified badge",
-              ]}
-              tone="negative"
-            />
-          </div>
-        </div>
-      </div>
-      <p className="mt-6 text-[0.83rem] leading-relaxed text-muted-foreground">
-        In the meantime, verify anyone you engage through the Nigerian Bar
-        Association rather than through any listing — including ours.
-      </p>
     </div>
   );
 }
@@ -562,7 +376,7 @@ const moderationStages = [
 
 export function ModerationFlow() {
   return (
-    <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+    <ol className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
       {moderationStages.map((stage, index) => (
         <li
           key={stage.title}
@@ -617,15 +431,5 @@ export function PrivacyNotice() {
         </p>
       </div>
     </div>
-  );
-}
-
-/** Shown where a route or listing needs a caution beside it, not under it. */
-export function InlineCaution({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="flex items-start gap-2 text-[0.8rem] leading-relaxed text-muted-foreground">
-      <CircleAlert className="mt-0.5 size-3.5 shrink-0 text-brand-ink" />
-      <span>{children}</span>
-    </p>
   );
 }

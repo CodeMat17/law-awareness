@@ -69,7 +69,7 @@ export const constitutionChapters: ConstitutionChapter[] = [
       "Derogation during a period of emergency",
       "Special jurisdiction of the High Court to hear enforcement claims",
     ],
-    href: "/your-rights",
+    href: "/know-the-law/your-rights",
     hrefLabel: "Rights guides",
   },
   {
@@ -108,8 +108,8 @@ export const constitutionChapters: ConstitutionChapter[] = [
       "Sharia and Customary Courts of Appeal",
       "Appointment and tenure of judicial officers",
     ],
-    href: "/cases",
-    hrefLabel: "How judgments work",
+    href: "/know-the-law/court-process",
+    hrefLabel: "How the courts work",
   },
   {
     numeral: "VIII",
@@ -157,7 +157,7 @@ export const fundamentalRights: FundamentalRight[] = [
     title: "Right to personal liberty",
     summary:
       "Governs when a person may lawfully be deprived of liberty, and carries the requirements around being informed of the reason for an arrest and being brought before a court.",
-    href: "/your-rights/arrest-and-detention",
+    href: "/know-the-law/your-rights/arrest-and-detention",
   },
   {
     section: "36",
@@ -170,7 +170,7 @@ export const fundamentalRights: FundamentalRight[] = [
     title: "Right to private and family life",
     summary:
       "Protects the privacy of citizens, their homes, correspondence and communications — the constitutional footing beneath Nigeria's data protection regime.",
-    href: "/your-rights/privacy",
+    href: "/know-the-law/your-rights/privacy",
   },
   {
     section: "38",

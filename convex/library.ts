@@ -1,17 +1,16 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import type { Doc, Id } from "./_generated/dataModel";
+import type { Doc } from "./_generated/dataModel";
 import {
   defaultPreferences,
   optionalOwner,
   requireOwner,
   type NotificationPreferences,
 } from "./model/preferences";
-import { assertMember } from "./model/organizations";
 
 /**
  * The reader's own library (Phase 6, spec sections 42 and 62): saved items,
- * followed topics, notification preferences, quiz history.
+ * followed topics and notification preferences.
  *
  * Every function keys on the caller's Clerk subject, taken from the request
  * token. No function accepts an owner id as an argument, so there is no shape
@@ -39,7 +38,6 @@ function toBookmark(row: Doc<"bookmarks">) {
     group: row.group,
     href: row.href,
     note: row.note ?? null,
-    orgId: row.orgId ?? null,
     createdAt: row.createdAt,
   };
 }
@@ -91,10 +89,9 @@ export const isSaved = query({
  * Returns the resulting state so the client does not have to guess.
  */
 export const toggleBookmark = mutation({
-  args: { ...savedItemArgs, orgId: v.optional(v.id("organizations")) },
+  args: savedItemArgs,
   handler: async (ctx, args) => {
     const owner = await requireOwner(ctx);
-    if (args.orgId) await assertMember(ctx, args.orgId, owner);
 
     const existing = await ctx.db
       .query("bookmarks")
@@ -110,7 +107,6 @@ export const toggleBookmark = mutation({
 
     await ctx.db.insert("bookmarks", {
       ownerId: owner,
-      orgId: args.orgId,
       kind: args.kind,
       title: args.title,
       summary: args.summary,
@@ -169,10 +165,9 @@ export const listFollowedTopics = query({
 });
 
 export const toggleTopicFollow = mutation({
-  args: { topic: v.string(), orgId: v.optional(v.id("organizations")) },
-  handler: async (ctx, { topic, orgId }) => {
+  args: { topic: v.string() },
+  handler: async (ctx, { topic }) => {
     const owner = await requireOwner(ctx);
-    if (orgId) await assertMember(ctx, orgId, owner);
 
     const existing = await ctx.db
       .query("topicFollows")
@@ -188,7 +183,6 @@ export const toggleTopicFollow = mutation({
 
     await ctx.db.insert("topicFollows", {
       ownerId: owner,
-      orgId,
       topic,
       createdAt: Date.now(),
     });
@@ -297,114 +291,5 @@ export const markNotificationsRead = mutation({
         readAt: Date.now(),
       });
     }
-  },
-});
-
-/* -------------------------------------------------------------------------- */
-/* Learning progress                                                           */
-/* -------------------------------------------------------------------------- */
-
-/** Every attempt, newest first. Attempts are never overwritten. */
-export const listQuizAttempts = query({
-  args: {},
-  handler: async (ctx) => {
-    const owner = await optionalOwner(ctx);
-    if (!owner) return [];
-
-    const rows = await ctx.db
-      .query("quizAttempts")
-      .withIndex("by_owner", (q) => q.eq("ownerId", owner))
-      .collect();
-
-    return rows
-      .sort((a, b) => b.completedAt - a.completedAt)
-      .map((row) => ({
-        id: row._id,
-        quizSlug: row.quizSlug,
-        quizTitle: row.quizTitle,
-        score: row.score,
-        total: row.total,
-        completedAt: row.completedAt,
-      }));
-  },
-});
-
-export const recordQuizAttempt = mutation({
-  args: {
-    quizSlug: v.string(),
-    quizTitle: v.string(),
-    score: v.number(),
-    total: v.number(),
-  },
-  handler: async (ctx, args) => {
-    const owner = await requireOwner(ctx);
-
-    // A score outside the range would corrupt every average computed from it,
-    // and the client is not the authority on its own arithmetic.
-    if (args.total <= 0 || args.score < 0 || args.score > args.total) {
-      throw new Error("Invalid score");
-    }
-
-    await ctx.db.insert("quizAttempts", {
-      ownerId: owner,
-      quizSlug: args.quizSlug,
-      quizTitle: args.quizTitle,
-      score: args.score,
-      total: args.total,
-      completedAt: Date.now(),
-    });
-  },
-});
-
-/* -------------------------------------------------------------------------- */
-/* Organization-shared library                                                 */
-/* -------------------------------------------------------------------------- */
-
-/** Resources shared with one organization. Members only. */
-export const listOrgBookmarks = query({
-  args: { orgId: v.id("organizations") },
-  handler: async (ctx, { orgId }) => {
-    const owner = await optionalOwner(ctx);
-    if (!owner) return [];
-    // Not a member: an empty list, not an error. A non-member has no business
-    // learning whether the organization has resources at all.
-    const member = await ctx.db
-      .query("orgMembers")
-      .withIndex("by_org_user", (q) =>
-        q.eq("orgId", orgId).eq("clerkUserId", owner)
-      )
-      .unique();
-    if (!member) return [];
-
-    const rows = await ctx.db
-      .query("bookmarks")
-      .withIndex("by_org", (q) => q.eq("orgId", orgId))
-      .collect();
-
-    return rows.sort((a, b) => b.createdAt - a.createdAt).map(toBookmark);
-  },
-});
-
-/** Topics an organization follows. Members only, same reasoning. */
-export const listOrgTopics = query({
-  args: { orgId: v.id("organizations") },
-  handler: async (ctx, { orgId }: { orgId: Id<"organizations"> }) => {
-    const owner = await optionalOwner(ctx);
-    if (!owner) return [];
-
-    const member = await ctx.db
-      .query("orgMembers")
-      .withIndex("by_org_user", (q) =>
-        q.eq("orgId", orgId).eq("clerkUserId", owner)
-      )
-      .unique();
-    if (!member) return [];
-
-    const rows = await ctx.db
-      .query("topicFollows")
-      .withIndex("by_org", (q) => q.eq("orgId", orgId))
-      .collect();
-
-    return rows.map((row) => row.topic);
   },
 });

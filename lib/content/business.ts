@@ -117,13 +117,6 @@ export const businessAreas: BusinessArea[] = [
     icon: "list-checks",
     href: "/business/compliance",
   },
-  {
-    slug: "industry-regulations",
-    name: "Industry Regulations",
-    blurb: "What changes about your legal profile because of the sector you are in.",
-    icon: "hard-hat",
-    href: "/business/industries",
-  },
 ];
 
 /* -------------------------------------------------------------------------- */
@@ -657,7 +650,6 @@ export const businessGuideDetails: BusinessGuideDetail[] = [
     related: {
       compliance: ["corporate-governance", "business-structure-and-registration"],
       contracts: ["partnership-agreement", "shareholder-agreement"],
-      briefings: ["governance-essentials"],
     },
     meta: businessMeta({ label: "Companies and Allied Matters Act 2020" }),
   },
@@ -1041,7 +1033,6 @@ export const businessGuideDetails: BusinessGuideDetail[] = [
     related: {
       compliance: ["consumer-protection", "data-protection"],
       contracts: ["terms-and-conditions", "privacy-policy"],
-      industries: ["technology", "retail"],
     },
     meta: businessMeta({
       label: "Federal Competition and Consumer Protection Act 2018",
@@ -1157,7 +1148,6 @@ export const businessGuideDetails: BusinessGuideDetail[] = [
     related: {
       compliance: ["intellectual-property"],
       contracts: ["nda", "consultancy-agreement"],
-      industries: ["media", "technology"],
     },
     meta: businessMeta({ label: "Copyright Act 2022" }),
   },

@@ -17,7 +17,7 @@ import type { EntryPoint } from "@/lib/content/types";
 export const metadata: Metadata = {
   title: "Legal Help — start from what happened, not from the law",
   description:
-    "Guided educational pathways for real situations, a moderated public Q&A, a lawyer directory, and the routes to free and low-cost legal assistance in Nigeria.",
+    "Guided educational pathways for real situations, a moderated public Q&A, and the routes to free and low-cost legal assistance in Nigeria.",
   alternates: { canonical: "/legal-help" },
 };
 
@@ -50,10 +50,10 @@ const services: EntryPoint[] = [
   {
     id: "svc-3",
     audience: "citizens",
-    eyebrow: "Lawyer directory",
-    promise: "Find a practitioner by area, state and language",
-    href: "/lawyers",
-    icon: "users",
+    eyebrow: "Know your rights",
+    promise: "What the law protects when the police stop you, and at work",
+    href: "/know-the-law/your-rights",
+    icon: "shield-check",
   },
   {
     id: "svc-4",
@@ -117,7 +117,7 @@ export default async function LegalHelpPage() {
             description="Each does a different job, and none of them is legal advice on your situation."
           />
         </Reveal>
-        <RevealGroup className="mt-10 grid gap-3 sm:grid-cols-2">
+        <RevealGroup className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {services.map((service) => (
             <RevealItem key={service.id}>
               <EntryPointCard entry={service} />
@@ -136,7 +136,7 @@ export default async function LegalHelpPage() {
             action={{ label: `All ${problems.length} situations`, href: "/legal-help/problem" }}
           />
         </Reveal>
-        <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <RevealGroup className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {urgent.map((problem) => (
             <RevealItem key={problem.id} className="flex">
               <ProblemCard problem={problem} />
@@ -155,7 +155,7 @@ export default async function LegalHelpPage() {
             action={{ label: "Open the guide", href: "/legal-help/legal-aid" }}
           />
         </Reveal>
-        <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <RevealGroup className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {routes.map((route) => (
             <RevealItem key={route.id} className="flex">
               <ReferralCard route={route} />
@@ -174,7 +174,7 @@ export default async function LegalHelpPage() {
             action={{ label: "Ask your own", href: "/ask" }}
           />
         </Reveal>
-        <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <RevealGroup className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {questions.map((question) => (
             <RevealItem key={question.id} className="flex">
               <QuestionCard question={question} />

@@ -40,17 +40,17 @@ export default async function LegalAidPage() {
             <ArrowRight className="size-4" />
           </Link>
           <Link
-            href="/lawyers"
+            href="/ask"
             className="inline-flex h-12 items-center gap-2 rounded-xl border border-hairline bg-card px-5 text-[0.9rem] font-extrabold text-foreground transition-colors hover:border-primary/45"
           >
-            Lawyer directory
+            Ask a question
           </Link>
         </div>
       </PageHeader>
 
       {/* How to use this ---------------------------------------------------- */}
       <Section className="pt-12 sm:pt-14 lg:pt-16">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14">
           <Reveal>
             <SectionHeader
               eyebrow="Before you go anywhere"

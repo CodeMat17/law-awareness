@@ -11,18 +11,16 @@ import {
 } from "lucide-react";
 import { cn } from "cn";
 import { Icon } from "@/lib/icons";
+import { deskLabel, isLegalStory } from "@/lib/content/news";
 import { IconBadge, Pill, ReviewBadge, SourceReference } from "./primitives";
 import type {
   Article,
   BusinessGuide,
-  Checklist,
   EntryPoint,
-  GlossaryTerm,
   LawCategory,
   LawEntry,
   LiveEvent,
   MediaItem,
-  Quiz,
   RightSummary,
   SafetyGuide,
 } from "@/lib/content/types";
@@ -78,7 +76,7 @@ export function RightsCard({
         className={cn("mt-2 text-foreground", featured ? "text-h2" : "text-h3")}
       >
         <Link
-          href={`/your-rights/${right.slug}`}
+          href={`/know-the-law/your-rights/${right.slug}`}
           className="after:absolute after:inset-0"
         >
           {right.title}
@@ -175,6 +173,12 @@ const kindLabel: Record<Article["kind"], string> = {
   educational: "Educational",
 };
 
+/** Law stories show their subject; other desks lead with the desk name. */
+function articleTopic(article: Article): string {
+  if (isLegalStory(article)) return article.category;
+  return [deskLabel(article), article.category].filter(Boolean).join(" · ");
+}
+
 export function ArticleCard({
   article,
   variant = "default",
@@ -189,12 +193,12 @@ export function ArticleCard({
           <div className="flex flex-wrap items-center gap-2">
             <Pill tone="outline">{kindLabel[article.kind]}</Pill>
             <span className="text-[0.75rem] font-semibold text-muted-foreground">
-              {article.category}
+              {articleTopic(article)}
             </span>
           </div>
           <h3 className="text-h4 mt-2.5 text-foreground">
             <Link
-              href={`/law-and-society/${article.slug}`}
+              href={`/news/${article.slug}`}
               className="after:absolute after:inset-0"
             >
               {article.title}
@@ -214,6 +218,7 @@ export function ArticleCard({
   }
 
   const feature = variant === "feature";
+  const legal = isLegalStory(article);
 
   return (
     <article className={cn(cardBase, feature ? "p-6 sm:p-9" : "p-5 sm:p-6")}>
@@ -222,14 +227,14 @@ export function ArticleCard({
           {kindLabel[article.kind]}
         </Pill>
         <span className="text-[0.75rem] font-semibold text-muted-foreground">
-          {article.category}
+          {articleTopic(article)}
         </span>
       </div>
       <h3
         className={cn("mt-5 text-foreground", feature ? "text-h1" : "text-h3")}
       >
         <Link
-          href={`/law-and-society/${article.slug}`}
+          href={`/news/${article.slug}`}
           className="after:absolute after:inset-0"
         >
           {article.title}
@@ -244,14 +249,16 @@ export function ArticleCard({
         {article.standfirst}
       </p>
       <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 pt-7">
-        <ReviewBadge meta={article.meta} />
+        {legal && <ReviewBadge meta={article.meta} />}
         <span className="flex items-center gap-1.5 text-[0.75rem] font-semibold text-muted-foreground">
           <Clock className="size-3.5" />
           {article.readingMinutes} min read
         </span>
-        <span className="text-[0.75rem] font-semibold text-muted-foreground">
-          Last reviewed {article.meta.lastReviewed}
-        </span>
+        {legal && (
+          <span className="text-[0.75rem] font-semibold text-muted-foreground">
+            Last reviewed {article.meta.lastReviewed}
+          </span>
+        )}
       </div>
     </article>
   );
@@ -334,7 +341,7 @@ export function LiveCard({ event }: { event: LiveEvent }) {
         aria-hidden
         className="absolute -top-24 -right-16 size-80 rounded-full bg-primary/20 blur-[90px]"
       />
-      <div className="relative grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+      <div className="relative grid grid-cols-1 gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-end">
         <div>
           <p className="flex items-center gap-2.5">
             {isLive ? (
@@ -382,79 +389,6 @@ export function LiveCard({ event }: { event: LiveEvent }) {
 }
 
 /* -------------------------------------------------------------------------- */
-
-export function GlossaryCard({ term }: { term: GlossaryTerm }) {
-  return (
-    <article className={cn(cardBase, "p-5")}>
-      <h3 className="text-h4 text-foreground">
-        <Link
-          href={`/glossary/${term.slug}`}
-          className="after:absolute after:inset-0"
-        >
-          {term.term}
-        </Link>
-      </h3>
-      <p className="mt-2.5 text-[0.86rem] leading-relaxed text-muted-foreground">
-        {term.definition}
-      </p>
-      <p className="mt-4 border-l-2 border-primary/50 pl-3 text-[0.8rem] leading-snug text-muted-foreground italic">
-        {term.example}
-      </p>
-    </article>
-  );
-}
-
-export function QuizCard({ quiz }: { quiz: Quiz }) {
-  return (
-    <article className={cn(cardBase, "p-5 sm:p-6")}>
-      <div className="flex items-center justify-between gap-3">
-        <Pill tone="brand">{quiz.level}</Pill>
-        <span className="text-[0.75rem] font-bold text-muted-foreground">
-          {quiz.questionCount} questions · {quiz.minutes} min
-        </span>
-      </div>
-      <h3 className="text-h3 mt-5 text-foreground">
-        <Link
-          href={`/quizzes/${quiz.slug}`}
-          className="after:absolute after:inset-0"
-        >
-          {quiz.title}
-        </Link>
-      </h3>
-      <p className="mt-2.5 text-[0.87rem] leading-relaxed text-muted-foreground">
-        {quiz.description}
-      </p>
-      <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-[0.85rem] font-bold text-foreground">
-        <span className="link-underline">Start the quiz</span>
-        <ArrowRight className="size-3.5 text-brand-ink transition-transform group-hover:translate-x-0.5" />
-      </span>
-    </article>
-  );
-}
-
-export function ChecklistCard({ checklist }: { checklist: Checklist }) {
-  return (
-    <article className="group relative flex items-center gap-4 rounded-xl border border-hairline bg-card p-4 transition-colors hover:border-primary/45">
-      <ListChecks className="size-5 shrink-0 text-brand-ink" />
-      <div className="min-w-0 flex-1">
-        <h3 className="text-[0.92rem] font-extrabold text-foreground">
-          <Link
-            href={`/resources/${checklist.slug}`}
-            className="after:absolute after:inset-0"
-          >
-            {checklist.title}
-          </Link>
-        </h3>
-        <p className="mt-0.5 truncate text-[0.8rem] text-muted-foreground">
-          {checklist.description}
-        </p>
-      </div>
-      <span className="shrink-0 text-[0.75rem] font-bold text-muted-foreground">
-        {checklist.itemCount} items
-      </span>
-    </article>
-  );
-}
 
 /* -------------------------------------------------------------------------- */
 
@@ -509,7 +443,7 @@ export function SafetyCard({ guide }: { guide: SafetyGuide }) {
       </div>
       <h3 className="text-h3 mt-5 text-foreground">
         <Link
-          href={`/stay-safe/${guide.slug}`}
+          href={`/know-the-law/stay-safe/${guide.slug}`}
           className="after:absolute after:inset-0"
         >
           {guide.title}

@@ -76,7 +76,7 @@ export default async function ListenPage() {
               description="Each show keeps its own seasons and running order."
             />
           </Reveal>
-          <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2">
+          <RevealGroup className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
             {seriesCounts.map(({ strand, count }) => (
               <RevealItem key={strand.id} className="flex">
                 <SeriesCard series={strand} itemCount={count} />

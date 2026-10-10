@@ -55,7 +55,7 @@ export function HeroSection({ stats, screen, upNext }: HeroSectionProps) {
     <section className="relative isolate overflow-clip">
       <HeroBackdrop />
 
-      <div className="rail relative grid gap-12 pt-8 pb-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-16">
+      <div className="rail relative grid grid-cols-1 gap-12 pt-8 pb-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-16">
         <div className="min-w-0 max-w-2xl">
           <motion.p
             {...rise(0)}
@@ -71,12 +71,10 @@ export function HeroSection({ stats, screen, upNext }: HeroSectionProps) {
             {...rise(0.08)}
             className="text-5xl sm:text-6xl md:text-7xl font-black mt-4 text-foreground"
           >
-            The Law,
-            <br />
-            On Your Screen.
+            Know The Law
             <br />
             <span className="relative inline-block">
-              <span className="text-brand-ink">In Plain Words.</span>
+              <span className="text-brand-ink">And Be Free</span>
               <HeadlineSwash className="absolute -bottom-1 left-0 h-2.5 w-full sm:-bottom-1.5 sm:h-3" />
             </span>
           </motion.h1>
@@ -108,7 +106,7 @@ export function HeroSection({ stats, screen, upNext }: HeroSectionProps) {
               Browse Programmes
             </Link>
             <Link
-              href="/your-rights"
+              href="/know-the-law/your-rights"
               className="inline-flex h-13 items-center justify-center gap-2 rounded-xl px-6 text-[0.95rem] font-extrabold text-foreground transition-colors hover:bg-muted sm:px-4"
             >
               <span className="link-underline">Know Your Rights</span>

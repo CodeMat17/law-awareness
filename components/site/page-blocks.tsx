@@ -97,7 +97,7 @@ function CardsBlock({ block }: { block: PageBlock }) {
       <Heading block={block} />
       <RevealGroup
         className={cn(
-          "mt-10 grid gap-5 sm:grid-cols-2",
+          "mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2",
           columns === 3 && "xl:grid-cols-3"
         )}
       >

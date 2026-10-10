@@ -1,5 +1,4 @@
 import type {
-  GlossaryTerm,
   LawEntry,
   RightGuide,
   RightSummary,
@@ -173,7 +172,6 @@ export const lawEntries: LawEntry[] = [
     related: {
       rights: ["arrest-and-detention", "fair-hearing", "privacy"],
       laws: ["enforcing-fundamental-rights", "how-a-criminal-case-moves"],
-      terms: ["fundamental-rights", "habeas-corpus"],
       media: ["fair-hearing-explained", "police-stop-what-to-do"],
       problems: ["police-stopped-or-questioned-me"],
       referrals: ["national-human-rights-commission"],
@@ -279,7 +277,6 @@ export const lawEntries: LawEntry[] = [
     related: {
       laws: ["fundamental-rights-chapter-iv", "how-a-criminal-case-moves"],
       rights: ["arrest-and-detention", "bail"],
-      terms: ["affidavit", "habeas-corpus", "injunction"],
       problems: ["someone-is-being-held-at-a-station"],
       referrals: ["national-human-rights-commission"],
     },
@@ -384,7 +381,6 @@ export const lawEntries: LawEntry[] = [
     related: {
       laws: ["fundamental-rights-chapter-iv", "enforcing-fundamental-rights"],
       rights: ["arrest-and-detention", "bail", "fair-hearing", "police-stop"],
-      terms: ["bail", "subpoena", "affidavit"],
       media: ["inside-the-court-process"],
       problems: ["i-have-been-charged-with-an-offence", "i-have-been-served-with-court-papers"],
       referrals: ["legal-aid-council"],
@@ -499,7 +495,6 @@ export const lawEntries: LawEntry[] = [
       laws: ["registering-a-company"],
       safety: ["employment-offer"],
       guides: ["before-hiring-an-employee"],
-      terms: ["negligence", "limitation-period"],
     },
     meta: {
       ...educational,
@@ -613,7 +608,6 @@ export const lawEntries: LawEntry[] = [
       laws: ["directors-duties", "employment-contracts-and-termination"],
       guides: ["before-entering-a-partnership", "before-hiring-an-employee"],
       safety: ["business-partnership"],
-      terms: ["power-of-attorney"],
       media: ["what-cama-changed", "cama-2020-what-changed"],
     },
     meta: {
@@ -719,7 +713,6 @@ export const lawEntries: LawEntry[] = [
       laws: ["registering-a-company"],
       guides: ["before-entering-a-partnership"],
       safety: ["business-partnership"],
-      terms: ["negligence", "power-of-attorney"],
     },
     meta: {
       ...educational,
@@ -822,7 +815,6 @@ export const lawEntries: LawEntry[] = [
       safety: ["buying-property"],
       articles: ["land-use-act-basics"],
       rights: ["fair-hearing"],
-      terms: ["trespass", "power-of-attorney", "injunction"],
     },
     meta: {
       ...educational,
@@ -932,7 +924,6 @@ export const lawEntries: LawEntry[] = [
       safety: ["online-scams"],
       articles: ["cybercrimes-act-everyday"],
       rights: ["privacy"],
-      terms: ["negligence", "defamation"],
     },
     meta: {
       ...educational,
@@ -1043,7 +1034,6 @@ export const lawEntries: LawEntry[] = [
       rights: ["privacy"],
       guides: ["before-collecting-customer-data"],
       articles: ["ndpa-for-small-business"],
-      terms: ["negligence"],
       media: ["customer-data-webinar"],
     },
     meta: {
@@ -1149,7 +1139,6 @@ export const lawEntries: LawEntry[] = [
     related: {
       rights: ["consumer"],
       media: ["consumer-complaint-route"],
-      terms: ["negligence", "limitation-period"],
     },
     meta: {
       ...educational,
@@ -1256,7 +1245,6 @@ export const lawEntries: LawEntry[] = [
     related: {
       laws: ["registering-a-company", "cybercrimes-act"],
       guides: ["before-signing-a-supplier-contract"],
-      terms: ["injunction", "limitation-period"],
       media: ["creators-and-copyright"],
     },
     meta: {
@@ -1347,7 +1335,6 @@ export const rightGuides: RightGuide[] = [
       laws: ["fundamental-rights-chapter-iv", "how-a-criminal-case-moves"],
       rights: ["arrest-and-detention", "bail"],
       media: ["know-your-rights-police-encounters"],
-      terms: ["fundamental-rights", "bail"],
       problems: ["police-stopped-or-questioned-me"],
       questions: ["can-the-police-hold-someone-without-charge"],
     },
@@ -1433,7 +1420,6 @@ export const rightGuides: RightGuide[] = [
         "enforcing-fundamental-rights",
       ],
       rights: ["bail", "fair-hearing", "police-stop"],
-      terms: ["bail", "habeas-corpus", "affidavit"],
       problems: ["someone-is-being-held-at-a-station"],
       referrals: ["legal-aid-council"],
     },
@@ -1514,7 +1500,6 @@ export const rightGuides: RightGuide[] = [
     related: {
       laws: ["how-a-criminal-case-moves", "fundamental-rights-chapter-iv"],
       rights: ["arrest-and-detention", "fair-hearing"],
-      terms: ["bail", "affidavit"],
       problems: ["i-have-been-charged-with-an-offence"],
       referrals: ["legal-aid-council"],
     },
@@ -1669,7 +1654,6 @@ export const rightGuides: RightGuide[] = [
       guides: ["before-hiring-an-employee"],
       articles: ["employment-contract-anatomy"],
       safety: ["employment-offer"],
-      terms: ["limitation-period"],
       problems: ["i-lost-my-job-or-was-not-paid"],
       questions: ["dismissed-without-notice"],
     },
@@ -1744,7 +1728,6 @@ export const rightGuides: RightGuide[] = [
       laws: ["fundamental-rights-chapter-iv", "how-a-criminal-case-moves"],
       rights: ["arrest-and-detention", "at-work"],
       articles: ["fair-hearing-explained"],
-      terms: ["fundamental-rights", "subpoena"],
       problems: ["i-have-been-served-with-court-papers"],
     },
     meta: {
@@ -1821,7 +1804,6 @@ export const rightGuides: RightGuide[] = [
     related: {
       laws: ["consumer-protection-fccpa"],
       articles: ["consumer-complaint-route"],
-      terms: ["negligence", "limitation-period"],
       problems: ["i-paid-for-something-that-failed"],
       referrals: ["consumer-and-sector-regulators"],
     },
@@ -1856,7 +1838,7 @@ export const featuredRights: RightSummary[] = rightGuides.map(
 export const BEFORE_YOU_SIGN = "Before You Sign";
 
 /**
- * The series featured on /stay-safe, each as a section of its own. Seed for the
+ * The series featured on /know-the-law/stay-safe, each as a section of its own. Seed for the
  * "Stay Safe series" collection in the CMS.
  */
 export const safetySeries: SafetySeries[] = [
@@ -1910,7 +1892,6 @@ export const safetyGuides: SafetyGuide[] = [
     related: {
       safety: ["tenancy-agreement", "employment-offer", "business-partnership"],
       guides: ["before-signing-a-supplier-contract"],
-      terms: ["power-of-attorney", "negligence"],
     },
     meta: { ...educational },
   },
@@ -1955,7 +1936,6 @@ export const safetyGuides: SafetyGuide[] = [
       laws: ["land-use-act-and-title"],
       safety: ["before-you-sign", "buying-property"],
       media: ["before-you-sign-tenancy"],
-      terms: ["trespass", "injunction"],
       problems: ["my-landlord-wants-me-out"],
       questions: ["landlord-changed-the-locks"],
     },
@@ -2047,7 +2027,6 @@ export const safetyGuides: SafetyGuide[] = [
       rights: ["privacy"],
       articles: ["cybercrimes-act-everyday"],
       media: ["scams-that-look-official"],
-      terms: ["negligence"],
       problems: ["something-happened-to-me-online"],
       questions: ["someone-is-impersonating-me-online"],
     },
@@ -2099,7 +2078,6 @@ export const safetyGuides: SafetyGuide[] = [
       laws: ["land-use-act-and-title"],
       articles: ["land-use-act-basics"],
       safety: ["before-you-sign"],
-      terms: ["trespass", "power-of-attorney", "injunction"],
       problems: ["someone-is-claiming-my-land"],
       questions: ["do-i-need-a-lawyer-to-buy-land"],
     },
@@ -2146,7 +2124,6 @@ export const safetyGuides: SafetyGuide[] = [
     related: {
       safety: ["before-you-sign"],
       laws: ["consumer-protection-fccpa"],
-      terms: ["negligence", "limitation-period"],
       problems: ["i-am-owed-money-or-being-pursued-for-it"],
       questions: ["can-i-be-arrested-over-a-debt"],
     },
@@ -2193,220 +2170,10 @@ export const safetyGuides: SafetyGuide[] = [
       laws: ["registering-a-company", "directors-duties"],
       guides: ["before-entering-a-partnership"],
       media: ["what-cama-changed", "before-you-sign-partnership"],
-      terms: ["power-of-attorney"],
     },
     meta: {
       ...educational,
       source: { label: "Companies and Allied Matters Act 2020" },
     },
-  },
-];
-
-/* -------------------------------------------------------------------------- */
-/* Glossary                                                                    */
-/* -------------------------------------------------------------------------- */
-
-export const glossaryTerms: GlossaryTerm[] = [
-  {
-    id: "gl-1",
-    slug: "bail",
-    term: "Bail",
-    definition:
-      "Being allowed to go home, usually on conditions, while your case continues. A court or the police decides.",
-    example:
-      "A person charged with a minor offence goes home until the next court date, on conditions the court sets.",
-    whyItMatters:
-      "Bail does not mean you are innocent, and it is not a price for your freedom.",
-    related: {
-      rights: ["bail", "arrest-and-detention"],
-      laws: ["how-a-criminal-case-moves"],
-      terms: ["habeas-corpus"],
-    },
-    meta: { ...educational },
-  },
-  {
-    id: "gl-2",
-    slug: "affidavit",
-    term: "Affidavit",
-    definition:
-      "A written statement that you swear is true, used as evidence.",
-    example:
-      "Someone confirming their date of birth for an official process swears an affidavit before a commissioner for oaths.",
-    whyItMatters:
-      "Swearing to something untrue in an affidavit carries legal consequences.",
-    alsoKnownAs: ["Sworn statement"],
-    related: {
-      laws: ["enforcing-fundamental-rights"],
-      terms: ["subpoena"],
-    },
-    meta: { ...educational },
-  },
-  {
-    id: "gl-3",
-    slug: "injunction",
-    term: "Injunction",
-    definition:
-      "A court order telling someone to do something, or to stop doing something.",
-    example:
-      "A court orders that building work stop until a dispute over the land is decided.",
-    whyItMatters:
-      "It is the main tool for preventing harm while a case is still running.",
-    related: {
-      laws: ["land-use-act-and-title"],
-      safety: ["buying-property"],
-      terms: ["trespass"],
-    },
-    meta: { ...educational },
-  },
-  {
-    id: "gl-4",
-    slug: "power-of-attorney",
-    term: "Power of attorney",
-    definition:
-      "A document by which one person authorises another to act on their behalf in defined matters.",
-    example:
-      "A property owner abroad authorises a relative to sign documents relating to a specific transaction.",
-    whyItMatters:
-      "Its scope is exactly what the document says — no wider — and it can be misused if drafted loosely.",
-    related: {
-      laws: ["land-use-act-and-title"],
-      safety: ["before-you-sign", "buying-property"],
-    },
-    meta: { ...educational },
-  },
-  {
-    id: "gl-5",
-    slug: "negligence",
-    term: "Negligence",
-    definition:
-      "A failure to take the care the law expects, causing harm that the law recognises.",
-    example:
-      "A service provider ignores an obvious safety risk and a customer is injured as a result.",
-    whyItMatters:
-      "Much of everyday civil liability turns on this single concept.",
-    related: {
-      laws: ["consumer-protection-fccpa"],
-      rights: ["consumer"],
-      terms: ["limitation-period"],
-    },
-    meta: { ...educational },
-  },
-  {
-    id: "gl-6",
-    slug: "limitation-period",
-    term: "Limitation period",
-    definition:
-      "The window of time within which a claim must be brought, after which it may no longer be pursued.",
-    example:
-      "A person waits too long to bring a claim and finds the court will not hear it.",
-    whyItMatters:
-      "Delay alone can end an otherwise good claim, which is why timing questions belong early.",
-    alsoKnownAs: ["Statute-barred", "Time bar"],
-    related: {
-      rights: ["consumer", "at-work"],
-      terms: ["negligence"],
-    },
-    meta: { ...educational },
-  },
-  {
-    id: "gl-7",
-    slug: "habeas-corpus",
-    term: "Habeas corpus",
-    definition:
-      "An application asking a court to require that a detained person be produced, so the lawfulness of their detention can be examined.",
-    example:
-      "A family applies to court because a relative has been held without being brought before any court.",
-    whyItMatters:
-      "It is the classic remedy against unlawful detention, and it puts the burden on the detaining authority to justify itself.",
-    related: {
-      rights: ["arrest-and-detention"],
-      laws: ["enforcing-fundamental-rights", "fundamental-rights-chapter-iv"],
-      terms: ["fundamental-rights"],
-    },
-    meta: { ...educational },
-  },
-  {
-    id: "gl-8",
-    slug: "subpoena",
-    term: "Subpoena",
-    definition:
-      "A court order requiring a person to attend to give evidence, or to produce a document.",
-    example:
-      "A bank officer is required to attend court with records relevant to a dispute.",
-    whyItMatters:
-      "Ignoring one is not a neutral act: it is a matter for the court that issued it.",
-    alsoKnownAs: ["Witness summons"],
-    related: {
-      rights: ["fair-hearing"],
-      laws: ["how-a-criminal-case-moves"],
-      terms: ["affidavit"],
-    },
-    meta: { ...educational },
-  },
-  {
-    id: "gl-9",
-    slug: "fundamental-rights",
-    term: "Fundamental rights",
-    definition:
-      "The rights guaranteed by Chapter IV of the Constitution, enforceable against the state through a dedicated court procedure.",
-    example:
-      "A person held without being told why relies on the right to personal liberty.",
-    whyItMatters:
-      "These are the rights with their own fast-track route to the High Court.",
-    related: {
-      laws: ["fundamental-rights-chapter-iv", "enforcing-fundamental-rights"],
-      rights: ["fair-hearing", "privacy", "arrest-and-detention"],
-    },
-    meta: { ...educational },
-  },
-  {
-    id: "gl-10",
-    slug: "probate",
-    term: "Probate",
-    definition:
-      "The court process by which a will is proved and the executors are authorised to deal with the estate of a person who has died.",
-    example:
-      "A bank asks for a grant before releasing the account of a deceased customer.",
-    whyItMatters:
-      "Institutions generally cannot release assets without the appropriate grant, whatever the family agrees among themselves.",
-    alsoKnownAs: ["Grant of probate", "Letters of administration"],
-    related: {
-      terms: ["affidavit", "power-of-attorney"],
-    },
-    meta: { ...educational },
-  },
-  {
-    id: "gl-11",
-    slug: "defamation",
-    term: "Defamation",
-    definition:
-      "A statement published to others that injures a person's reputation, where the law provides a remedy.",
-    example:
-      "A false claim about a business owner's honesty is circulated in a public group.",
-    whyItMatters:
-      "Publication online reaches further and lasts longer than the person posting usually expects.",
-    alsoKnownAs: ["Libel", "Slander"],
-    related: {
-      laws: ["cybercrimes-act"],
-      terms: ["injunction"],
-    },
-    meta: { ...educational },
-  },
-  {
-    id: "gl-12",
-    slug: "trespass",
-    term: "Trespass",
-    definition:
-      "Interference with another person's land, person or goods without lawful justification.",
-    example:
-      "Someone enters and begins building on land held by another without any right to do so.",
-    whyItMatters:
-      "In land disputes it is often the practical cause of action while title is being argued.",
-    related: {
-      laws: ["land-use-act-and-title"],
-      safety: ["buying-property"],
-      terms: ["injunction"],
-    },
-    meta: { ...educational },
   },
 ];

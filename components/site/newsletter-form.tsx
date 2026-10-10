@@ -85,7 +85,7 @@ export function NewsletterForm() {
             onSubmit={onSubmit}
             initial={reduce ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:gap-14"
+            className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.1fr] lg:gap-14"
           >
             <div>
               <p className="text-eyebrow text-brand-ink">Newsletter</p>

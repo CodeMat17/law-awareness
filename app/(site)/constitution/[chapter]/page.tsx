@@ -61,22 +61,18 @@ export default async function ConstitutionChapterPage(
   const sections = await content.getConstitutionSections(chapter.numeral);
 
   // The chapter's own cross-references, gathered from its sections, so a
-  // reader arriving at Chapter IV sees the cases and guides it touches without
+  // reader arriving at Chapter IV sees the laws and guides it touches without
   // opening every section.
   const related = await content.getRelated(
     sections.reduce<{
       laws: string[];
       rights: string[];
-      cases: string[];
-      terms: string[];
     }>(
       (acc, section) => ({
         laws: [...new Set([...acc.laws, ...(section.related?.laws ?? [])])],
         rights: [...new Set([...acc.rights, ...(section.related?.rights ?? [])])],
-        cases: [...new Set([...acc.cases, ...(section.related?.cases ?? [])])],
-        terms: [...new Set([...acc.terms, ...(section.related?.terms ?? [])])],
       }),
-      { laws: [], rights: [], cases: [], terms: [] }
+      { laws: [], rights: [] }
     )
   );
 
@@ -92,7 +88,7 @@ export default async function ConstitutionChapterPage(
         title={chapter.title}
         lede={chapter.summary}
       >
-        <ul className="mt-7 grid max-w-3xl gap-2 sm:grid-cols-2">
+        <ul className="mt-7 grid grid-cols-1 max-w-3xl gap-2 sm:grid-cols-2">
           {chapter.covers.map((item) => (
             <li
               key={item}
@@ -120,7 +116,7 @@ export default async function ConstitutionChapterPage(
 
       <Section className="pt-12 sm:pt-14 lg:pt-16">
         {sections.length > 0 ? (
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-14">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-14">
             <div className="min-w-0">
               <Reveal>
                 <SectionHeader

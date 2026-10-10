@@ -7,7 +7,7 @@ import { searchSuggestions } from "@/lib/search-index";
 export const metadata: Metadata = {
   title: "Search — Law Awareness TV",
   description:
-    "Search laws, rights guides, Stay Safe guides, business guides, coverage, media and the plain-language glossary.",
+    "Search laws, rights guides, Stay Safe guides, business guides, coverage and media.",
   alternates: { canonical: "/search" },
 };
 

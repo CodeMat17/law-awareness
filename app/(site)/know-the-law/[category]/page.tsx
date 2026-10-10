@@ -78,7 +78,7 @@ export default async function LawCategoryPage(
       <Section className="pt-12 sm:pt-14 lg:pt-16">
         <h2 className="sr-only">{category.name} explainers</h2>
         {entries.length > 0 ? (
-          <RevealGroup className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {entries.map((entry) => (
               <RevealItem key={entry.id} className="flex">
                 <LawEntryCard entry={entry} categoryName={category.name} />

@@ -312,7 +312,7 @@ const editorialPolicy: PageSeed = {
     section({
       heading: "Automated and interactive tools",
       paragraphs: [
-        "Our questionnaires, triage pathways, health checks and calendars are educational aids that help a reader organise a situation and find the right area of law. They do not assess a case, and their output is not a legal opinion.",
+        "Our questionnaires and triage pathways are educational aids that help a reader organise a situation and find the right area of law. They do not assess a case, and their output is not a legal opinion.",
       ],
     }),
     section({
@@ -366,7 +366,7 @@ const privacy: PageSeed = {
         },
         {
           term: "Tool responses",
-          body: "Answers you give to the legal health check, problem triage and similar tools, used to produce your result on the page.",
+          body: "Answers you give to the business profiler, problem triage and similar tools, used to produce your result on the page.",
         },
         {
           term: "Technical and usage data",
@@ -576,7 +576,7 @@ const accessibility: PageSeed = {
         },
         {
           term: "Plain language",
-          body: "An accessibility measure in its own right: legal terms are explained where they first appear and gathered in the glossary.",
+          body: "An accessibility measure in its own right: legal terms are explained in everyday words where they first appear.",
         },
       ],
     }),

@@ -108,7 +108,7 @@ export default async function RegulatoryWatchPage(
         </Reveal>
 
         {updates.length > 0 ? (
-          <RevealGroup className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          <RevealGroup className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {updates.map((update) => (
               <RevealItem key={update.id} className="flex">
                 <RegulatoryUpdateCard

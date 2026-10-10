@@ -5,8 +5,6 @@ import type {
   WorkflowStatus,
 } from "@/lib/content/types";
 import { pageSeeds } from "@/lib/content/pages";
-import { checklistItems, quizQuestions } from "@/lib/content/learning";
-import { courtProfiles } from "@/lib/content/case-law";
 import { constitutionChapters } from "@/lib/content/constitution";
 import { constitutionSections } from "@/lib/content/constitution-sections";
 import { programmeCategories } from "@/lib/content/programmes";
@@ -268,11 +266,12 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
       ...fromMeta(item.meta),
       status: item.meta.status,
       updatedAt: stamp,
-      publicHref: `/law-and-society/${item.slug}`,
+      publicHref: `/news/${item.slug}`,
       fields: {
         title: item.title,
         standfirst: item.standfirst,
         kind: item.kind,
+        desk: item.desk ?? "law",
         category: item.category,
         slug: item.slug,
         readingMinutes: String(item.readingMinutes),
@@ -283,12 +282,7 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
         audiences: encodeList(item.audiences),
         // Paragraphs are one multiline column, split on blank lines the way
         // prose is read everywhere else in the CMS.
-        body: serialiseRows(
-          (item.body ?? []).map((section) => ({
-            heading: section.heading,
-            paragraphs: section.paragraphs.join("\n\n"),
-          }))
-        ),
+        body: item.body ?? "",
         ...metaFields(item.meta),
       },
     }))
@@ -304,7 +298,7 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
       ...fromMeta(item.meta),
       status: item.meta.status,
       updatedAt: stamp,
-      publicHref: `/your-rights/${item.slug}`,
+      publicHref: `/know-the-law/your-rights/${item.slug}`,
       fields: {
         title: item.title,
         situation: item.situation,
@@ -349,38 +343,6 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
   );
 
   store.set(
-    "cases",
-    seed.caseRecords.map((item) => ({
-      id: item.id,
-      collection: "cases" as const,
-      title: item.title,
-      subtitle: `${item.issueTag} · ${item.year}`,
-      ...fromMeta(item.meta),
-      status: item.meta.status,
-      updatedAt: stamp,
-      publicHref: `/cases/${item.slug}`,
-      fields: {
-        title: item.title,
-        slug: item.slug,
-        court: item.court,
-        year: String(item.year),
-        subject: item.subject,
-        issueTag: item.issueTag,
-        legalIssue: item.legalIssue,
-        keyPrinciple: item.keyPrinciple,
-        standing: item.standing,
-        whereToFindIt: item.whereToFindIt,
-        background: encodeList(item.background),
-        decision: encodeList(item.decision),
-        plainLanguage: encodeList(item.plainLanguage),
-        doesNotSettle: encodeList(item.doesNotSettle),
-        instruments: encodeList(item.instruments),
-        ...metaFields(item.meta),
-      },
-    }))
-  );
-
-  store.set(
     "law-histories",
     seed.lawHistories.map((item) => ({
       id: item.id,
@@ -390,7 +352,7 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
       ...fromMeta(item.meta),
       status: item.meta.status,
       updatedAt: stamp,
-      publicHref: `/know-the-law/amendments#${item.lawSlug}`,
+      publicHref: `/know-the-law/${item.category}/${item.lawSlug}#history`,
       fields: {
         instrument: item.instrument,
         lawSlug: item.lawSlug,
@@ -569,92 +531,6 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
     }))
   );
 
-  store.set(
-    "glossary",
-    seed.glossaryTerms.map((item) => ({
-      id: item.id,
-      collection: "glossary" as const,
-      title: item.term,
-      ...fromMeta(item.meta),
-      status: item.meta.status,
-      updatedAt: stamp,
-      publicHref: `/glossary/${item.slug}`,
-      fields: {
-        term: item.term,
-        definition: item.definition,
-        example: item.example,
-        whyItMatters: item.whyItMatters,
-        slug: item.slug,
-        alsoKnownAs: encodeList(item.alsoKnownAs ?? []),
-        ...metaFields(item.meta),
-      },
-    }))
-  );
-
-  store.set(
-    "quizzes",
-    seed.quizzes.map((item) => ({
-      id: item.id,
-      collection: "quizzes" as const,
-      title: item.title,
-      subtitle: item.level,
-      ...fromMeta(item.meta),
-      status: item.meta.status,
-      updatedAt: stamp,
-      publicHref: `/quizzes/${item.slug}`,
-      fields: {
-        title: item.title,
-        description: item.description,
-        level: item.level,
-        questionCount: String(item.questionCount),
-        minutes: String(item.minutes),
-        slug: item.slug,
-        // Answers are stored 1-based, as an editor counts the options on the
-        // form. The read path subtracts one to get back to the array index.
-        questions: serialiseRows(
-          (quizQuestions[item.slug] ?? []).map((question) => ({
-            prompt: question.prompt,
-            options: encodeList(question.options),
-            answer: String(question.answer + 1),
-            explanation: question.explanation,
-          }))
-        ),
-        ...metaFields(item.meta),
-      },
-    }))
-  );
-
-  store.set(
-    "checklists",
-    seed.checklists.map((item) => ({
-      id: item.id,
-      collection: "checklists" as const,
-      title: item.title,
-      ...fromMeta(item.meta),
-      status: item.meta.status,
-      updatedAt: stamp,
-      publicHref: `/resources/${item.slug}`,
-      fields: {
-        title: item.title,
-        description: item.description,
-        itemCount: String(item.itemCount),
-        slug: item.slug,
-        audience: item.audience,
-        // The lines live beside the checklists rather than on them, so they
-        // are gathered here - the CMS record is the whole checklist, which is
-        // what an editor opens to work on.
-        items: serialiseRows(
-          (checklistItems[item.slug] ?? []).map((line) => ({
-            group: line.group,
-            label: line.label,
-            detail: line.detail,
-          }))
-        ),
-        ...metaFields(item.meta),
-      },
-    }))
-  );
-
   /* Business & enterprise - Phase 3 ---------------------------------------- */
 
   store.set(
@@ -712,54 +588,6 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
             whatToCheck: clause.whatToCheck,
           }))
         ),
-        ...metaFields(item.meta),
-      },
-    }))
-  );
-
-  store.set(
-    "industries",
-    seed.industryHubs.map((item) => ({
-      id: item.id,
-      collection: "industries" as const,
-      title: item.name,
-      ...fromMeta(item.meta),
-      status: item.meta.status,
-      updatedAt: stamp,
-      publicHref: `/business/industries/${item.slug}`,
-      fields: {
-        name: item.name,
-        blurb: item.blurb,
-        slug: item.slug,
-        icon: item.icon,
-        overview: encodeList(item.overview),
-        regulatoryThemes: encodeList(item.regulatoryThemes),
-        complianceTopics: encodeList(item.complianceTopics),
-        ...metaFields(item.meta),
-      },
-    }))
-  );
-
-  store.set(
-    "ceo-briefings",
-    seed.ceoBriefings.map((item) => ({
-      id: item.id,
-      collection: "ceo-briefings" as const,
-      title: item.title,
-      subtitle: item.question,
-      ...fromMeta(item.meta),
-      status: item.meta.status,
-      updatedAt: stamp,
-      publicHref: `/business/ceo/${item.slug}`,
-      fields: {
-        title: item.title,
-        question: item.question,
-        summary: item.summary,
-        readingMinutes: String(item.readingMinutes),
-        slug: item.slug,
-        keyPoints: encodeList(item.keyPoints),
-        questionsForTheBoard: encodeList(item.questionsForTheBoard),
-        whereRiskLands: encodeList(item.whereRiskLands),
         ...metaFields(item.meta),
       },
     }))
@@ -853,36 +681,6 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
   );
 
   store.set(
-    "lawyer-listings",
-    seed.lawyerListings.map((item) => ({
-      id: item.id,
-      collection: "lawyer-listings" as const,
-      title: item.displayName,
-      subtitle: `${item.city}, ${item.state}`,
-      ...fromMeta(item.meta),
-      status: item.meta.status,
-      updatedAt: stamp,
-      publicHref: `/lawyers/${item.slug}`,
-      fields: {
-        displayName: item.displayName,
-        listingStatus: item.listingStatus,
-        focus: item.focus,
-        state: item.state,
-        city: item.city,
-        availability: item.availability,
-        experienceBand: item.experienceBand,
-        consultation: item.consultation,
-        slug: item.slug,
-        practiceAreas: encodeList(item.practiceAreas),
-        languages: encodeList(item.languages),
-        about: encodeList(item.about),
-        credentials: encodeList(item.credentials),
-        ...metaFields(item.meta),
-      },
-    }))
-  );
-
-  store.set(
     "questions",
     seed.publicQuestions.map((item) => ({
       id: item.id,
@@ -967,7 +765,7 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
       ...fromMeta(item.meta),
       status: item.meta.status,
       updatedAt: stamp,
-      publicHref: `/stay-safe/${item.slug}`,
+      publicHref: `/know-the-law/stay-safe/${item.slug}`,
       fields: {
         title: item.title,
         risk: item.risk,
@@ -1035,25 +833,6 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
   );
 
   store.set(
-    "courts",
-    courtProfiles.map((item) => ({
-      id: item.id,
-      collection: "courts" as const,
-      title: item.name,
-      subtitle: `Rank ${item.rank}`,
-      status: "published" as const,
-      updatedAt: stamp,
-      fields: {
-        name: item.name,
-        courtId: item.id,
-        rank: String(item.rank),
-        jurisdiction: item.jurisdiction,
-        bindingEffect: item.bindingEffect,
-      },
-    }))
-  );
-
-  store.set(
     "alert-topics",
     seed.alertTopics.map((item) => ({
       id: `alert-topic-${item.slug}`,
@@ -1072,49 +851,6 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
   );
 
   store.set(
-    "calendar-entries",
-    seed.calendarEntries.map((item) => ({
-      id: item.id,
-      collection: "calendar-entries" as const,
-      title: item.title,
-      subtitle: item.cadence,
-      ...fromMeta(item.meta),
-      status: item.meta.status,
-      updatedAt: stamp,
-      publicHref: "/business/legal-calendar",
-      fields: {
-        title: item.title,
-        cadence: item.cadence,
-        trigger: item.trigger,
-        timing: item.timing,
-        summary: item.summary,
-        areaId: item.areaId,
-        icon: item.icon,
-        whatToPrepare: encodeList(item.whatToPrepare),
-        ...metaFields(item.meta),
-      },
-    }))
-  );
-
-  store.set(
-    "health-check",
-    seed.healthCheckQuestions.map((item) => ({
-      id: item.id,
-      collection: "health-check" as const,
-      title: item.prompt,
-      subtitle: item.areaId,
-      status: "published" as const,
-      updatedAt: stamp,
-      publicHref: "/business/health-check",
-      fields: {
-        prompt: item.prompt,
-        help: item.help ?? "",
-        areaId: item.areaId,
-      },
-    }))
-  );
-
-  store.set(
     "profile-questions",
     seed.profileQuestions.map((item) => ({
       id: item.id,
@@ -1123,7 +859,7 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
       subtitle: item.kind === "boolean" ? "Yes or no" : "Choose one",
       status: "published" as const,
       updatedAt: stamp,
-      publicHref: "/business-account",
+      publicHref: "/business/compliance",
       fields: {
         label: item.label,
         help: item.help ?? "",
@@ -1290,11 +1026,65 @@ export function buildSeed(): Map<CollectionId, CmsRecord[]> {
       subtitle: item.headline,
       status: "published" as const,
       updatedAt: stamp,
-      publicHref: "/stay-safe",
+      publicHref: "/know-the-law/stay-safe",
       fields: {
         name: item.name,
         headline: item.headline,
         description: item.description,
+      },
+    }))
+  );
+
+  store.set(
+    "leadership",
+    seed.leadershipMembers.map((item) => ({
+      id: item.id,
+      collection: "leadership" as const,
+      title: item.name,
+      subtitle: item.role,
+      status: "published" as const,
+      updatedAt: stamp,
+      publicHref: "/about",
+      fields: {
+        name: item.name,
+        role: item.role,
+        group: item.group,
+        photo: item.photo ?? "",
+        bio: item.bio,
+        position: String(item.position),
+      },
+    }))
+  );
+
+  store.set(
+    "san-of-the-week",
+    seed.sanFeatures.map((item) => ({
+      id: item.id,
+      collection: "san-of-the-week" as const,
+      title: item.name,
+      subtitle: item.role,
+      status: "published" as const,
+      updatedAt: stamp,
+      publicHref: `/san-of-the-week/${item.slug}`,
+      fields: {
+        name: item.name,
+        slug: item.slug,
+        role: item.role,
+        weekOf: item.weekOf,
+        yearConferred: item.yearConferred ? String(item.yearConferred) : "",
+        photo: item.photo ?? "",
+        quote: item.quote,
+        intro: item.intro,
+        practiceAreas: encodeList(item.practiceAreas),
+        bio: item.bio.join("\n\n"),
+        conversation: JSON.stringify(
+          item.conversation.map((turn) => ({
+            question: turn.question,
+            answer: turn.answer.join("\n\n"),
+          }))
+        ),
+        advice: item.advice.join("\n\n"),
+        watchHref: item.watchHref,
       },
     }))
   );
@@ -1320,7 +1110,6 @@ function store() {
   }
   return globalStore.__lawCms;
 }
-
 
 const REVIEW_VALUES: ReviewStatus[] = [
   "educational",

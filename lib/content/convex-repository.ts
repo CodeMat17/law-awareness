@@ -7,32 +7,20 @@ import type {
   Article,
   Audience,
   BusinessGuideDetail,
-  CaseRecord,
-  CaseStanding,
-  CeoBriefing,
-  Checklist,
   ComplianceTopic,
   ContentKind,
   ContractType,
-  CourtLevel,
   EditorialMeta,
-  ExperienceBand,
-  GlossaryTerm,
-  IndustryHub,
   LawCategory,
   LawHistory,
-  ChecklistItem,
-  LawyerListing,
   LegalProblem,
-  ListingAvailability,
-  ListingStatus,
   MediaFormat,
   MediaKind,
   MediaSeason,
   MediaSeries,
+  NewsDesk,
   ProblemUrgency,
   PublicQuestion,
-  Quiz,
   ReferralKind,
   ReferralRoute,
   RegulatoryUpdate,
@@ -42,11 +30,7 @@ import type {
   TickerTone,
   AgendaSlot,
   AlertTopic,
-  CalendarCadence,
-  CalendarEntry,
   ConstitutionSection,
-  CourtProfile,
-  HealthCheckQuestion,
   LawEntry,
   LiveEvent,
   LiveStatus,
@@ -55,7 +39,6 @@ import type {
   MediaDetail,
   MediaTranscript,
   ProfileQuestion,
-  QuizQuestion,
   RelatedRefs,
   SafetyGuide,
   SafetySeries,
@@ -64,6 +47,11 @@ import type {
 } from "./types";
 import type { ConstitutionChapter, FundamentalRight } from "./constitution";
 import { isProgrammeSlug, type ProgrammeCategory } from "./programmes";
+import {
+  LEADERSHIP_GROUPS,
+  type LeadershipMember,
+} from "./leadership";
+import type { SanFeature } from "./san-of-the-week";
 import type {
   ContactPageContent,
   DonatePageContent,
@@ -162,30 +150,20 @@ export const siteBackedCollections: ReadonlySet<string> = new Set([
   "rights",
   "laws",
   "business-guides",
-  "cases",
   "law-histories",
   "media",
   "media-series",
-  "glossary",
-  "quizzes",
-  "checklists",
   "compliance-topics",
   "contracts",
-  "industries",
-  "ceo-briefings",
   "regulatory-updates",
   "legal-problems",
   "referral-routes",
-  "lawyer-listings",
   "questions",
   "law-entries",
   "safety-guides",
   "constitution-chapters",
   "constitution-sections",
-  "courts",
   "alert-topics",
-  "calendar-entries",
-  "health-check",
   "profile-questions",
   "programmes",
   "footer-columns",
@@ -193,6 +171,8 @@ export const siteBackedCollections: ReadonlySet<string> = new Set([
   "donate-page",
   "fundamental-rights",
   "safety-series",
+  "leadership",
+  "san-of-the-week",
 ]);
 
 /**
@@ -231,26 +211,6 @@ export const fetchTickerItems = unstable_cache(
   { tags: [contentTag("ticker")], revalidate: CONTENT_REVALIDATE }
 );
 
-/* -------------------------------------------------------------------------- */
-/* Case law                                                                    */
-/* -------------------------------------------------------------------------- */
-
-const COURT_LEVELS: CourtLevel[] = [
-  "supreme-court",
-  "court-of-appeal",
-  "federal-high-court",
-  "state-high-court",
-  "national-industrial-court",
-  "tribunal",
-];
-
-const CASE_STANDINGS: CaseStanding[] = [
-  "followed",
-  "distinguished",
-  "overtaken-by-statute",
-  "position-not-stated",
-];
-
 const REVIEW_STATUSES: ReviewStatus[] = [
   "educational",
   "reviewed",
@@ -279,61 +239,6 @@ function toMeta(fields: Record<string, string>): EditorialMeta {
       : undefined,
   };
 }
-
-interface CaseRow {
-  recordId: string;
-  title: string;
-  fields: Record<string, string>;
-}
-
-function toCaseRecord(row: CaseRow): CaseRecord {
-  const f = row.fields;
-  const court = f.court as CourtLevel;
-  const standing = f.standing as CaseStanding;
-  return {
-    id: row.recordId,
-    slug: f.slug ?? "",
-    title: f.title || row.title,
-    court: COURT_LEVELS.includes(court) ? court : "tribunal",
-    year: Number.parseInt(f.year ?? "", 10) || 0,
-    subject: f.subject ?? "",
-    legalIssue: f.legalIssue ?? "",
-    issueTag: f.issueTag ?? "",
-    background: decodeList(f.background),
-    decision: decodeList(f.decision),
-    keyPrinciple: f.keyPrinciple ?? "",
-    plainLanguage: decodeList(f.plainLanguage),
-    doesNotSettle: decodeList(f.doesNotSettle),
-    standing: CASE_STANDINGS.includes(standing)
-      ? standing
-      : "position-not-stated",
-    whereToFindIt: f.whereToFindIt ?? "",
-    instruments: decodeList(f.instruments),
-    meta: toMeta(f),
-  };
-}
-
-/**
- * Every published case.
- *
- * Ordering is left to the caller: the explorer ranks by court seniority and
- * then by year, which depends on the court hierarchy in ./case-law.ts and so
- * belongs with the repository rather than here.
- */
-export const fetchCases = unstable_cache(
-  async (): Promise<CaseRecord[] | null> => {
-    try {
-      const rows = await fetchQuery(api.content.publishedByCollection, {
-        collection: "cases",
-      });
-      return rows.map(toCaseRecord);
-    } catch {
-      return null;
-    }
-  },
-  ["content", "cases"],
-  { tags: [contentTag("cases")], revalidate: CONTENT_REVALIDATE }
-);
 
 /* -------------------------------------------------------------------------- */
 /* Media                                                                       */
@@ -687,16 +592,12 @@ const RELATED_KEYS = [
   "guides",
   "articles",
   "media",
-  "terms",
   "compliance",
   "contracts",
-  "industries",
-  "briefings",
   "updates",
   "problems",
   "questions",
   "referrals",
-  "cases",
   "sections",
 ] as const;
 
@@ -742,13 +643,6 @@ const TRANSCRIPT_STATUSES: TranscriptStatus[] = [
   "in-progress",
   "unavailable",
 ];
-const CALENDAR_CADENCES: CalendarCadence[] = [
-  "annual",
-  "quarterly",
-  "monthly",
-  "ongoing",
-  "event-driven",
-];
 
 const CONTENT_KINDS: ContentKind[] = [
   "news",
@@ -758,6 +652,8 @@ const CONTENT_KINDS: ContentKind[] = [
   "educational",
 ];
 
+const NEWS_DESKS: NewsDesk[] = ["law", "sports", "entertainment"];
+
 const AUDIENCES: Audience[] = [
   "citizens",
   "business",
@@ -765,8 +661,6 @@ const AUDIENCES: Audience[] = [
   "learners",
   "viewers",
 ];
-
-const QUIZ_LEVELS: Quiz["level"][] = ["starter", "core", "advanced"];
 
 const PROBLEM_URGENCIES: ProblemUrgency[] = [
   "immediate",
@@ -781,20 +675,6 @@ const REFERRAL_KINDS: ReferralKind[] = [
   "civil-society",
   "law-clinic",
 ];
-
-const LISTING_STATUSES: ListingStatus[] = [
-  "sample",
-  "pending-verification",
-  "verified",
-];
-
-const LISTING_AVAILABILITY: ListingAvailability[] = [
-  "accepting",
-  "waitlist",
-  "not-accepting",
-];
-
-const EXPERIENCE_BANDS: ExperienceBand[] = ["1-5", "6-10", "11-20", "20+"];
 
 function asAudiences(value: string | undefined): Audience[] {
   return decodeList(value).filter((entry): entry is Audience =>
@@ -827,6 +707,7 @@ export const fetchArticles = collectionReader<ArticleCmsRecord>(
     id: row.recordId,
     slug: row.fields.slug ?? "",
     kind: asEnum(CONTENT_KINDS, row.fields.kind, "educational"),
+    desk: asEnum(NEWS_DESKS, row.fields.desk, "law"),
     title: row.fields.title || row.title,
     standfirst: row.fields.standfirst ?? "",
     category: row.fields.category ?? "",
@@ -834,21 +715,12 @@ export const fetchArticles = collectionReader<ArticleCmsRecord>(
     publishedAt: row.fields.publishedAt ?? "",
     image: row.fields.image?.trim() || undefined,
     audiences: asAudiences(row.fields.audiences),
-    // An article with no sections keeps `body` undefined rather than an empty
-    // array: the page reads that as "not written out yet" and renders the
-    // standfirst, which is a real editorial state.
-    body: toArticleBody(row.fields.body),
+    // An empty body stays undefined: the page reads that as "not written out
+    // yet" and renders the standfirst, which is a real editorial state.
+    body: row.fields.body?.trim() || undefined,
     meta: toMeta(row.fields),
   })
 );
-
-function toArticleBody(value: string | undefined) {
-  const sections = rowsOf(value).map((section) => ({
-    heading: section.heading ?? "",
-    paragraphs: paragraphs(section.paragraphs),
-  }));
-  return sections.length > 0 ? sections : undefined;
-}
 
 /** A law category without `entryCount`, which is counted, never stored. */
 export type LawCategoryCmsRecord = Omit<LawCategory, "entryCount">;
@@ -919,115 +791,6 @@ export const fetchBusinessGuides = collectionReader<BusinessGuideCmsRecord>(
   })
 );
 
-export type GlossaryCmsRecord = Omit<GlossaryTerm, "related">;
-
-export const fetchGlossaryTerms = collectionReader<GlossaryCmsRecord>(
-  "glossary",
-  (row) => {
-    const alsoKnownAs = decodeList(row.fields.alsoKnownAs);
-    return {
-      id: row.recordId,
-      slug: row.fields.slug ?? "",
-      term: row.fields.term || row.title,
-      definition: row.fields.definition ?? "",
-      example: row.fields.example ?? "",
-      whyItMatters: row.fields.whyItMatters ?? "",
-      alsoKnownAs: alsoKnownAs.length > 0 ? alsoKnownAs : undefined,
-      meta: toMeta(row.fields),
-    };
-  }
-);
-
-/**
- * A quiz and the questions that make it up.
- *
- * `questionCount` is counted here rather than read from the stored field: the
- * two used to be able to disagree, and a quiz advertising ten questions and
- * asking eight is a bug a reader meets rather than one an editor sees.
- */
-export interface QuizCmsRecord extends Quiz {
-  questions: QuizQuestion[];
-}
-
-/**
- * Reads one question back.
- *
- * The answer is stored 1-based, as an editor counts the options on the form,
- * and is subtracted back to an index here. An answer that points past the end
- * of the options - or at nothing at all - falls back to the first option
- * rather than reaching the quiz as an index that marks every attempt wrong.
- */
-function toQuizQuestions(
-  recordId: string,
-  value: string | undefined
-): QuizQuestion[] {
-  return rowsOf(value).map((entry, index) => {
-    const options = decodeList(entry.options);
-    const answer = asNumber(entry.answer) - 1;
-    return {
-      id: `${recordId}-question-${index + 1}`,
-      prompt: entry.prompt ?? "",
-      options,
-      answer: answer >= 0 && answer < options.length ? answer : 0,
-      explanation: entry.explanation ?? "",
-    };
-  });
-}
-
-export const fetchQuizzes = collectionReader<QuizCmsRecord>("quizzes", (row) => {
-  const questions = toQuizQuestions(row.recordId, row.fields.questions);
-  return {
-    id: row.recordId,
-    slug: row.fields.slug ?? "",
-    title: row.fields.title || row.title,
-    description: row.fields.description ?? "",
-    // Counted, never read: the stored field is locked in the admin for the
-    // same reason.
-    questionCount: questions.length,
-    minutes: asNumber(row.fields.minutes),
-    level: asEnum(QUIZ_LEVELS, row.fields.level, "starter"),
-    questions,
-    meta: toMeta(row.fields),
-  };
-});
-
-/**
- * A checklist and the lines on it.
- *
- * The lines are part of the record rather than a table beside it, because that
- * is what an editor opens to work on: a checklist with its lines somewhere
- * else is a checklist nobody can finish writing.
- */
-export interface ChecklistCmsRecord extends Checklist {
-  items: ChecklistItem[];
-}
-
-export const fetchChecklists = collectionReader<ChecklistCmsRecord>(
-  "checklists",
-  (row) => {
-    const slug = row.fields.slug ?? "";
-    const items = rowsOf(row.fields.items).map((line, index) => ({
-      id: `${slug || row.recordId}-${index + 1}`,
-      group: line.group ?? "",
-      label: line.label ?? "",
-      detail: line.detail ?? "",
-    }));
-
-    return {
-      id: row.recordId,
-      slug,
-      title: row.fields.title || row.title,
-      description: row.fields.description ?? "",
-      // Counted from the lines rather than read from the field, so a checklist
-      // can never advertise more steps than it has.
-      itemCount: items.length || asNumber(row.fields.itemCount),
-      audience: asEnum(AUDIENCES, row.fields.audience, "citizens"),
-      items,
-      meta: toMeta(row.fields),
-    };
-  }
-);
-
 export type ComplianceTopicCmsRecord = Omit<ComplianceTopic, "related">;
 
 export const fetchComplianceTopics = collectionReader<ComplianceTopicCmsRecord>(
@@ -1070,41 +833,6 @@ export const fetchContractTypes = collectionReader<ContractCmsRecord>(
       purpose: clause.purpose ?? "",
       whatToCheck: clause.whatToCheck ?? "",
     })),
-    meta: toMeta(row.fields),
-  })
-);
-
-export type IndustryCmsRecord = Omit<IndustryHub, "related">;
-
-export const fetchIndustryHubs = collectionReader<IndustryCmsRecord>(
-  "industries",
-  (row) => ({
-    id: row.recordId,
-    slug: row.fields.slug ?? "",
-    name: row.fields.name || row.title,
-    blurb: row.fields.blurb ?? "",
-    icon: row.fields.icon?.trim() || "hard-hat",
-    overview: decodeList(row.fields.overview),
-    regulatoryThemes: decodeList(row.fields.regulatoryThemes),
-    complianceTopics: decodeList(row.fields.complianceTopics),
-    meta: toMeta(row.fields),
-  })
-);
-
-export type CeoBriefingCmsRecord = Omit<CeoBriefing, "related">;
-
-export const fetchCeoBriefings = collectionReader<CeoBriefingCmsRecord>(
-  "ceo-briefings",
-  (row) => ({
-    id: row.recordId,
-    slug: row.fields.slug ?? "",
-    title: row.fields.title || row.title,
-    question: row.fields.question ?? "",
-    summary: row.fields.summary ?? "",
-    readingMinutes: asNumber(row.fields.readingMinutes),
-    keyPoints: decodeList(row.fields.keyPoints),
-    questionsForTheBoard: decodeList(row.fields.questionsForTheBoard),
-    whereRiskLands: decodeList(row.fields.whereRiskLands),
     meta: toMeta(row.fields),
   })
 );
@@ -1180,38 +908,6 @@ export const fetchReferralRoutes = collectionReader<ReferralRoute>(
   })
 );
 
-/**
- * Directory listings, modelled in full.
- *
- * `listingStatus` falls back to "sample" rather than to anything stronger: an
- * unset or unrecognised value must never be read as a claim that a
- * practitioner has been verified.
- */
-export const fetchLawyerListings = collectionReader<LawyerListing>(
-  "lawyer-listings",
-  (row) => ({
-    id: row.recordId,
-    slug: row.fields.slug ?? "",
-    displayName: row.fields.displayName || row.title,
-    listingStatus: asEnum(LISTING_STATUSES, row.fields.listingStatus, "sample"),
-    focus: row.fields.focus ?? "",
-    practiceAreas: decodeList(row.fields.practiceAreas),
-    state: row.fields.state ?? "",
-    city: row.fields.city ?? "",
-    languages: decodeList(row.fields.languages),
-    experienceBand: asEnum(EXPERIENCE_BANDS, row.fields.experienceBand, "1-5"),
-    availability: asEnum(
-      LISTING_AVAILABILITY,
-      row.fields.availability,
-      "not-accepting"
-    ),
-    consultation: row.fields.consultation ?? "",
-    about: decodeList(row.fields.about),
-    credentials: decodeList(row.fields.credentials),
-    meta: toMeta(row.fields),
-  })
-);
-
 export type PublicQuestionCmsRecord = Omit<PublicQuestion, "related">;
 
 export const fetchPublicQuestions = collectionReader<PublicQuestionCmsRecord>(
@@ -1255,7 +951,6 @@ export const fetchLawHistories = collectionReader<LawHistoryCmsRecord>(
     meta: toMeta(row.fields),
   })
 );
-
 
 /* -------------------------------------------------------------------------- */
 /* Know the Law, the Constitution and the courts                               */
@@ -1347,29 +1042,6 @@ export const fetchConstitutionSections = collectionReader<ConstitutionSection>(
   })
 );
 
-/**
- * The court hierarchy.
- *
- * `courtId` rather than the record id: cases store the court they were decided
- * in by this value, and it is locked in the admin for that reason. A row whose
- * id is not a court the application knows about is dropped rather than
- * rendered, because it could only ever match no case.
- */
-export const fetchCourtProfiles = collectionReader<CourtProfile | null>(
-  "courts",
-  (row) => {
-    const id = row.fields.courtId?.trim();
-    if (!COURT_LEVELS.includes(id as CourtLevel)) return null;
-    return {
-      id: id as CourtLevel,
-      name: row.fields.name || row.title,
-      rank: asNumber(row.fields.rank),
-      jurisdiction: row.fields.jurisdiction ?? "",
-      bindingEffect: row.fields.bindingEffect ?? "",
-    };
-  }
-);
-
 /* -------------------------------------------------------------------------- */
 /* Business tools                                                              */
 /* -------------------------------------------------------------------------- */
@@ -1381,32 +1053,6 @@ export const fetchAlertTopics = collectionReader<AlertTopic>(
     label: row.fields.label || row.title,
     description: row.fields.description ?? "",
     icon: row.fields.icon?.trim() || "bell",
-  })
-);
-
-export const fetchCalendarEntries = collectionReader<CalendarEntry>(
-  "calendar-entries",
-  (row) => ({
-    id: row.recordId,
-    title: row.fields.title || row.title,
-    cadence: asEnum(CALENDAR_CADENCES, row.fields.cadence, "ongoing"),
-    trigger: row.fields.trigger ?? "",
-    timing: row.fields.timing ?? "",
-    summary: row.fields.summary ?? "",
-    areaId: row.fields.areaId ?? "",
-    icon: row.fields.icon?.trim() || "calendar",
-    whatToPrepare: decodeList(row.fields.whatToPrepare),
-    meta: toMeta(row.fields),
-  })
-);
-
-export const fetchHealthCheckQuestions = collectionReader<HealthCheckQuestion>(
-  "health-check",
-  (row) => ({
-    id: row.recordId,
-    areaId: row.fields.areaId ?? "",
-    prompt: row.fields.prompt || row.title,
-    help: row.fields.help?.trim() || undefined,
   })
 );
 
@@ -1494,6 +1140,47 @@ export const fetchSafetySeries = collectionReader<SafetySeries>(
     name: row.fields.name?.trim() || row.title,
     headline: row.fields.headline ?? "",
     description: row.fields.description ?? "",
+  })
+);
+
+export const fetchLeadershipMembers = collectionReader<LeadershipMember>(
+  "leadership",
+  (row) => ({
+    id: row.recordId,
+    name: row.fields.name?.trim() || row.title,
+    role: row.fields.role?.trim() ?? "",
+    // An unrecognised group would file the person under no heading at all, so
+    // it falls back to the management team rather than vanishing.
+    group: asEnum(LEADERSHIP_GROUPS, row.fields.group, "management"),
+    photo: row.fields.photo?.trim() || undefined,
+    bio: row.fields.bio ?? "",
+    position: asNumber(row.fields.position),
+  })
+);
+
+export const fetchSanFeatures = collectionReader<SanFeature>(
+  "san-of-the-week",
+  (row) => ({
+    id: row.recordId,
+    slug: row.fields.slug?.trim() ?? "",
+    name: row.fields.name?.trim() || row.title,
+    role: row.fields.role?.trim() ?? "",
+    yearConferred: asNumber(row.fields.yearConferred),
+    weekOf: row.fields.weekOf?.trim() ?? "",
+    photo: row.fields.photo?.trim() || undefined,
+    quote: row.fields.quote?.trim() ?? "",
+    intro: row.fields.intro ?? "",
+    practiceAreas: decodeList(row.fields.practiceAreas),
+    bio: paragraphs(row.fields.bio),
+    conversation: rowsOf(row.fields.conversation)
+      .map((turn) => ({
+        question: turn.question?.trim() ?? "",
+        answer: paragraphs(turn.answer),
+      }))
+      // A question with no answer is a note to self, not something to print.
+      .filter((turn) => turn.question && turn.answer.length > 0),
+    advice: paragraphs(row.fields.advice),
+    watchHref: row.fields.watchHref?.trim() ?? "",
   })
 );
 

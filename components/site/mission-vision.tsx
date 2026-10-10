@@ -16,7 +16,7 @@ const statements = [
   {
     icon: Compass,
     label: "Our vision",
-    text: "A leading Nigeria & global law television.",
+    text: "A leading Nigeria, Africa & global law television.",
   },
 ];
 
@@ -29,7 +29,7 @@ export function MissionVision({ className }: { className?: string }) {
           Who we are · Law Awareness TV
         </p>
       </Reveal>
-      <RevealGroup className="mt-8 grid gap-5 lg:grid-cols-2 lg:gap-6">
+      <RevealGroup className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-6">
         {statements.map((statement) => (
           <RevealItem key={statement.label} className="flex">
             <div className="relative flex w-full flex-col overflow-hidden rounded-3xl border border-forest-foreground/12 bg-forest-foreground/[0.04] p-7 sm:p-10">

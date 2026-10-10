@@ -26,9 +26,6 @@ export const constitutionSections: ConstitutionSection[] = [
     qualifications: [
       "Inconsistency voids the other law only to the extent of the inconsistency — not the whole statute.",
     ],
-    related: {
-      cases: ["governor-of-lagos-state-v-ojukwu", "abacha-v-fawehinmi"],
-    },
   },
   {
     id: "cs-2",
@@ -48,12 +45,6 @@ export const constitutionSections: ConstitutionSection[] = [
     qualifications: [
       "A law made outside the legislature's competence is void, and the courts will say so.",
     ],
-    related: {
-      cases: [
-        "attorney-general-ondo-v-attorney-general-federation",
-        "attorney-general-lagos-v-attorney-general-federation",
-      ],
-    },
   },
   {
     id: "cs-4",
@@ -73,9 +64,6 @@ export const constitutionSections: ConstitutionSection[] = [
     qualifications: [
       "The same section limits how far the courts will examine the Chapter II objectives.",
     ],
-    related: {
-      cases: ["adesanya-v-president", "elelu-habeeb-v-attorney-general"],
-    },
   },
   {
     id: "cs-6",
@@ -84,9 +72,6 @@ export const constitutionSections: ConstitutionSection[] = [
     heading: "Local government system",
     plainLanguage:
       "Guarantees a system of democratically elected local government councils, and places duties on the states in relation to their establishment, structure, finance and functions.",
-    related: {
-      cases: ["attorney-general-lagos-v-attorney-general-federation"],
-    },
   },
   {
     id: "cs-7",
@@ -95,7 +80,6 @@ export const constitutionSections: ConstitutionSection[] = [
     heading: "Implementation of treaties",
     plainLanguage:
       "A treaty between Nigeria and another country has no force of law here until the National Assembly enacts it. That is why an international convention can be argued in a Nigerian court only once it has been domesticated.",
-    related: { cases: ["abacha-v-fawehinmi"] },
   },
 
   /* Chapter II — Fundamental Objectives ------------------------------------ */
@@ -125,9 +109,6 @@ export const constitutionSections: ConstitutionSection[] = [
     heading: "Political objectives",
     plainLanguage:
       "Sets political objectives including national integration and the prohibition of discrimination, and directs the State to abolish corrupt practices and abuse of power.",
-    related: {
-      cases: ["attorney-general-ondo-v-attorney-general-federation"],
-    },
   },
   {
     id: "cs-11",
@@ -194,7 +175,6 @@ export const constitutionSections: ConstitutionSection[] = [
     ],
     related: {
       rights: ["arrest-and-detention"],
-      cases: ["ransome-kuti-v-attorney-general"],
     },
   },
   {
@@ -207,7 +187,6 @@ export const constitutionSections: ConstitutionSection[] = [
     related: {
       laws: ["fundamental-rights-chapter-iv"],
       rights: ["arrest-and-detention", "police-stop"],
-      cases: ["ransome-kuti-v-attorney-general"],
     },
   },
   {
@@ -224,8 +203,6 @@ export const constitutionSections: ConstitutionSection[] = [
     related: {
       laws: ["fundamental-rights-chapter-iv", "how-a-criminal-case-moves"],
       rights: ["arrest-and-detention", "bail", "police-stop"],
-      cases: ["dokubo-asari-v-federal-republic-of-nigeria"],
-      terms: ["bail", "habeas-corpus"],
     },
   },
   {
@@ -241,11 +218,6 @@ export const constitutionSections: ConstitutionSection[] = [
     related: {
       laws: ["fundamental-rights-chapter-iv"],
       rights: ["fair-hearing"],
-      cases: [
-        "garba-v-university-of-maiduguri",
-        "ariori-v-elemo",
-        "aoko-v-fagbemi",
-      ],
     },
   },
   {
@@ -275,7 +247,6 @@ export const constitutionSections: ConstitutionSection[] = [
     heading: "Right to freedom of expression and the press",
     plainLanguage:
       "Freedom to hold opinions and to receive and impart ideas and information without interference, and to own or operate a medium for disseminating information, subject to the conditions the section states.",
-    related: { terms: ["defamation"] },
   },
   {
     id: "cs-24",
@@ -311,7 +282,6 @@ export const constitutionSections: ConstitutionSection[] = [
       "Every citizen has the right to acquire and own immovable property anywhere in Nigeria — a right that operates alongside, and is shaped by, the Land Use Act.",
     related: {
       laws: ["land-use-act-and-title"],
-      cases: ["savannah-bank-v-ajilo"],
     },
   },
   {
@@ -332,9 +302,6 @@ export const constitutionSections: ConstitutionSection[] = [
     heading: "Restriction on and derogation from fundamental rights",
     plainLanguage:
       "Permits laws that are reasonably justifiable in a democratic society in the interest of defence, public safety, public order, public morality or public health, or to protect the rights of others — and addresses derogation during a period of emergency. Most real arguments about rights are fought here rather than over the right itself.",
-    related: {
-      cases: ["dokubo-asari-v-federal-republic-of-nigeria"],
-    },
   },
   {
     id: "cs-30",
@@ -345,8 +312,6 @@ export const constitutionSections: ConstitutionSection[] = [
       "A person who alleges that a Chapter IV right has been, is being, or is likely to be contravened may apply to the High Court of the state where it occurred. This is the door to the fundamental rights enforcement procedure.",
     related: {
       laws: ["enforcing-fundamental-rights"],
-      cases: ["uzoukwu-v-ezeonu", "adesanya-v-president"],
-      terms: ["fundamental-rights"],
     },
   },
 
@@ -358,7 +323,6 @@ export const constitutionSections: ConstitutionSection[] = [
     heading: "Federal executive bodies",
     plainLanguage:
       "Establishes a set of federal bodies in the Constitution itself rather than by ordinary legislation — among them the National Judicial Council, the Independent National Electoral Commission and the Federal Character Commission — which is why their functions cannot simply be legislated away.",
-    related: { cases: ["elelu-habeeb-v-attorney-general"] },
   },
   {
     id: "cs-32",
@@ -367,9 +331,6 @@ export const constitutionSections: ConstitutionSection[] = [
     heading: "The Federation Account",
     plainLanguage:
       "Establishes the Federation Account and provides for the distribution of revenue among the Federal Government, the states and the local government councils.",
-    related: {
-      cases: ["attorney-general-lagos-v-attorney-general-federation"],
-    },
   },
   {
     id: "cs-33",
@@ -389,12 +350,6 @@ export const constitutionSections: ConstitutionSection[] = [
     heading: "Original jurisdiction of the Supreme Court",
     plainLanguage:
       "Gives the Supreme Court original jurisdiction in disputes between the Federation and a state, or between states, where the dispute involves a question of law or fact on which the existence of a legal right depends. It is why some constitutional disputes begin at the top instead of working their way up.",
-    related: {
-      cases: [
-        "attorney-general-lagos-v-attorney-general-federation",
-        "attorney-general-ondo-v-attorney-general-federation",
-      ],
-    },
   },
   {
     id: "cs-35",
@@ -412,7 +367,6 @@ export const constitutionSections: ConstitutionSection[] = [
     heading: "Election tribunals",
     plainLanguage:
       "Establishes election petition tribunals and sets strict limits on the time within which petitions must be filed and determined. Those limits are constitutional, and a court has no power to extend them.",
-    related: { cases: ["amaechi-v-inec", "awolowo-v-shagari"] },
   },
   {
     id: "cs-37",
@@ -421,7 +375,6 @@ export const constitutionSections: ConstitutionSection[] = [
     heading: "Proclamation of a state of emergency",
     plainLanguage:
       "Sets out the procedure by which the President may proclaim a state of emergency, the conditions for doing so, and the requirement of approval by the National Assembly.",
-    related: { cases: ["governor-of-lagos-state-v-ojukwu"] },
   },
   {
     id: "cs-38",

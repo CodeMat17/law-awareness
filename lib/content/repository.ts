@@ -1,31 +1,21 @@
 import {
   fetchArticles,
   fetchBusinessGuides,
-  fetchCases,
-  fetchCeoBriefings,
-  fetchChecklists,
   fetchComplianceTopics,
   fetchContractTypes,
-  fetchGlossaryTerms,
-  fetchIndustryHubs,
   fetchLawCategories,
   fetchLawHistories,
-  fetchLawyerListings,
   fetchLegalProblems,
   fetchMedia,
   fetchMediaSeries,
   fetchPublicQuestions,
-  fetchQuizzes,
   fetchReferralRoutes,
   fetchRegulatoryUpdates,
   fetchRights,
   fetchTickerItems,
   fetchAlertTopics,
-  fetchCalendarEntries,
   fetchConstitutionChapters,
   fetchConstitutionSections,
-  fetchCourtProfiles,
-  fetchHealthCheckQuestions,
   fetchLawEntries,
   fetchProfileQuestions,
   fetchSafetyGuides,
@@ -33,12 +23,12 @@ import {
   fetchDonatePage,
   fetchFooterColumns,
   fetchFundamentalRights,
+  fetchLeadershipMembers,
+  fetchSanFeatures,
   fetchProgrammeCategories,
   fetchSafetySeries,
 } from "./convex-repository";
 import * as seed from "./data";
-import { checklistItems, quizQuestions } from "./learning";
-import { caseRecords, courtProfiles } from "./case-law";
 import { constitutionSections } from "./constitution-sections";
 import {
   constitutionChapters,
@@ -47,6 +37,12 @@ import {
   type FundamentalRight,
 } from "./constitution";
 import { programmeCategories, type ProgrammeCategory } from "./programmes";
+import { leadershipMembers, type LeadershipMember } from "./leadership";
+import {
+  runningSanFeatures,
+  sanFeatures,
+  type SanFeature,
+} from "./san-of-the-week";
 import {
   contactPage,
   donatePage,
@@ -57,31 +53,20 @@ import { lawHistories } from "./versions";
 import type {
   AlertTopic,
   Article,
-  CaseRecord,
   ConstitutionSection,
-  CourtLevel,
-  CourtProfile,
   LawHistory,
   LawVersion,
   BusinessArea,
   BusinessGuide,
   BusinessGuideDetail,
-  CalendarEntry,
-  CeoBriefing,
-  Checklist,
-  ChecklistItem,
   ComplianceArea,
   ComplianceTopic,
   ContractType,
   EntryPoint,
   FooterColumn,
-  GlossaryTerm,
-  HealthCheckQuestion,
-  IndustryHub,
   IssueCategory,
   LawCategory,
   LawEntry,
-  LawyerListing,
   LegalProblem,
   LiveEvent,
   MediaDetail,
@@ -92,8 +77,6 @@ import type {
   PlatformStat,
   ProfileQuestion,
   PublicQuestion,
-  Quiz,
-  QuizQuestion,
   ReferralRoute,
   RegulatoryUpdate,
   RelatedItem,
@@ -106,36 +89,7 @@ import type {
   TickerItem,
   WorkflowStatus,
 } from "./types";
-
-/**
- * The facets the lawyer directory filters on (spec section 36).
- *
- * Derived from the listings rather than maintained beside them, so a filter
- * option can never exist without a listing behind it.
- */
-/**
- * The facets the Case Law Explorer filters on (spec section 29).
- *
- * Derived from the records, exactly as `DirectoryFacets` is, so the explorer
- * can never offer a court, a year or a subject with no case behind it. The
- * spec also lists judge and case number as filters; neither is offered,
- * because neither is stored — see the editorial note in ./case-law.
- */
-export interface CaseFacets {
-  courts: CourtProfile[];
-  years: number[];
-  subjects: { slug: string; name: string }[];
-  issues: string[];
-}
-
-export interface DirectoryFacets {
-  states: string[];
-  cities: string[];
-  practiceAreas: string[];
-  languages: string[];
-  experienceBands: string[];
-  availability: string[];
-}
+import { deskLabel } from "./news";
 
 /**
  * The data seam.
@@ -178,6 +132,11 @@ export interface ContentRepository {
   getSafetyGuide(slug: string): Promise<SafetyGuide | null>;
   /** The Stay Safe series featured as sections of their own. */
   getSafetySeries(): Promise<SafetySeries[]>;
+  /** Board, management and advisory board on /about, by position. */
+  getLeadershipMembers(): Promise<LeadershipMember[]>;
+  /** SAN of the Week features whose week has started, newest first. */
+  getSanFeatures(): Promise<SanFeature[]>;
+  getSanFeature(slug: string): Promise<SanFeature | null>;
   getBusinessGuides(limit?: number): Promise<BusinessGuide[]>;
   getBusinessGuide(slug: string): Promise<BusinessGuideDetail | null>;
   getComplianceAreas(): Promise<ComplianceArea[]>;
@@ -187,19 +146,13 @@ export interface ContentRepository {
   /** Compliance Centre topics, optionally narrowed to one compliance area. */
   getComplianceTopics(areaId?: string): Promise<ComplianceTopic[]>;
   getComplianceTopic(slug: string): Promise<ComplianceTopic | null>;
-  getHealthCheckQuestions(): Promise<HealthCheckQuestion[]>;
   getProfileQuestions(): Promise<ProfileQuestion[]>;
   getAlertTopics(): Promise<AlertTopic[]>;
-  getCalendarEntries(): Promise<CalendarEntry[]>;
   /** Regulatory Watch entries, newest first, optionally narrowed to a topic. */
   getRegulatoryUpdates(topic?: string, limit?: number): Promise<RegulatoryUpdate[]>;
   getRegulatoryUpdate(slug: string): Promise<RegulatoryUpdate | null>;
   getContractTypes(): Promise<ContractType[]>;
   getContractType(slug: string): Promise<ContractType | null>;
-  getIndustryHubs(): Promise<IndustryHub[]>;
-  getIndustryHub(slug: string): Promise<IndustryHub | null>;
-  getCeoBriefings(limit?: number): Promise<CeoBriefing[]>;
-  getCeoBriefing(slug: string): Promise<CeoBriefing | null>;
   getLatestArticles(limit?: number): Promise<Article[]>;
   getArticle(slug: string): Promise<Article | null>;
   getLiveEvent(): Promise<MediaItem | null>;
@@ -229,23 +182,11 @@ export interface ContentRepository {
   getReferralRoute(slug: string): Promise<ReferralRoute | null>;
   /** The routes one pathway points at, in the order the pathway lists them. */
   getReferralRoutesFor(slugs: string[]): Promise<ReferralRoute[]>;
-  getLawyerListings(): Promise<LawyerListing[]>;
-  getLawyerListing(slug: string): Promise<LawyerListing | null>;
-  /** Filter facets, derived from the listings so they cannot go stale. */
-  getDirectoryFacets(): Promise<DirectoryFacets>;
   /** Published questions, newest first. */
   getPublicQuestions(limit?: number): Promise<PublicQuestion[]>;
   getPublicQuestion(slug: string): Promise<PublicQuestion | null>;
   getQuestionTopics(): Promise<string[]>;
 
-  /* Professional/advanced - Phase 6 */
-  /** Decided cases, most authoritative court first, then newest. */
-  getCases(): Promise<CaseRecord[]>;
-  getCase(slug: string): Promise<CaseRecord | null>;
-  /** Explorer facets, derived from the records so they cannot go stale. */
-  getCaseFacets(): Promise<CaseFacets>;
-  /** The court hierarchy, ranked. */
-  getCourtProfiles(): Promise<CourtProfile[]>;
   getConstitutionChapters(): Promise<ConstitutionChapter[]>;
   /** The Chapter IV rights at a glance, in section order. */
   getFundamentalRights(): Promise<FundamentalRight[]>;
@@ -259,16 +200,6 @@ export interface ContentRepository {
   /** The version currently in force, or null where the record does not say. */
   getCurrentVersion(lawSlug: string): Promise<LawVersion | null>;
 
-  getGlossaryTerms(limit?: number): Promise<GlossaryTerm[]>;
-  getGlossaryTerm(slug: string): Promise<GlossaryTerm | null>;
-  getQuizzes(limit?: number): Promise<Quiz[]>;
-  getQuiz(slug: string): Promise<Quiz | null>;
-  /** The questions behind a quiz, in the order they are asked. */
-  getQuizQuestions(slug: string): Promise<QuizQuestion[]>;
-  getChecklists(limit?: number): Promise<Checklist[]>;
-  getChecklist(slug: string): Promise<Checklist | null>;
-  /** The lines of a checklist, in order. Grouping is carried on each line. */
-  getChecklistItems(slug: string): Promise<ChecklistItem[]>;
   /** Resolves stored cross-reference slugs into renderable items. */
   getRelated(refs: RelatedRefs | undefined): Promise<RelatedItem[]>;
   /** Everything searchable, in one shape. */
@@ -293,6 +224,15 @@ function isPublished<T extends HasMeta>(item: T): boolean {
 /** Newest first, by publication date. */
 function newestFirst<T extends { publishedAt: string }>(items: T[]): T[] {
   return [...items].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+}
+
+/**
+ * Lower positions first. The sort is stable, so people sharing a position keep
+ * the order they were added in - an editor who never touches the field still
+ * gets a predictable list.
+ */
+function byPosition<T extends { position: number }>(items: T[]): T[] {
+  return [...items].sort((a, b) => a.position - b.position);
 }
 
 function take<T>(items: T[], limit?: number): T[] {
@@ -402,6 +342,19 @@ export class InMemoryContentRepository implements ContentRepository {
     return seed.safetySeries;
   }
 
+  async getLeadershipMembers(): Promise<LeadershipMember[]> {
+    return byPosition(leadershipMembers);
+  }
+
+  async getSanFeatures(): Promise<SanFeature[]> {
+    return runningSanFeatures(sanFeatures);
+  }
+
+  async getSanFeature(slug: string): Promise<SanFeature | null> {
+    const features = await this.getSanFeatures();
+    return features.find((feature) => feature.slug === slug) ?? null;
+  }
+
   async getBusinessGuides(limit?: number): Promise<BusinessGuide[]> {
     return take(seed.businessGuides.filter(isPublished), limit);
   }
@@ -432,20 +385,12 @@ export class InMemoryContentRepository implements ContentRepository {
     return topic && isPublished(topic) ? topic : null;
   }
 
-  async getHealthCheckQuestions(): Promise<HealthCheckQuestion[]> {
-    return seed.healthCheckQuestions;
-  }
-
   async getProfileQuestions(): Promise<ProfileQuestion[]> {
     return seed.profileQuestions;
   }
 
   async getAlertTopics(): Promise<AlertTopic[]> {
     return seed.alertTopics;
-  }
-
-  async getCalendarEntries(): Promise<CalendarEntry[]> {
-    return seed.calendarEntries.filter(isPublished);
   }
 
   async getRegulatoryUpdates(
@@ -471,24 +416,6 @@ export class InMemoryContentRepository implements ContentRepository {
   async getContractType(slug: string): Promise<ContractType | null> {
     const contract = seed.contractTypes.find((item) => item.slug === slug);
     return contract && isPublished(contract) ? contract : null;
-  }
-
-  async getIndustryHubs(): Promise<IndustryHub[]> {
-    return seed.industryHubs.filter(isPublished);
-  }
-
-  async getIndustryHub(slug: string): Promise<IndustryHub | null> {
-    const hub = seed.industryHubs.find((item) => item.slug === slug);
-    return hub && isPublished(hub) ? hub : null;
-  }
-
-  async getCeoBriefings(limit?: number): Promise<CeoBriefing[]> {
-    return take(seed.ceoBriefings.filter(isPublished), limit);
-  }
-
-  async getCeoBriefing(slug: string): Promise<CeoBriefing | null> {
-    const briefing = seed.ceoBriefings.find((item) => item.slug === slug);
-    return briefing && isPublished(briefing) ? briefing : null;
   }
 
   async getLatestArticles(limit?: number): Promise<Article[]> {
@@ -651,38 +578,6 @@ export class InMemoryContentRepository implements ContentRepository {
     return routes;
   }
 
-  async getLawyerListings(): Promise<LawyerListing[]> {
-    return seed.lawyerListings.filter(isPublished);
-  }
-
-  async getLawyerListing(slug: string): Promise<LawyerListing | null> {
-    const listing = seed.lawyerListings.find((item) => item.slug === slug);
-    return listing && isPublished(listing) ? listing : null;
-  }
-
-  async getDirectoryFacets(): Promise<DirectoryFacets> {
-    const listings = await this.getLawyerListings();
-    const collect = (values: (listing: LawyerListing) => string[]) => {
-      const set = new Set<string>();
-      for (const listing of listings) {
-        for (const value of values(listing)) set.add(value);
-      }
-      return [...set].sort((a, b) => a.localeCompare(b));
-    };
-
-    return {
-      states: collect((listing) => [listing.state]),
-      cities: collect((listing) => [listing.city]),
-      practiceAreas: collect((listing) => listing.practiceAreas),
-      languages: collect((listing) => listing.languages),
-      // Experience is ordered by seniority, not alphabetically.
-      experienceBands: ["1-5", "6-10", "11-20", "20+"].filter((band) =>
-        listings.some((listing) => listing.experienceBand === band)
-      ),
-      availability: collect((listing) => [listing.availability]),
-    };
-  }
-
   async getPublicQuestions(limit?: number): Promise<PublicQuestion[]> {
     const sorted = [...seed.publicQuestions]
       .filter(isPublished)
@@ -704,54 +599,6 @@ export class InMemoryContentRepository implements ContentRepository {
   }
 
   /* Professional/advanced - Phase 6 ------------------------------------- */
-
-  /**
-   * Ordered by authority first and recency second, because "which court said
-   * it" decides how much a decision matters. Alphabetical order would be
-   * actively misleading here.
-   */
-  async getCases(): Promise<CaseRecord[]> {
-    const rank = new Map(courtProfiles.map((court) => [court.id, court.rank]));
-    return caseRecords.filter(isPublished).sort((a, b) => {
-      const byCourt = (rank.get(a.court) ?? 99) - (rank.get(b.court) ?? 99);
-      return byCourt !== 0 ? byCourt : b.year - a.year;
-    });
-  }
-
-  async getCase(slug: string): Promise<CaseRecord | null> {
-    const record = caseRecords.find((item) => item.slug === slug);
-    return record && isPublished(record) ? record : null;
-  }
-
-  async getCaseFacets(): Promise<CaseFacets> {
-    const cases = await this.getCases();
-    const categories = await this.getLawCategories();
-
-    const usedCourts = new Set(cases.map((item) => item.court));
-    const years = [...new Set(cases.map((item) => item.year))].sort(
-      (a, b) => b - a
-    );
-    const subjects = [...new Set(cases.map((item) => item.subject))]
-      .map((slug) => ({
-        slug,
-        name: categories.find((category) => category.slug === slug)?.name ?? slug,
-      }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-    const issues = [...new Set(cases.map((item) => item.issueTag))].sort(
-      (a, b) => a.localeCompare(b)
-    );
-
-    return {
-      courts: courtProfiles.filter((court) => usedCourts.has(court.id)),
-      years,
-      subjects,
-      issues,
-    };
-  }
-
-  async getCourtProfiles(): Promise<CourtProfile[]> {
-    return [...courtProfiles].sort((a, b) => a.rank - b.rank);
-  }
 
   async getFundamentalRights(): Promise<FundamentalRight[]> {
     return fundamentalRights;
@@ -811,48 +658,6 @@ export class InMemoryContentRepository implements ContentRepository {
     return history?.versions.find((version) => version.current) ?? null;
   }
 
-  async getGlossaryTerms(limit?: number): Promise<GlossaryTerm[]> {
-    const sorted = [...seed.glossaryTerms]
-      .filter(isPublished)
-      .sort((a, b) => a.term.localeCompare(b.term));
-    return take(sorted, limit);
-  }
-
-  async getGlossaryTerm(slug: string): Promise<GlossaryTerm | null> {
-    const term = seed.glossaryTerms.find((item) => item.slug === slug);
-    return term && isPublished(term) ? term : null;
-  }
-
-  async getQuizzes(limit?: number): Promise<Quiz[]> {
-    return take(seed.quizzes.filter(isPublished), limit);
-  }
-
-  async getQuiz(slug: string): Promise<Quiz | null> {
-    const quiz = seed.quizzes.find((item) => item.slug === slug);
-    return quiz && isPublished(quiz) ? quiz : null;
-  }
-
-  /**
-   * A quiz whose questions have not been written yet returns an empty list
-   * rather than a partly-populated one, so the page can say so plainly.
-   */
-  async getQuizQuestions(slug: string): Promise<QuizQuestion[]> {
-    return quizQuestions[slug] ?? [];
-  }
-
-  async getChecklists(limit?: number): Promise<Checklist[]> {
-    return take(seed.checklists.filter(isPublished), limit);
-  }
-
-  async getChecklist(slug: string): Promise<Checklist | null> {
-    const checklist = seed.checklists.find((item) => item.slug === slug);
-    return checklist && isPublished(checklist) ? checklist : null;
-  }
-
-  async getChecklistItems(slug: string): Promise<ChecklistItem[]> {
-    return checklistItems[slug] ?? [];
-  }
-
   /**
    * The content graph. References are stored as slugs; unresolved or
    * unpublished references are dropped silently rather than rendering a
@@ -864,13 +669,6 @@ export class InMemoryContentRepository implements ContentRepository {
     const categories = await this.getLawCategories();
     const categoryName = (slug: string) =>
       categories.find((category) => category.slug === slug)?.name ?? "Law";
-    // Through the repository rather than the seed array: courts are a
-    // collection now, and a related case must be labelled with the court the
-    // site is actually rendering, not the one the seed file remembers.
-    const courts = await this.getCourtProfiles();
-    const courtName = (id: CourtLevel) =>
-      courts.find((court) => court.id === id)?.name ?? "Court";
-
     const items: RelatedItem[] = [];
 
     for (const slug of refs.laws ?? []) {
@@ -896,7 +694,7 @@ export class InMemoryContentRepository implements ContentRepository {
         title: guide.title,
         group: `Your Rights · ${guide.category}`,
         summary: guide.summary,
-        href: `/your-rights/${guide.slug}`,
+        href: `/know-the-law/your-rights/${guide.slug}`,
         icon: "shield-check",
       });
     }
@@ -910,7 +708,7 @@ export class InMemoryContentRepository implements ContentRepository {
         title: guide.title,
         group: guide.series ? `Stay Safe · ${guide.series}` : "Stay Safe",
         summary: guide.summary,
-        href: `/stay-safe/${guide.slug}`,
+        href: `/know-the-law/stay-safe/${guide.slug}`,
         icon: "shield",
       });
     }
@@ -938,9 +736,9 @@ export class InMemoryContentRepository implements ContentRepository {
         id: `related-article-${article.id}`,
         kind: "article",
         title: article.title,
-        group: `Law & Society · ${article.category}`,
+        group: `News · ${article.category}`,
         summary: article.standfirst,
-        href: `/law-and-society/${article.slug}`,
+        href: `/news/${article.slug}`,
         icon: "newspaper",
       });
     }
@@ -990,34 +788,6 @@ export class InMemoryContentRepository implements ContentRepository {
         summary: contract.whatItIs,
         href: `/business/contracts/${contract.slug}`,
         icon: "signature",
-      });
-    }
-
-    for (const slug of refs.industries ?? []) {
-      const hub = await this.getIndustryHub(slug);
-      if (!hub) continue;
-      items.push({
-        id: `related-industry-${hub.id}`,
-        kind: "industry",
-        title: hub.name,
-        group: "Industry hub",
-        summary: hub.blurb,
-        href: `/business/industries/${hub.slug}`,
-        icon: hub.icon,
-      });
-    }
-
-    for (const slug of refs.briefings ?? []) {
-      const briefing = await this.getCeoBriefing(slug);
-      if (!briefing) continue;
-      items.push({
-        id: `related-briefing-${briefing.id}`,
-        kind: "briefing",
-        title: briefing.title,
-        group: "Law for CEOs",
-        summary: briefing.summary,
-        href: `/business/ceo/${briefing.slug}`,
-        icon: "trending-up",
       });
     }
 
@@ -1077,20 +847,6 @@ export class InMemoryContentRepository implements ContentRepository {
       });
     }
 
-    for (const slug of refs.cases ?? []) {
-      const record = await this.getCase(slug);
-      if (!record) continue;
-      items.push({
-        id: `related-case-${record.id}`,
-        kind: "case",
-        title: record.title,
-        group: `Case law · ${courtName(record.court)}`,
-        summary: record.keyPrinciple,
-        href: `/cases/${record.slug}`,
-        icon: "gavel",
-      });
-    }
-
     for (const number of refs.sections ?? []) {
       const section = await this.getConstitutionSection(number);
       if (!section) continue;
@@ -1102,20 +858,6 @@ export class InMemoryContentRepository implements ContentRepository {
         summary: section.plainLanguage,
         href: `/constitution/chapter-${section.chapter.toLowerCase()}#s-${section.number}`,
         icon: "landmark",
-      });
-    }
-
-    for (const slug of refs.terms ?? []) {
-      const term = await this.getGlossaryTerm(slug);
-      if (!term) continue;
-      items.push({
-        id: `related-term-${term.id}`,
-        kind: "term",
-        title: term.term,
-        group: "Plain language",
-        summary: term.definition,
-        href: `/glossary/${term.slug}`,
-        icon: "book-open",
       });
     }
 
@@ -1133,19 +875,12 @@ export class InMemoryContentRepository implements ContentRepository {
       media,
       live,
       series,
-      terms,
-      quizzes,
-      checklists,
       complianceTopics,
       contracts,
-      industries,
-      briefings,
       updates,
       problems,
       questions,
-      listings,
       referrals,
-      cases,
       sections,
     ] = await Promise.all([
       this.getLawCategories(),
@@ -1159,19 +894,12 @@ export class InMemoryContentRepository implements ContentRepository {
       ),
       this.getLiveEvents(),
       this.getMediaSeries(),
-      this.getGlossaryTerms(),
-      this.getQuizzes(),
-      this.getChecklists(),
       this.getComplianceTopics(),
       this.getContractTypes(),
-      this.getIndustryHubs(),
-      this.getCeoBriefings(),
       this.getRegulatoryUpdates(),
       this.getLegalProblems(),
       this.getPublicQuestions(),
-      this.getLawyerListings(),
       this.getReferralRoutes(),
-      this.getCases(),
       this.getConstitutionSections(),
     ]);
 
@@ -1203,7 +931,7 @@ export class InMemoryContentRepository implements ContentRepository {
         title: guide.title,
         summary: guide.summary,
         group: `Your Rights · ${guide.category}`,
-        href: `/your-rights/${guide.slug}`,
+        href: `/know-the-law/your-rights/${guide.slug}`,
         keywords: [guide.situation, guide.category, ...guide.protects],
       })),
       ...safety.map<SearchDocument>((guide) => ({
@@ -1212,7 +940,7 @@ export class InMemoryContentRepository implements ContentRepository {
         title: guide.title,
         summary: guide.summary,
         group: guide.series ? `Stay Safe · ${guide.series}` : "Stay Safe",
-        href: `/stay-safe/${guide.slug}`,
+        href: `/know-the-law/stay-safe/${guide.slug}`,
         keywords: [guide.risk, guide.area, ...guide.redFlags],
       })),
       ...guides.map<SearchDocument>((guide) => ({
@@ -1229,9 +957,9 @@ export class InMemoryContentRepository implements ContentRepository {
         type: "article",
         title: article.title,
         summary: article.standfirst,
-        group: `Law & Society · ${article.category}`,
-        href: `/law-and-society/${article.slug}`,
-        keywords: [article.category, article.kind],
+        group: `News · ${article.category}`,
+        href: `/news/${article.slug}`,
+        keywords: [article.category, article.kind, deskLabel(article)],
       })),
       ...media.map<SearchDocument>((item) => ({
         id: `media-${item.id}`,
@@ -1264,33 +992,6 @@ export class InMemoryContentRepository implements ContentRepository {
         href: `/${strand.kind === "podcast" ? "listen" : "watch"}/series/${strand.slug}`,
         keywords: [strand.tagline, ...strand.topics],
       })),
-      ...terms.map<SearchDocument>((term) => ({
-        id: `term-${term.id}`,
-        type: "term",
-        title: term.term,
-        summary: term.definition,
-        group: "Plain language",
-        href: `/glossary/${term.slug}`,
-        keywords: term.alsoKnownAs ?? [],
-      })),
-      ...quizzes.map<SearchDocument>((quiz) => ({
-        id: `quiz-${quiz.id}`,
-        type: "quiz",
-        title: quiz.title,
-        summary: quiz.description,
-        group: "Quizzes",
-        href: `/quizzes/${quiz.slug}`,
-        keywords: [quiz.level],
-      })),
-      ...checklists.map<SearchDocument>((checklist) => ({
-        id: `checklist-${checklist.id}`,
-        type: "resource",
-        title: checklist.title,
-        summary: checklist.description,
-        group: "Resources",
-        href: `/resources/${checklist.slug}`,
-        keywords: [checklist.audience],
-      })),
       ...complianceTopics.map<SearchDocument>((topic) => ({
         id: `compliance-${topic.id}`,
         type: "compliance",
@@ -1312,24 +1013,6 @@ export class InMemoryContentRepository implements ContentRepository {
           ...contract.commonlyUsedWhen,
           ...contract.importantClauses.map((clause) => clause.name),
         ],
-      })),
-      ...industries.map<SearchDocument>((hub) => ({
-        id: `industry-${hub.id}`,
-        type: "industry",
-        title: hub.name,
-        summary: hub.blurb,
-        group: "Industry hubs",
-        href: `/business/industries/${hub.slug}`,
-        keywords: hub.regulatoryThemes,
-      })),
-      ...briefings.map<SearchDocument>((briefing) => ({
-        id: `briefing-${briefing.id}`,
-        type: "briefing",
-        title: briefing.title,
-        summary: briefing.summary,
-        group: "Law for CEOs",
-        href: `/business/ceo/${briefing.slug}`,
-        keywords: [briefing.question, ...briefing.keyPoints],
       })),
       ...updates.map<SearchDocument>((update) => ({
         id: `update-${update.id}`,
@@ -1364,38 +1047,6 @@ export class InMemoryContentRepository implements ContentRepository {
         group: `Ask a Question · ${question.topic}`,
         href: `/ask/${question.slug}`,
         keywords: [question.topic, ...question.whatToDoNext],
-      })),
-      ...listings.map<SearchDocument>((listing) => ({
-        id: `lawyer-${listing.id}`,
-        type: "lawyer",
-        title: listing.displayName,
-        summary: listing.focus,
-        group: `Directory · ${listing.state}`,
-        href: `/lawyers/${listing.slug}`,
-        keywords: [
-          listing.state,
-          listing.city,
-          ...listing.practiceAreas,
-          ...listing.languages,
-        ],
-      })),
-      ...cases.map<SearchDocument>((record) => ({
-        id: `case-${record.id}`,
-        type: "case",
-        title: record.title,
-        summary: record.keyPrinciple,
-        group: `Case law · ${
-          courtProfiles.find((court) => court.id === record.court)?.name ??
-          "Court"
-        }`,
-        href: `/cases/${record.slug}`,
-        keywords: [
-          String(record.year),
-          record.issueTag,
-          record.legalIssue,
-          categoryName(record.subject),
-          ...record.instruments,
-        ],
       })),
       ...sections.map<SearchDocument>((section) => ({
         id: `section-${section.id}`,
@@ -1512,28 +1163,6 @@ class ConvexContentRepository extends InMemoryContentRepository {
 
   override async getTickerItems(): Promise<TickerItem[]> {
     return (await fetchTickerItems()) ?? super.getTickerItems();
-  }
-
-  /**
-   * Cases come back unordered from Convex; the explorer's order - most
-   * authoritative court first, then newest - is applied here, using the same
-   * hierarchy the seed path uses.
-   */
-  override async getCases(): Promise<CaseRecord[]> {
-    const cases = await fetchCases();
-    if (!cases) return super.getCases();
-
-    const rank = new Map(courtProfiles.map((court) => [court.id, court.rank]));
-    return [...cases].sort((a, b) => {
-      const byCourt = (rank.get(a.court) ?? 99) - (rank.get(b.court) ?? 99);
-      return byCourt !== 0 ? byCourt : b.year - a.year;
-    });
-  }
-
-  override async getCase(slug: string): Promise<CaseRecord | null> {
-    const cases = await fetchCases();
-    if (!cases) return super.getCase(slug);
-    return cases.find((item) => item.slug === slug) ?? null;
   }
 
   // getCaseFacets is deliberately not overridden: it derives everything from
@@ -1699,7 +1328,7 @@ class ConvexContentRepository extends InMemoryContentRepository {
     return all.find((series) => series.slug === slug) ?? null;
   }
 
-  /* Law & Society --------------------------------------------------------- */
+  /* News ----------------------------------------------------------------- */
 
   /**
    * Articles, the CMS merged over the seed.
@@ -1820,82 +1449,6 @@ class ConvexContentRepository extends InMemoryContentRepository {
 
   /* Learning -------------------------------------------------------------- */
 
-  private async mergedGlossary(): Promise<GlossaryTerm[] | null> {
-    const rows = await fetchGlossaryTerms();
-    if (!rows) return null;
-    const seeded = new Map(seed.glossaryTerms.map((item) => [item.slug, item]));
-    return rows.map((row) => {
-      const base = seeded.get(row.slug);
-      return base ? { ...base, ...row } : row;
-    });
-  }
-
-  override async getGlossaryTerms(limit?: number): Promise<GlossaryTerm[]> {
-    const terms = await this.mergedGlossary();
-    if (!terms) return super.getGlossaryTerms(limit);
-    return take(
-      [...terms].sort((a, b) => a.term.localeCompare(b.term)),
-      limit
-    );
-  }
-
-  override async getGlossaryTerm(slug: string): Promise<GlossaryTerm | null> {
-    const terms = await this.mergedGlossary();
-    if (!terms) return super.getGlossaryTerm(slug);
-    return terms.find((term) => term.slug === slug) ?? null;
-  }
-
-  override async getQuizzes(limit?: number): Promise<Quiz[]> {
-    const rows = await fetchQuizzes();
-    if (!rows) return super.getQuizzes(limit);
-    return take(rows, limit);
-  }
-
-  override async getQuiz(slug: string): Promise<Quiz | null> {
-    const rows = await fetchQuizzes();
-    if (!rows) return super.getQuiz(slug);
-    return rows.find((quiz) => quiz.slug === slug) ?? null;
-  }
-
-  /**
-   * The questions in one quiz.
-   *
-   * These lived in the seed until the quiz collection grew a row field for
-   * them: a question's options are themselves a list, and a row column holds
-   * one string, so they are stored one-per-line inside the column and split
-   * back out on the way in.
-   *
-   * A quiz the CMS knows about with no questions stored returns none rather
-   * than falling back to the seed. Falling back would put a reader through the
-   * questions of an older version of a quiz an editor has since emptied.
-   */
-  override async getQuizQuestions(slug: string): Promise<QuizQuestion[]> {
-    const rows = await fetchQuizzes();
-    if (!rows) return super.getQuizQuestions(slug);
-    return rows.find((quiz) => quiz.slug === slug)?.questions ?? [];
-  }
-
-  override async getChecklists(limit?: number): Promise<Checklist[]> {
-    const rows = await fetchChecklists();
-    if (!rows) return super.getChecklists(limit);
-    return take(rows, limit);
-  }
-
-  override async getChecklist(slug: string): Promise<Checklist | null> {
-    const rows = await fetchChecklists();
-    if (!rows) return super.getChecklist(slug);
-    return rows.find((checklist) => checklist.slug === slug) ?? null;
-  }
-
-  override async getChecklistItems(slug: string): Promise<ChecklistItem[]> {
-    const rows = await fetchChecklists();
-    if (!rows) return super.getChecklistItems(slug);
-    // A checklist the CMS knows about but has written no lines for returns
-    // none, rather than falling through to the seed's lines: the editor
-    // emptying a checklist has to be able to empty it.
-    return rows.find((checklist) => checklist.slug === slug)?.items ?? [];
-  }
-
   /* Compliance & enterprise ------------------------------------------------ */
 
   private async mergedComplianceTopics(): Promise<ComplianceTopic[] | null> {
@@ -1944,48 +1497,6 @@ class ConvexContentRepository extends InMemoryContentRepository {
     const contracts = await this.mergedContracts();
     if (!contracts) return super.getContractType(slug);
     return contracts.find((contract) => contract.slug === slug) ?? null;
-  }
-
-  private async mergedIndustries(): Promise<IndustryHub[] | null> {
-    const rows = await fetchIndustryHubs();
-    if (!rows) return null;
-    const seeded = new Map(seed.industryHubs.map((item) => [item.slug, item]));
-    return rows.map((row) => {
-      const base = seeded.get(row.slug);
-      return base ? { ...base, ...row } : row;
-    });
-  }
-
-  override async getIndustryHubs(): Promise<IndustryHub[]> {
-    return (await this.mergedIndustries()) ?? super.getIndustryHubs();
-  }
-
-  override async getIndustryHub(slug: string): Promise<IndustryHub | null> {
-    const hubs = await this.mergedIndustries();
-    if (!hubs) return super.getIndustryHub(slug);
-    return hubs.find((hub) => hub.slug === slug) ?? null;
-  }
-
-  private async mergedCeoBriefings(): Promise<CeoBriefing[] | null> {
-    const rows = await fetchCeoBriefings();
-    if (!rows) return null;
-    const seeded = new Map(seed.ceoBriefings.map((item) => [item.slug, item]));
-    return rows.map((row) => {
-      const base = seeded.get(row.slug);
-      return base ? { ...base, ...row } : row;
-    });
-  }
-
-  override async getCeoBriefings(limit?: number): Promise<CeoBriefing[]> {
-    const briefings = await this.mergedCeoBriefings();
-    if (!briefings) return super.getCeoBriefings(limit);
-    return take(briefings, limit);
-  }
-
-  override async getCeoBriefing(slug: string): Promise<CeoBriefing | null> {
-    const briefings = await this.mergedCeoBriefings();
-    if (!briefings) return super.getCeoBriefing(slug);
-    return briefings.find((briefing) => briefing.slug === slug) ?? null;
   }
 
   private async mergedRegulatoryUpdates(): Promise<RegulatoryUpdate[] | null> {
@@ -2067,16 +1578,6 @@ class ConvexContentRepository extends InMemoryContentRepository {
     return routes.find((route) => route.slug === slug) ?? null;
   }
 
-  override async getLawyerListings(): Promise<LawyerListing[]> {
-    return (await fetchLawyerListings()) ?? super.getLawyerListings();
-  }
-
-  override async getLawyerListing(slug: string): Promise<LawyerListing | null> {
-    const listings = await fetchLawyerListings();
-    if (!listings) return super.getLawyerListing(slug);
-    return listings.find((listing) => listing.slug === slug) ?? null;
-  }
-
   private async mergedQuestions(): Promise<PublicQuestion[] | null> {
     const rows = await fetchPublicQuestions();
     if (!rows) return null;
@@ -2143,7 +1644,6 @@ class ConvexContentRepository extends InMemoryContentRepository {
 
   // getCurrentVersion reads through getLawHistory, so it follows on its own.
 
-
   // Live events are deliberately not overridden. A `LiveEvent` additionally
   // carries an agenda, a question policy, a registration note and an archive
   // policy, none of which the CMS models - so /live keeps rendering from the
@@ -2176,6 +1676,19 @@ class ConvexContentRepository extends InMemoryContentRepository {
 
   override async getSafetySeries(): Promise<SafetySeries[]> {
     return (await fetchSafetySeries()) ?? super.getSafetySeries();
+  }
+
+  override async getLeadershipMembers(): Promise<LeadershipMember[]> {
+    const rows = await fetchLeadershipMembers();
+    if (!rows) return super.getLeadershipMembers();
+    return byPosition(rows);
+  }
+
+  // `getSanFeature` is inherited: it reads through this method.
+  override async getSanFeatures(): Promise<SanFeature[]> {
+    const rows = await fetchSanFeatures();
+    if (!rows) return super.getSanFeatures();
+    return runningSanFeatures(rows);
   }
 
   override async getSafetyGuide(slug: string): Promise<SafetyGuide | null> {
@@ -2237,36 +1750,10 @@ class ConvexContentRepository extends InMemoryContentRepository {
     return rows.find((section) => section.number === number) ?? null;
   }
 
-  /**
-   * The court hierarchy, most authoritative first.
-   *
-   * A row whose court id the application does not recognise reads as null and
-   * is dropped here - it could only ever match no case, so it would render as
-   * a filter with nothing behind it.
-   */
-  override async getCourtProfiles(): Promise<CourtProfile[]> {
-    const rows = await fetchCourtProfiles();
-    if (!rows) return super.getCourtProfiles();
-    const courts = rows.filter((court): court is CourtProfile => court !== null);
-    return courts.length > 0
-      ? [...courts].sort((a, b) => a.rank - b.rank)
-      : super.getCourtProfiles();
-  }
-
   /* Business tools -------------------------------------------------------- */
 
   override async getAlertTopics(): Promise<AlertTopic[]> {
     return (await fetchAlertTopics()) ?? super.getAlertTopics();
-  }
-
-  override async getCalendarEntries(): Promise<CalendarEntry[]> {
-    return (await fetchCalendarEntries()) ?? super.getCalendarEntries();
-  }
-
-  override async getHealthCheckQuestions(): Promise<HealthCheckQuestion[]> {
-    return (
-      (await fetchHealthCheckQuestions()) ?? super.getHealthCheckQuestions()
-    );
   }
 
   override async getProfileQuestions(): Promise<ProfileQuestion[]> {

@@ -88,7 +88,7 @@ export const contactPage: ContactPageContent = {
       },
       {
         title: "You need a practitioner",
-        body: "We do not take instructions and we do not represent anyone. The directory and the legal-aid routes are where to look for someone who can.",
+        body: "We do not take instructions and we do not represent anyone. The legal-aid routes are where to look for someone who can.",
         href: "/legal-help/legal-aid",
         linkLabel: "Find help",
       },

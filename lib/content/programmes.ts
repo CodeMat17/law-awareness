@@ -45,7 +45,7 @@ export const programmeCategories: ProgrammeCategory[] = [
     description:
       "Reports from Nigeria's courts: important cases, court decisions and how the justice system is being run — told in everyday words, without the legal jargon.",
     icon: "gavel",
-    readMore: { label: "Court decisions explained", href: "/cases" },
+    readMore: { label: "How the courts work", href: "/know-the-law/court-process" },
   },
   {
     slug: "law-making",
@@ -54,7 +54,7 @@ export const programmeCategories: ProgrammeCategory[] = [
     description:
       "How a law is made, what lawmakers are debating, and what new or changed laws will mean for ordinary Nigerians once they are passed.",
     icon: "landmark",
-    readMore: { label: "How the laws have changed", href: "/know-the-law/amendments" },
+    readMore: { label: "Browse the law library", href: "/know-the-law" },
   },
   {
     slug: "law-enforcement",
@@ -63,7 +63,7 @@ export const programmeCategories: ProgrammeCategory[] = [
     description:
       "What the police and other enforcement agencies can and cannot do, how to stay safe during a stop or an arrest, and how officers are held to account.",
     icon: "siren",
-    readMore: { label: "If the police stop you", href: "/your-rights/police-stop" },
+    readMore: { label: "If the police stop you", href: "/know-the-law/your-rights/police-stop" },
   },
   {
     slug: "corporate-law-and-regulation",
@@ -81,7 +81,7 @@ export const programmeCategories: ProgrammeCategory[] = [
     description:
       "The rights every Nigerian has under the Constitution — liberty, a fair hearing, privacy and more — and what you can do when they are not respected.",
     icon: "scale",
-    readMore: { label: "Know your rights", href: "/your-rights" },
+    readMore: { label: "Know your rights", href: "/know-the-law/your-rights" },
   },
   {
     slug: "everyday-law",
@@ -90,7 +90,7 @@ export const programmeCategories: ProgrammeCategory[] = [
     description:
       "The law in daily life: renting a home, starting a job, buying and selling, and the documents you are asked to sign along the way.",
     icon: "home",
-    readMore: { label: "Before You Sign", href: "/stay-safe/before-you-sign" },
+    readMore: { label: "Before You Sign", href: "/know-the-law/stay-safe/before-you-sign" },
   },
   {
     slug: "crime-and-safety",
@@ -99,7 +99,7 @@ export const programmeCategories: ProgrammeCategory[] = [
     description:
       "How common crimes and scams work, how to spot them early, and what to do — and where to report — if it happens to you.",
     icon: "shield",
-    readMore: { label: "Stay safe", href: "/stay-safe" },
+    readMore: { label: "Stay safe", href: "/know-the-law/stay-safe" },
   },
 ];
 

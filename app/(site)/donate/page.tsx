@@ -66,7 +66,7 @@ export default async function DonatePage() {
       />
 
       <Section className="pt-12 sm:pt-14 lg:pt-16">
-        <div className="grid gap-12 lg:grid-cols-[1.3fr_minmax(0,1fr)] lg:gap-16">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.3fr_minmax(0,1fr)] lg:gap-16">
           <div>
             {why.title && (
               <Reveal>
@@ -152,7 +152,7 @@ export default async function DonatePage() {
               />
             </Reveal>
           )}
-          <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2">
+          <RevealGroup className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2">
             {funds.items.map((item) => (
               <RevealItem key={item.title} className="flex">
                 <article className="flex w-full flex-col rounded-2xl border border-hairline bg-card p-6">
@@ -170,7 +170,7 @@ export default async function DonatePage() {
 
       {boundaries.items.length > 0 && (
         <Section>
-          <div className="grid gap-12 lg:grid-cols-[1fr_minmax(0,1.15fr)] lg:gap-16">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_minmax(0,1.15fr)] lg:gap-16">
             <div>
               {boundaries.title && (
                 <Reveal>
@@ -226,7 +226,7 @@ export default async function DonatePage() {
               />
             </Reveal>
           )}
-          <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          <RevealGroup className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {otherWays.items.map((item) => (
               <RevealItem key={item.title} className="flex">
                 <article className="flex w-full flex-col rounded-2xl border border-hairline bg-card p-6">

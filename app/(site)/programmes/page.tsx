@@ -24,7 +24,7 @@ export default async function ProgrammesPage() {
         lede="Pick a programme and watch, listen or tune in live. Every show explains Nigerian law in everyday words."
       />
       <Section>
-        <RevealGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <RevealGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {lineups.map(({ programme, items }) => (
             <RevealItem key={programme.slug} className="flex">
               <ProgrammeCard programme={programme} itemCount={items.length} />

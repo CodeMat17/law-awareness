@@ -13,18 +13,6 @@ export const roleValidator = v.union(
 );
 
 /**
- * Membership roles inside an organization (Phase 6, spec section 43). These are
- * deliberately separate from `roleValidator`: CMS privilege and organization
- * membership are different things, and conflating them would let an
- * organization owner reach editorial tooling.
- */
-export const orgRoleValidator = v.union(
-  v.literal("owner"),
-  v.literal("admin"),
-  v.literal("member")
-);
-
-/**
  * What a saved item points at. Mirrors `SearchType` in lib/content/types.ts,
  * but stored as a plain string rather than a union so that adding a content
  * type does not require a schema migration for every existing bookmark.
@@ -204,16 +192,12 @@ export default defineSchema({
     .index("by_role", ["role"]),
 
   /* ------------------------------------------------------------------------ */
-  /* User and business accounts - Phase 6                                      */
+  /* User accounts - Phase 6                                                   */
   /* ------------------------------------------------------------------------ */
 
   /**
-   * Saved articles, laws, cases, videos and podcasts (spec section 42).
-   *
-   * `ownerId` is always the Clerk subject of the person who saved it, even for
-   * an organization bookmark - so a shared resource still records who shared
-   * it. `orgId` present means the item is shared with that organization;
-   * absent means it is private to the person.
+   * Saved articles, laws, videos and podcasts (spec section 42), keyed by the
+   * Clerk subject of the person who saved them.
    *
    * The card fields are denormalised on purpose. A bookmark must keep working
    * when the underlying content is unpublished or renamed, and resolving every
@@ -222,7 +206,6 @@ export default defineSchema({
    */
   bookmarks: defineTable({
     ownerId: v.string(),
-    orgId: v.optional(v.id("organizations")),
     ...savedItem,
     /** The reader's own note, if they added one. */
     note: v.optional(v.string()),
@@ -230,8 +213,7 @@ export default defineSchema({
   })
     .index("by_owner", ["ownerId"])
     // Saving is idempotent: the same route is looked up before it is inserted.
-    .index("by_owner_href", ["ownerId", "href"])
-    .index("by_org", ["orgId"]),
+    .index("by_owner_href", ["ownerId", "href"]),
 
   /**
    * Followed topics, feeding law-change alerts (spec sections 23 and 62).
@@ -239,13 +221,11 @@ export default defineSchema({
    */
   topicFollows: defineTable({
     ownerId: v.string(),
-    orgId: v.optional(v.id("organizations")),
     topic: v.string(),
     createdAt: v.number(),
   })
     .index("by_owner", ["ownerId"])
-    .index("by_owner_topic", ["ownerId", "topic"])
-    .index("by_org", ["orgId"]),
+    .index("by_owner_topic", ["ownerId", "topic"]),
 
   /**
    * Notification preferences (spec section 62: "users must control
@@ -291,63 +271,4 @@ export default defineSchema({
   })
     .index("by_owner", ["ownerId"])
     .index("by_owner_notification", ["ownerId", "notificationId"]),
-
-  /**
-   * Quiz history and learning progress (spec section 42). One row per attempt,
-   * never overwritten - a later worse score does not erase an earlier one.
-   */
-  quizAttempts: defineTable({
-    ownerId: v.string(),
-    quizSlug: v.string(),
-    quizTitle: v.string(),
-    score: v.number(),
-    total: v.number(),
-    completedAt: v.number(),
-  })
-    .index("by_owner", ["ownerId"])
-    .index("by_owner_quiz", ["ownerId", "quizSlug"]),
-
-  /**
-   * Organization accounts (spec section 43).
-   *
-   * `plan` records which of the architected tiers the organization is on. No
-   * payment is taken anywhere in this codebase - spec section 44 says not to
-   * implement payments unless explicitly required - so the field describes
-   * capability, not billing.
-   */
-  organizations: defineTable({
-    name: v.string(),
-    /** URL-safe identity, unique. Checked on insert. */
-    slug: v.string(),
-    industry: v.string(),
-    size: v.string(),
-    plan: v.union(
-      v.literal("free"),
-      v.literal("business"),
-      v.literal("enterprise")
-    ),
-    createdBy: v.string(),
-    createdAt: v.number(),
-  })
-    .index("by_slug", ["slug"])
-    .index("by_creator", ["createdBy"]),
-
-  /**
-   * Team members. Membership is what grants access to an organization's saved
-   * resources and followed topics - there is no public read path to either,
-   * which is what spec section 43 means by not exposing private organization
-   * data.
-   */
-  orgMembers: defineTable({
-    orgId: v.id("organizations"),
-    clerkUserId: v.string(),
-    email: v.string(),
-    name: v.string(),
-    role: orgRoleValidator,
-    addedBy: v.string(),
-    createdAt: v.number(),
-  })
-    .index("by_org", ["orgId"])
-    .index("by_user", ["clerkUserId"])
-    .index("by_org_user", ["orgId", "clerkUserId"]),
 });

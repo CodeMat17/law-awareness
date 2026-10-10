@@ -3,9 +3,9 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { BusinessGuideCard } from "@/components/site/cards";
 import {
-  BriefingCard,
   BusinessAreaCard,
   ComplianceTopicCard,
+  ContractCard,
   RegulatoryUpdateCard,
 } from "@/components/site/business";
 import { PageHeader } from "@/components/site/knowledge";
@@ -19,19 +19,19 @@ import { getContent } from "@/lib/content/repository";
 export const metadata: Metadata = {
   title: "Business & Enterprise — legal knowledge for Nigerian businesses",
   description:
-    "A first-class business legal section: the Compliance Centre, a legal health check, Regulatory Watch, Before You Do This guides, the Contract Knowledge Centre, industry hubs and Law for CEOs.",
+    "Legal knowledge for Nigerian businesses: the Compliance Centre, Regulatory Watch, Before You Do This guides and the Contract Knowledge Centre.",
   alternates: { canonical: "/business" },
 };
 
 export default async function BusinessPage() {
   const content = getContent();
-  const [areas, guides, topics, updates, briefings, alertTopics] =
+  const [areas, guides, topics, updates, contracts, alertTopics] =
     await Promise.all([
       content.getBusinessAreas(),
       content.getBusinessGuides(3),
       content.getComplianceTopics(),
       content.getRegulatoryUpdates(undefined, 3),
-      content.getCeoBriefings(3),
+      content.getContractTypes(),
       content.getAlertTopics(),
     ]);
 
@@ -48,17 +48,17 @@ export default async function BusinessPage() {
       >
         <div className="mt-8 flex flex-wrap gap-2.5">
           <Link
-            href="/business/health-check"
+            href="/business/compliance"
             className="inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-5 text-[0.9rem] font-extrabold text-primary-foreground transition-opacity hover:opacity-90"
           >
-            Start the legal health check
+            What applies to my company?
             <ArrowRight className="size-4" />
           </Link>
           <Link
-            href="/business/compliance"
+            href="/business/regulatory-watch"
             className="inline-flex h-12 items-center gap-2 rounded-xl border border-hairline bg-card px-5 text-[0.9rem] font-extrabold text-foreground transition-colors hover:border-primary/45"
           >
-            What applies to my company?
+            What changed this week
           </Link>
         </div>
       </PageHeader>
@@ -72,7 +72,7 @@ export default async function BusinessPage() {
             description="Each one leads into the explanation, the practical guide, or the compliance topic that covers it."
           />
         </Reveal>
-        <RevealGroup className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <RevealGroup className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {areas.map((area) => (
             <RevealItem key={area.slug} className="flex">
               <BusinessAreaCard area={area} />
@@ -91,7 +91,7 @@ export default async function BusinessPage() {
             action={{ label: "Open the Compliance Centre", href: "/business/compliance" }}
           />
         </Reveal>
-        <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+        <RevealGroup className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {topics.slice(0, 6).map((topic) => (
             <RevealItem key={topic.id} className="flex">
               <ComplianceTopicCard topic={topic} />
@@ -110,7 +110,7 @@ export default async function BusinessPage() {
             action={{ label: "All business guides", href: "/business/guides" }}
           />
         </Reveal>
-        <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+        <RevealGroup className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {guides.map((guide) => (
             <RevealItem key={guide.id} className="flex">
               <BusinessGuideCard guide={guide} />
@@ -129,7 +129,7 @@ export default async function BusinessPage() {
             action={{ label: "All updates", href: "/business/regulatory-watch" }}
           />
         </Reveal>
-        <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+        <RevealGroup className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {updates.map((update) => (
             <RevealItem key={update.id} className="flex">
               <RegulatoryUpdateCard
@@ -141,69 +141,23 @@ export default async function BusinessPage() {
         </RevealGroup>
       </Section>
 
-      {/* Law for CEOs ------------------------------------------------------- */}
+      {/* Contract Knowledge Centre ------------------------------------------ */}
       <Section>
         <Reveal>
           <SectionHeader
-            eyebrow="Law for CEOs"
-            title="Short, strategic briefings for people who decide"
-            description="What the risk is, where it lands in the business, and the questions a board should be asking about it."
-            action={{ label: "All briefings", href: "/business/ceo" }}
+            eyebrow="Contract Knowledge Centre"
+            title="What common contracts mean, term by term"
+            description="Agreement types explained clause by clause — what each does, what to check, and when legal review is appropriate."
+            action={{ label: "All contract types", href: "/business/contracts" }}
           />
         </Reveal>
-        <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {briefings.map((briefing) => (
-            <RevealItem key={briefing.id} className="flex">
-              <BriefingCard briefing={briefing} />
+        <RevealGroup className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {contracts.slice(0, 3).map((contract) => (
+            <RevealItem key={contract.id} className="flex">
+              <ContractCard contract={contract} />
             </RevealItem>
           ))}
         </RevealGroup>
-      </Section>
-
-      {/* Remaining entry points --------------------------------------------- */}
-      <Section tone="surface">
-        <Reveal>
-          <SectionHeader
-            eyebrow="Also in this section"
-            title="Contracts, the compliance calendar and your industry"
-          />
-        </Reveal>
-        <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-3">
-          {[
-            {
-              href: "/business/contracts",
-              title: "Contract Knowledge Centre",
-              body: "Agreement types explained clause by clause — what each does, what to check, and when legal review is appropriate.",
-            },
-            {
-              href: "/business/legal-calendar",
-              title: "Business legal calendar",
-              body: "The compliance rhythm of a business year, described by cadence and trigger rather than by dates we cannot maintain.",
-            },
-            {
-              href: "/business/industries",
-              title: "Industry hubs",
-              body: "What changes about your legal profile because of the sector you operate in.",
-            },
-          ].map((card) => (
-            <RevealItem key={card.href} className="flex">
-              <Link
-                href={card.href}
-                className="group flex h-full flex-col rounded-2xl border border-hairline bg-card p-6 transition-all duration-300 hover:border-primary/45 hover:shadow-lg hover:shadow-foreground/5"
-              >
-                <h3 className="text-h4 text-foreground">{card.title}</h3>
-                <p className="mt-3 text-[0.88rem] leading-relaxed text-muted-foreground">
-                  {card.body}
-                </p>
-                <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-[0.85rem] font-extrabold text-foreground">
-                  <span className="link-underline">Open</span>
-                  <ArrowRight className="size-4 text-brand-ink transition-transform group-hover:translate-x-0.5" />
-                </span>
-              </Link>
-            </RevealItem>
-          ))}
-        </RevealGroup>
-
       </Section>
     </>
   );

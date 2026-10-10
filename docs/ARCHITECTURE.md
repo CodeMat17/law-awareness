@@ -715,7 +715,7 @@ overlay picks them up unchanged.
 ### Known gaps outside Phase 4 scope
 
 Links still pointing at routes later phases own: `/constitution/chapter-iv`,
-`/law-and-society/[slug]` (referenced by article cross-references),
+`/news/[slug]` (referenced by article cross-references),
 `/legal-help/legal-aid`, `/lawyers`, `/cases`, `/quizzes`, `/resources`, and the
 account entries in the navigation and footer. These resolve as the phases that
 own them land. Every `/business/*`, `/watch/*`, `/listen/*` and `/live/*` link
@@ -860,7 +860,7 @@ editor makes one.
 ### Known gaps outside Phase 5 scope
 
 Links still pointing at routes later phases own: `/constitution/chapter-iv`,
-`/law-and-society/[slug]`, `/cases`, `/quizzes`, `/resources`, `/about`,
+`/news/[slug]`, `/cases`, `/quizzes`, `/resources`, `/about`,
 `/contact`, and the account entries in the navigation and footer. Every
 `/legal-help/*`, `/lawyers/*` and `/ask/*` link in the codebase resolves as of
 Phase 5.

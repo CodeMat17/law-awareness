@@ -61,9 +61,11 @@ export async function cmsPageMetadata(path: string): Promise<Metadata> {
 function StandardPage({
   page,
   intro,
+  outro,
 }: {
   page: ResolvedPage;
   intro?: React.ReactNode;
+  outro?: React.ReactNode;
 }) {
   return (
     <>
@@ -75,6 +77,7 @@ function StandardPage({
       />
       {intro}
       <PageBlocks blocks={page.blocks} />
+      {outro}
     </>
   );
 }
@@ -90,10 +93,13 @@ function StandardPage({
 export async function CmsPage({
   path,
   intro,
+  outro,
 }: {
   path: string;
   /** Fixed content shown between the page header and its CMS blocks. */
   intro?: React.ReactNode;
+  /** Fixed content shown after the CMS blocks. */
+  outro?: React.ReactNode;
 }) {
   const page = await getPage(path);
   if (!page) notFound();
@@ -113,5 +119,5 @@ export async function CmsPage({
     );
   }
 
-  return <StandardPage page={page} intro={intro} />;
+  return <StandardPage page={page} intro={intro} outro={outro} />;
 }

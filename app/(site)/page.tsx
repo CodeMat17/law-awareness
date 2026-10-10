@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Compass, ListChecks, Scale, Users } from "lucide-react";
+import { ArrowRight, Compass, Globe, Scale, ShieldCheck, Users } from "lucide-react";
 import {
   HeroSection,
   type HeroScreen,
@@ -8,18 +8,15 @@ import {
 } from "@/components/site/hero-section";
 import { MissionVision } from "@/components/site/mission-vision";
 import { IssueFinder } from "@/components/site/issue-finder";
-import { HealthCheckPreview } from "@/components/site/health-check-preview";
 import { NewsletterForm } from "@/components/site/newsletter-form";
 import { Reveal, RevealGroup, RevealItem } from "@/components/site/reveal";
+import { SanHomeBand } from "@/components/site/san-of-the-week";
 import {
   ArticleCard,
   BusinessGuideCard,
-  ChecklistCard,
   EntryPointCard,
-  GlossaryCard,
   LawCard,
   LiveCard,
-  QuizCard,
   RightsCard,
 } from "@/components/site/cards";
 import {
@@ -67,14 +64,11 @@ export default async function HomePage() {
     rights,
     lawCategories,
     guides,
-    complianceAreas,
     articles,
     videos,
     episodes,
-    glossary,
-    quizzes,
-    checklists,
     programmes,
+    sanFeatures,
   ] = await Promise.all([
     content.getPlatformStats(),
     content.getEntryPoints(),
@@ -83,15 +77,13 @@ export default async function HomePage() {
     content.getFeaturedRights(),
     content.getLawCategories(),
     content.getBusinessGuides(),
-    content.getComplianceAreas(),
     content.getLatestArticles(),
     content.getVideos(),
     content.getPodcastEpisodes(),
-    content.getGlossaryTerms(6),
-    content.getQuizzes(4),
-    content.getChecklists(3),
     content.getProgrammeCategories(),
+    content.getSanFeatures(),
   ]);
+  const [sanOfTheWeek] = sanFeatures;
 
   // The session to put in front of a visitor: whatever is on air, otherwise the
   // next one scheduled. Nothing is invented when the schedule is empty — the
@@ -156,7 +148,7 @@ export default async function HomePage() {
             action={{ label: "All programmes", href: "/programmes" }}
           />
         </Reveal>
-        <RevealGroup className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <RevealGroup className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {programmes.map((programme) => (
             <RevealItem key={programme.slug} className="flex">
               <ProgrammeCard programme={programme} variant="tile" />
@@ -186,7 +178,7 @@ export default async function HomePage() {
               action={{ label: "Watch everything", href: "/watch" }}
             />
           </Reveal>
-          <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+          <RevealGroup className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
             {latest.slice(0, 4).map((item) => (
               <RevealItem key={item.id} className="flex">
                 <MediaDetailCard item={item} />
@@ -205,17 +197,30 @@ export default async function HomePage() {
         </Section>
       )}
 
+      {/* SAN of the Week */}
+      {sanOfTheWeek && (
+        <Section
+          className={
+            latest.length > 0 || featuredSession ? "pt-0 sm:pt-0 lg:pt-0" : undefined
+          }
+        >
+          <Reveal>
+            <SanHomeBand feature={sanOfTheWeek} />
+          </Reveal>
+        </Section>
+      )}
+
       {/* News desk — editorial lead + rail */}
       <Section tone="surface">
         <Reveal>
           <SectionHeader
-            eyebrow="News desk · Law & Society"
-            title="Legal news from across Nigeria"
-            description="Every story is labelled — news, analysis, explainer or opinion — so you always know what you are reading."
-            action={{ label: "All news", href: "/law-and-society" }}
+            eyebrow="News desk"
+            title="News from across Nigeria"
+            description="Law first, plus sports and entertainment. Every story is labelled — news, analysis, explainer or opinion — so you always know what you are reading."
+            action={{ label: "All news", href: "/news" }}
           />
         </Reveal>
-        <div className="mt-10 grid gap-6 lg:grid-cols-[1.25fr_1fr] lg:gap-10">
+        <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-[1.25fr_1fr] lg:gap-10">
           {leadArticle && (
             <Reveal className="flex">
               <ArticleCard article={leadArticle} variant="feature" />
@@ -238,7 +243,7 @@ export default async function HomePage() {
             Start where you are
           </p>
         </Reveal>
-        <RevealGroup className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <RevealGroup className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {entryPoints.map((entry) => (
             <RevealItem key={entry.id}>
               <EntryPointCard entry={entry} />
@@ -268,16 +273,16 @@ export default async function HomePage() {
             eyebrow="Your rights"
             title="Know your rights, situation by situation"
             description="Your rights matter most when someone is testing them. These guides start from what is happening to you."
-            action={{ label: "All rights guides", href: "/your-rights" }}
+            action={{ label: "All rights guides", href: "/know-the-law/your-rights" }}
           />
         </Reveal>
-        <div className="mt-10 grid gap-5 lg:grid-cols-[1.15fr_1fr]">
+        <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-[1.15fr_1fr]">
           {featuredRight && (
             <Reveal className="flex">
               <RightsCard right={featuredRight} featured />
             </Reveal>
           )}
-          <RevealGroup className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+          <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
             {otherRights.slice(0, 4).map((right) => (
               <RevealItem key={right.id} className="flex">
                 <RightsCard right={right} />
@@ -297,7 +302,7 @@ export default async function HomePage() {
             action={{ label: "Open the library", href: "/know-the-law" }}
           />
         </Reveal>
-        <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <RevealGroup className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {lawCategories.slice(0, 8).map((category) => (
             <RevealItem key={category.slug} className="flex">
               <LawCard category={category} />
@@ -336,7 +341,7 @@ export default async function HomePage() {
           </div>
         </Reveal>
 
-        <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <RevealGroup className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {guides.map((guide) => (
             <RevealItem key={guide.id} className="flex [&_article]:bg-card">
               <BusinessGuideCard guide={guide} />
@@ -353,7 +358,7 @@ export default async function HomePage() {
               aria-hidden
               className="absolute -top-20 -right-16 size-72 rounded-full bg-primary/12 blur-[90px]"
             />
-            <div className="relative grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-16">
+            <div className="relative grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1fr] lg:gap-16">
               <div>
                 <p className="text-eyebrow text-brand-ink">
                   Stay safe · Before You Sign
@@ -368,7 +373,7 @@ export default async function HomePage() {
                   professional advice.
                 </p>
                 <Link
-                  href="/stay-safe/before-you-sign"
+                  href="/know-the-law/stay-safe/before-you-sign"
                   className="mt-7 inline-flex h-12 items-center gap-2 rounded-xl border border-hairline bg-background px-5 text-[0.9rem] font-extrabold text-foreground transition-colors hover:border-primary/45"
                 >
                   Read the series
@@ -417,9 +422,9 @@ export default async function HomePage() {
         </Reveal>
       </Section>
 
-      {/* Case law + Constitution */}
+      {/* The Constitution, and constitutions to compare it with */}
       <Section tone="surface">
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
           <Reveal className="flex">
             <Link
               href="/constitution"
@@ -449,7 +454,7 @@ export default async function HomePage() {
 
           <Reveal delay={0.08} className="flex">
             <Link
-              href="/cases"
+              href="/constitutions"
               className="group relative flex w-full flex-col justify-between overflow-hidden rounded-3xl border border-hairline bg-card p-6 transition-colors hover:border-primary/45 sm:p-10"
             >
               <div
@@ -457,18 +462,17 @@ export default async function HomePage() {
                 className="bg-ledger absolute inset-0 opacity-40 mask-fade-b"
               />
               <div className="relative">
-                <Compass className="size-6 text-brand-ink" strokeWidth={1.8} />
+                <Globe className="size-6 text-brand-ink" strokeWidth={1.8} />
                 <h3 className="text-h2 mt-6 text-foreground">
-                  Case Law Explorer
+                  Constitutions compared
                 </h3>
                 <p className="mt-3 max-w-md text-[0.95rem] leading-relaxed text-muted-foreground">
-                  Find court decisions by court, year and subject — each with
-                  what it decided and what it means for you, in everyday
-                  words.
+                  Every African constitution, and America&apos;s, side by side
+                  — to see how Nigeria&apos;s compares.
                 </p>
               </div>
               <span className="relative mt-10 inline-flex items-center gap-1.5 text-[0.88rem] font-bold text-foreground">
-                <span className="link-underline">Explore case law</span>
+                <span className="link-underline">Compare constitutions</span>
                 <ArrowRight className="size-4 text-brand-ink transition-transform group-hover:translate-x-0.5" />
               </span>
             </Link>
@@ -476,34 +480,10 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* Law in plain language */}
-      <Section>
-        <Reveal>
-          <SectionHeader
-            eyebrow="Law in plain language"
-            title="Legal words, explained simply"
-            description="Every term with a simple definition, a real example, and why it matters."
-            action={{ label: "Full glossary", href: "/glossary" }}
-          />
-        </Reveal>
-        <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {glossary.map((term) => (
-            <RevealItem key={term.id} className="flex">
-              <GlossaryCard term={term} />
-            </RevealItem>
-          ))}
-        </RevealGroup>
-      </Section>
-
-      {/* Business legal health check */}
-      <Section tone="surface">
-        <HealthCheckPreview areas={complianceAreas} />
-      </Section>
-
       {/* Legal help */}
       <Section>
         <Reveal>
-          <div className="grid gap-6 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <div className="lg:col-span-1">
               <p className="text-eyebrow text-brand-ink">Legal help</p>
               <h2 className="text-h2 mt-3.5 text-foreground">
@@ -515,7 +495,7 @@ export default async function HomePage() {
                 of help.
               </p>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:col-span-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:col-span-2">
               {[
                 {
                   icon: Compass,
@@ -525,9 +505,9 @@ export default async function HomePage() {
                 },
                 {
                   icon: Users,
-                  title: "Find a lawyer",
-                  body: "Search for lawyers by state, the kind of help you need, and the language you speak.",
-                  href: "/lawyers",
+                  title: "Free and low-cost help",
+                  body: "Legal aid, law clinics and the public offices that help people who cannot pay a lawyer.",
+                  href: "/legal-help/legal-aid",
                 },
                 {
                   icon: Scale,
@@ -536,10 +516,10 @@ export default async function HomePage() {
                   href: "/ask",
                 },
                 {
-                  icon: ListChecks,
-                  title: "Checklists and resources",
-                  body: "Printable checklists for the moments that matter — hiring, signing, buying, disputing.",
-                  href: "/resources",
+                  icon: ShieldCheck,
+                  title: "Know your rights",
+                  body: "What the law protects when the police stop you, when you are arrested, and at work.",
+                  href: "/know-the-law/your-rights",
                 },
               ].map((item) => (
                 <Link
@@ -566,34 +546,8 @@ export default async function HomePage() {
         </Reveal>
       </Section>
 
-      {/* Quizzes and checklists */}
-      <Section tone="surface">
-        <Reveal>
-          <SectionHeader
-            eyebrow="Learn"
-            title="Find out what you actually know"
-            description="Short quizzes that explain every answer and the law behind it."
-            action={{ label: "All quizzes", href: "/quizzes" }}
-          />
-        </Reveal>
-        <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-          {quizzes.map((quiz) => (
-            <RevealItem key={quiz.id} className="flex">
-              <QuizCard quiz={quiz} />
-            </RevealItem>
-          ))}
-        </RevealGroup>
-        <Reveal delay={0.1} className="mt-6">
-          <div className="grid gap-3 sm:grid-cols-3">
-            {checklists.map((checklist) => (
-              <ChecklistCard key={checklist.id} checklist={checklist} />
-            ))}
-          </div>
-        </Reveal>
-      </Section>
-
       {/* Newsletter */}
-      <Section>
+      <Section tone="surface">
         <Reveal>
           <NewsletterForm />
         </Reveal>

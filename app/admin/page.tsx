@@ -52,7 +52,7 @@ export default async function AdminDashboard() {
         />
       </div>
 
-      <dl className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <dl className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {[
           { label: "Total records", value: totals.total },
           { label: "Published", value: totals.published },
@@ -73,7 +73,7 @@ export default async function AdminDashboard() {
         ))}
       </dl>
 
-      <div className="mt-10 grid gap-6 xl:grid-cols-[1.3fr_1fr]">
+      <div className="mt-10 grid grid-cols-1 gap-6 xl:grid-cols-[1.3fr_1fr]">
         <section>
           <h2 className="text-h3 text-foreground">Editorial queue</h2>
           <p className="mt-1.5 text-[0.85rem] text-muted-foreground">
@@ -222,7 +222,7 @@ export default async function AdminDashboard() {
                 <p className="mt-2.5 text-[0.83rem] text-muted-foreground">
                   {section.description}
                 </p>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                   {inSection.map((collection) => {
                     const summary = counts.find(
                       (entry) => entry.collection === collection.id

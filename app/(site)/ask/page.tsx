@@ -43,7 +43,7 @@ export default async function AskPage() {
 
       {/* Ask ---------------------------------------------------------------- */}
       <Section className="pt-12 sm:pt-14 lg:pt-16">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
           <Reveal>
             <SectionHeader
               eyebrow="Your question"

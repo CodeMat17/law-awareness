@@ -65,20 +65,13 @@ const typeLabels: Record<SearchType, string> = {
   right: "Rights",
   safety: "Stay Safe",
   guide: "Business",
-  article: "Law & Society",
+  article: "News",
   media: "Watch & Listen",
-  term: "Glossary",
-  quiz: "Quizzes",
-  resource: "Resources",
   compliance: "Compliance",
   contract: "Contracts",
-  industry: "Industries",
-  briefing: "For CEOs",
   update: "Regulatory Watch",
   problem: "Legal Help",
   question: "Q&A",
-  lawyer: "Directory",
-  case: "Case law",
   section: "Constitution",
 };
 
@@ -253,7 +246,7 @@ export function SearchResults({
           )}
         </div>
       ) : (
-        <div className="mt-8 grid gap-8 sm:grid-cols-2">
+        <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
           {recent.length > 0 && (
             <div>
               <p className="text-eyebrow flex items-center gap-2 text-muted-foreground">

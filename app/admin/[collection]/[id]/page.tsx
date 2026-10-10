@@ -61,7 +61,7 @@ export default async function RecordPage({
         <StatusBadge status={record.status} className="shrink-0" />
       </header>
 
-      <div className="mt-8 grid gap-6 xl:grid-cols-[1.6fr_1fr] xl:items-start">
+      <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-[1.6fr_1fr] xl:items-start">
         <div className="space-y-6">
           <RecordEditor
             collectionId={definition.id}

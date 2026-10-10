@@ -115,8 +115,10 @@ export function SiteHeader({
                   <li key={group.label}>
                     <Link
                       href={group.href}
-                      onMouseEnter={() => setOpenGroup(group.label)}
-                      onFocus={() => setOpenGroup(group.label)}
+                      // A group with no sub-links (News) has no panel to
+                      // open; moving onto it closes whichever one was open.
+                      onMouseEnter={() => setOpenGroup(group.links.length ? group.label : null)}
+                      onFocus={() => setOpenGroup(group.links.length ? group.label : null)}
                       aria-current={active ? "page" : undefined}
                       className={cn(
                         "relative inline-flex h-9 shrink-0 items-center rounded-lg px-2.5 text-[0.82rem] font-bold whitespace-nowrap transition-colors xl:px-3 xl:text-[0.86rem]",

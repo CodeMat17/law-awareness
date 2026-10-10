@@ -10,10 +10,8 @@
 
 import type * as content from "../content.js";
 import type * as library from "../library.js";
-import type * as model_organizations from "../model/organizations.js";
 import type * as model_preferences from "../model/preferences.js";
 import type * as model_roles from "../model/roles.js";
-import type * as organizations from "../organizations.js";
 import type * as users from "../users.js";
 
 import type {
@@ -25,10 +23,8 @@ import type {
 declare const fullApi: ApiFromModules<{
   content: typeof content;
   library: typeof library;
-  "model/organizations": typeof model_organizations;
   "model/preferences": typeof model_preferences;
   "model/roles": typeof model_roles;
-  organizations: typeof organizations;
   users: typeof users;
 }>;
 

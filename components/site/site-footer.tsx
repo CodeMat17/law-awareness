@@ -17,7 +17,7 @@ export function SiteFooter({ columns }: { columns: FooterColumn[] }) {
   return (
     <footer className="overflow-x-clip border-t border-hairline bg-surface">
       <div className="rail py-14 lg:py-20">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_2.3fr] lg:gap-16">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_2.3fr] lg:gap-16">
           <div>
             <Link
               href="/"

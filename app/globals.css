@@ -331,3 +331,108 @@
     transition-duration: 0.001ms !important;
   }
 }
+
+/*
+ * Article body from the CMS rich-text editor. Used on the public story page and
+ * inside the editor itself, so what an editor writes is what a reader sees.
+ * Spacing lives here, not in the stored HTML: paragraphs are plain <p> and the
+ * gap between them is one rule, so every story reads at the same rhythm.
+ */
+@layer components {
+  .rich-text {
+    max-width: 68ch;
+    font-size: 1.0625rem;
+    line-height: 1.8;
+    color: var(--foreground);
+    overflow-wrap: break-word;
+  }
+  .rich-text > * + * {
+    margin-top: 1.35em;
+  }
+  .rich-text h2 {
+    margin-top: 2.4em;
+    padding-top: 1.4em;
+    border-top: 1px solid var(--hairline);
+    font-size: clamp(1.25rem, 1.08rem + 0.8vw, 1.6rem);
+    line-height: 1.25;
+    font-weight: 800;
+    scroll-margin-top: calc(var(--chrome-h) + 1.5rem);
+  }
+  .rich-text h3 {
+    margin-top: 1.9em;
+    font-size: 1.15rem;
+    line-height: 1.35;
+    font-weight: 700;
+  }
+  .rich-text > h2:first-child,
+  .rich-text > h3:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .rich-text h2 + *,
+  .rich-text h3 + * {
+    margin-top: 0.65em;
+  }
+  .rich-text strong {
+    font-weight: 700;
+  }
+  .rich-text a {
+    color: var(--brand-ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  .rich-text ul,
+  .rich-text ol {
+    padding-left: 1.4em;
+  }
+  .rich-text ul { list-style: disc; }
+  .rich-text ol { list-style: decimal; }
+  .rich-text li + li {
+    margin-top: 0.45em;
+  }
+  .rich-text li::marker {
+    color: var(--muted-foreground);
+  }
+  .rich-text li > p + p {
+    margin-top: 0.6em;
+  }
+  .rich-text blockquote {
+    border-left: 3px solid var(--brand);
+    padding-left: 1.1em;
+    font-size: 1.1em;
+    font-style: italic;
+    color: var(--muted-foreground);
+  }
+  .rich-text img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 0.9rem;
+    background: var(--muted);
+  }
+  .rich-text > img,
+  .rich-text > p:has(> img:only-child) {
+    margin-block: 2em;
+  }
+  .rich-text hr {
+    margin-block: 2.5em;
+    border: 0;
+    border-top: 1px solid var(--hairline);
+  }
+
+  /* Editor-only states. ProseMirror adds these classes; the site never does. */
+  .rich-text p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    color: var(--muted-foreground);
+    pointer-events: none;
+  }
+  .rich-text img.ProseMirror-selectednode {
+    outline: 3px solid var(--ring);
+    outline-offset: 2px;
+  }
+}

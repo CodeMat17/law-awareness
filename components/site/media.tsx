@@ -174,7 +174,7 @@ export function MediaDetailCard({ item }: { item: MediaDetail }) {
 /** The lead item at the top of a hub. */
 export function FeaturedMedia({ item }: { item: MediaDetail }) {
   return (
-    <article className="group relative grid overflow-hidden rounded-3xl border border-hairline bg-card lg:grid-cols-[1.1fr_1fr]">
+    <article className="group relative grid grid-cols-1 overflow-hidden rounded-3xl border border-hairline bg-card lg:grid-cols-[1.1fr_1fr]">
       <Artwork kind={item.kind} className="min-h-56 lg:min-h-full" size="stage" />
       <div className="flex flex-col justify-center p-6 sm:p-9">
         <div className="flex flex-wrap items-center gap-2">
@@ -471,7 +471,7 @@ export function ContributorList({
 }) {
   return (
     <>
-      <ul className="grid gap-3 sm:grid-cols-2">
+      <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {contributors.map((person) => (
           <li
             key={person.id}

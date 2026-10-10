@@ -1,6 +1,7 @@
 import type { WorkflowStatus } from "@/lib/content/types";
 import type { RowColumn } from "./rows";
 import { programmeCategories } from "@/lib/content/programmes";
+import { leadershipGroups } from "@/lib/content/leadership";
 
 /**
  * Collection registry.
@@ -20,35 +21,27 @@ export type CollectionId =
   | "business-guides"
   | "compliance-topics"
   | "contracts"
-  | "industries"
-  | "ceo-briefings"
   | "regulatory-updates"
   | "legal-problems"
   | "referral-routes"
-  | "lawyer-listings"
   | "questions"
   | "media"
   | "media-series"
-  | "glossary"
-  | "quizzes"
-  | "checklists"
-  | "cases"
   | "law-histories"
   | "law-entries"
   | "safety-guides"
   | "constitution-chapters"
   | "constitution-sections"
-  | "courts"
   | "alert-topics"
-  | "calendar-entries"
-  | "health-check"
   | "profile-questions"
   | "programmes"
   | "footer-columns"
   | "contact-page"
   | "donate-page"
   | "fundamental-rights"
-  | "safety-series";
+  | "safety-series"
+  | "leadership"
+  | "san-of-the-week";
 
 /**
  * The part of the public site a collection feeds.
@@ -66,10 +59,8 @@ export type SiteSection =
   | "watch-listen"
   | "news"
   | "know-the-law"
-  | "your-rights"
   | "business"
   | "legal-help"
-  | "learn"
   | "site";
 
 export const siteSections: {
@@ -87,17 +78,13 @@ export const siteSections: {
     id: "news",
     label: "News & the front page",
     description:
-      "What a reader meets first: the headlines stripe and the articles on Law & Society.",
+      "What a reader meets first: the headlines stripe and the articles on the News page.",
   },
   {
     id: "know-the-law",
     label: "Know the Law",
-    description: "The law itself, explained - subjects, judgments and terms.",
-  },
-  {
-    id: "your-rights",
-    label: "Your Rights",
-    description: "Situation-by-situation guides for ordinary people.",
+    description:
+      "The law itself, explained - the Constitution, subjects, Your Rights and Stay Safe.",
   },
   {
     id: "business",
@@ -108,11 +95,6 @@ export const siteSections: {
     id: "legal-help",
     label: "Legal Help",
     description: "Where a reader in trouble is pointed next.",
-  },
-  {
-    id: "learn",
-    label: "Learn & resources",
-    description: "Quizzes and the printable material in the resource centre.",
   },
   {
     id: "site",
@@ -153,7 +135,13 @@ export type FieldKind =
    * episode should not have to know that.
    */
   | "image"
-  | "video";
+  | "video"
+  /**
+   * Formatted writing with photos: the article editor. Stored as HTML that
+   * has been through the allow-list in lib/cms/rich-text.ts, which is the only
+   * thing that makes storing HTML safe.
+   */
+  | "richtext";
 
 export interface FieldDefinition {
   name: string;
@@ -507,6 +495,45 @@ export const collections: CollectionDefinition[] = [
     ],
   },
   {
+    id: "leadership",
+    label: "Leadership & boards",
+    singular: "Person",
+    description:
+      "The people behind the channel: the Board of Directors, the Management team and the Advisory Board. Add each person once and choose which of the three they belong to.",
+    icon: "users",
+    appearsOn:
+      "The About page (/about), at the bottom under 'Our people' — in the Board of Directors, Management team or Advisory Board section, whichever the Group field says. A section with nobody published in it is not shown.",
+    section: "site",
+    hasReviewMeta: false,
+    fields: [
+      { name: "name", label: "Full name", kind: "text", required: true, help: "As they would like it printed, with any title, e.g. Barr. Ngozi Okafor." },
+      { name: "role", label: "Role", kind: "text", required: true, help: "Their position, e.g. Chairman, Managing Director, Head of Programmes." },
+      {
+        name: "photo",
+        label: "Photo",
+        kind: "image",
+        help: "Optional. A head-and-shoulders portrait works best; it is shown as a square. Without one, their initials are shown.",
+      },
+      { name: "bio", label: "Short bio", kind: "textarea", help: "Two or three sentences. Optional." },
+      {
+        name: "group",
+        label: "Group",
+        kind: "select",
+        required: true,
+        group: PLACEMENT_GROUP,
+        help: "Which section of the About page they appear in.",
+        options: leadershipGroups.map((group) => ({ value: group.id, label: group.label })),
+      },
+      {
+        name: "position",
+        label: "Order",
+        kind: "number",
+        group: PLACEMENT_GROUP,
+        help: "Lower numbers show first within their group, e.g. 1 for the Chairman. Leave empty and they follow in the order they were added.",
+      },
+    ],
+  },
+  {
     id: "contact-page",
     label: "Contact page",
     singular: "Contact page",
@@ -708,7 +735,7 @@ export const collections: CollectionDefinition[] = [
         label: "Links to",
         kind: "text",
         required: true,
-        help: "Where the headline takes a reader who clicks it, e.g. /law-and-society/cama-amendment. A ticker headline is always a link - it is a pointer to the story, not the story itself.",
+        help: "Where the headline takes a reader who clicks it, e.g. /news/cama-amendment. A ticker headline is always a link - it is a pointer to the story, not the story itself.",
       },
       // `publishedAt` was removed: the ticker renders headline, badge and tone
       // (components/site/update-ticker.tsx) and orders by position, so a date
@@ -720,14 +747,25 @@ export const collections: CollectionDefinition[] = [
     label: "Articles",
     singular: "Article",
     description:
-      "Law & Society coverage. Every item is labelled as news, analysis, explainer, opinion or educational.",
+      "News stories: law, sport and entertainment. Every item is labelled as news, analysis, explainer, opinion or educational.",
     icon: "newspaper",
-    appearsOn: "Law & Society (/law-and-society), and the latest strip on the homepage.",
+    appearsOn: "News (/news), and the latest strip on the homepage.",
     section: "news",
     hasReviewMeta: true,
     fields: [
       { name: "title", label: "Title", kind: "text", required: true },
       { name: "standfirst", label: "Standfirst", kind: "textarea", required: true },
+      {
+        name: "desk",
+        label: "Desk",
+        kind: "select",
+        options: [
+          { value: "law", label: "Law" },
+          { value: "sports", label: "Sports" },
+          { value: "entertainment", label: "Entertainment" },
+        ],
+        help: "Which kind of news this is. Sports and entertainment stories do not show the legal review details on the site.",
+      },
       {
         name: "kind",
         label: "Content type",
@@ -750,14 +788,9 @@ export const collections: CollectionDefinition[] = [
       {
         name: "body",
         label: "The piece",
-        kind: "rows",
+        kind: "richtext",
         group: BODY_GROUP,
-        addLabel: "Add a section",
-        help: "The article itself, section by section. Leave a blank line between paragraphs. An article with no sections publishes as its standfirst alone, which is the honest state for one that has not been written out yet.",
-        columns: [
-          { name: "heading", label: "Section heading" },
-          { name: "paragraphs", label: "Paragraphs", multiline: true },
-        ],
+        help: "Write the story here. Use the toolbar for headings, bold, lists, quotes and links, and the photo button to add pictures from this device - you can also paste or drag them in. Section headings appear in the \"On this page\" list. Anything unsafe in pasted text (scripts, embedded frames, pictures from other websites) is removed when you save.",
       },
       ...editorialFields,
     ],
@@ -769,8 +802,8 @@ export const collections: CollectionDefinition[] = [
     description:
       "Situation-first guides in Your Rights.",
     icon: "scale",
-    appearsOn: "Your Rights (/your-rights), and the homepage.",
-    section: "your-rights",
+    appearsOn: "Your Rights (/know-the-law/your-rights), and the homepage.",
+    section: "know-the-law",
     hasReviewMeta: true,
     fields: [
       { name: "title", label: "Title", kind: "text", required: true },
@@ -825,107 +858,13 @@ export const collections: CollectionDefinition[] = [
     ],
   },
   {
-    id: "cases",
-    label: "Case law",
-    singular: "Case",
-    description:
-      "Decided cases in the explorer. No citation or judge field exists by design - see lib/content/case-law.ts.",
-    icon: "gavel",
-    appearsOn: "The case law explorer (/cases).",
-    section: "know-the-law",
-    hasReviewMeta: true,
-    fields: [
-      { name: "title", label: "Case name", kind: "text", required: true },
-      { name: "slug", label: "Slug", kind: "text", required: true, derivedFrom: "title" },
-      {
-        name: "court",
-        label: "Court",
-        kind: "select",
-        options: [
-          { value: "supreme-court", label: "Supreme Court of Nigeria" },
-          { value: "court-of-appeal", label: "Court of Appeal" },
-          { value: "federal-high-court", label: "Federal High Court" },
-          { value: "state-high-court", label: "State / FCT High Court" },
-          {
-            value: "national-industrial-court",
-            label: "National Industrial Court",
-          },
-          { value: "tribunal", label: "Tribunal" },
-        ],
-        required: true,
-      },
-      { name: "year", label: "Year", kind: "number", required: true },
-      { name: "subject", label: "Law subject it belongs to", kind: "text", group: WIRING_GROUP, help: "The internal name of a subject area on Know the Law, e.g. 'criminal-law'. It files the case under that subject." },
-      { name: "issueTag", label: "Legal issue filter", kind: "text", group: WIRING_GROUP, help: "The wording of one of the filter buttons on the case explorer. Type it exactly as it appears there, or the case will not show under any filter." },
-      { name: "legalIssue", label: "The question decided", kind: "textarea" },
-      { name: "keyPrinciple", label: "Key principle", kind: "textarea" },
-      {
-        name: "standing",
-        label: "Standing today",
-        kind: "select",
-        options: [
-          { value: "followed", label: "Followed" },
-          { value: "distinguished", label: "Distinguished since" },
-          { value: "overtaken-by-statute", label: "Overtaken by statute" },
-          { value: "position-not-stated", label: "Not stated" },
-        ],
-      },
-      {
-        name: "whereToFindIt",
-        label: "Where to find the judgment",
-        kind: "textarea",
-        help: "How to locate the reported decision. Never a citation reproduced from memory.",
-      },
-      {
-        name: "background",
-        label: "Background",
-        kind: "list",
-        group: BODY_GROUP,
-        required: true,
-        help: "What the dispute was about. One paragraph per line.",
-      },
-      {
-        name: "decision",
-        label: "Decision",
-        kind: "list",
-        group: BODY_GROUP,
-        required: true,
-        help: "What the court decided. One paragraph per line.",
-      },
-      {
-        name: "plainLanguage",
-        label: "In plain language",
-        kind: "list",
-        group: BODY_GROUP,
-        required: true,
-        help: "What it means for an ordinary reader. One paragraph per line.",
-      },
-      {
-        name: "doesNotSettle",
-        label: "What this does not settle",
-        kind: "list",
-        group: BODY_GROUP,
-        required: true,
-        help: "Required on every case: the limits of the holding, one per line. A case read as deciding more than it did is how bad advice starts.",
-      },
-      {
-        name: "instruments",
-        label: "Instruments relied on",
-        kind: "list",
-        group: BODY_GROUP,
-        help: "Named generally, one per line. Never a citation reproduced from memory.",
-      },
-      ...editorialFields,
-    ],
-  },
-  {
     id: "law-histories",
     label: "Law versions",
     singular: "Version history",
     description:
       "Amendment tracking. Effective dates are years, never commencement dates.",
     icon: "clock",
-    appearsOn: "The amendment tracker (/know-the-law/amendments).",
+    appearsOn: "The 'Version history' section of the law page it tracks (/know-the-law/<subject>/<law>).",
     section: "know-the-law",
     hasReviewMeta: true,
     fields: [
@@ -1034,7 +973,7 @@ export const collections: CollectionDefinition[] = [
         label: "Read-more link goes to",
         kind: "text",
         group: "The read-more link on the programme's page",
-        help: "A page on this site, e.g. /cases. Leave empty for no link.",
+        help: "A page on this site, e.g. /know-the-law/court-process. Leave empty for no link.",
       },
       {
         name: "slug",
@@ -1276,107 +1215,58 @@ export const collections: CollectionDefinition[] = [
     ],
   },
   {
-    id: "glossary",
-    label: "Glossary",
-    singular: "Glossary term",
-    description: "Law in Plain Language entries.",
-    icon: "book-open",
-    appearsOn: "The plain language glossary (/glossary).",
-    section: "know-the-law",
-    hasReviewMeta: true,
+    id: "san-of-the-week",
+    label: "SAN of the Week",
+    singular: "SAN of the Week",
+    description:
+      "A moment with a Senior Advocate of Nigeria, one each week: who they are, a short conversation, and their word to ordinary Nigerians.",
+    icon: "gavel",
+    appearsOn:
+      "SAN of the Week (/san-of-the-week), under Programmes in the menu, and on the homepage. The newest feature whose week has started leads the page; earlier ones move to its archive. A feature dated for a future week stays hidden until that week begins.",
+    section: "watch-listen",
+    hasReviewMeta: false,
     fields: [
-      { name: "term", label: "Term", kind: "text", required: true },
-      { name: "definition", label: "Definition", kind: "textarea", required: true },
-      { name: "example", label: "Example", kind: "textarea" },
-      { name: "whyItMatters", label: "Why it matters", kind: "textarea" },
-      { name: "slug", label: "Slug", kind: "text", required: true, derivedFrom: "term" },
-      { name: "alsoKnownAs", label: "Also known as", kind: "list", group: BODY_GROUP, help: "Other wording a reader may meet for the same idea. One per line." },
-      ...editorialFields,
-    ],
-  },
-  {
-    id: "quizzes",
-    label: "Quizzes",
-    singular: "Quiz",
-    description: "Interactive learning assessments.",
-    icon: "graduation-cap",
-    appearsOn: "Quizzes (/quizzes).",
-    section: "learn",
-    hasReviewMeta: true,
-    fields: [
-      { name: "title", label: "Title", kind: "text", required: true },
-      { name: "description", label: "Description", kind: "textarea", required: true },
+      { name: "name", label: "Full name", kind: "text", required: true, help: "As they would like it printed, with the rank, e.g. Chief Ada Obi, SAN." },
+      { name: "slug", label: "Slug", kind: "text", required: true, derivedFrom: "name" },
+      { name: "role", label: "Chambers or office", kind: "text", help: "e.g. Principal Partner, Obi & Co. Optional." },
+      { name: "weekOf", label: "Week of", kind: "date", required: true, help: "The Monday this feature runs from. It goes up on the page that day, not before." },
+      { name: "yearConferred", label: "Year made a SAN", kind: "number", help: "The year they were conferred with the rank. Optional." },
       {
-        name: "level",
-        label: "Level",
-        kind: "select",
-        options: [
-          { value: "starter", label: "Starter" },
-          { value: "core", label: "Core" },
-          { value: "advanced", label: "Advanced" },
-        ],
+        name: "photo",
+        label: "Portrait",
+        kind: "image",
+        help: "A head-and-shoulders portrait works best. Without one, their initials are shown.",
       },
-      { name: "questionCount", label: "Questions", kind: "number", locked: true, help: "Counted from the questions below, never typed." },
-      { name: "minutes", label: "Minutes", kind: "number" },
-      { name: "slug", label: "Slug", kind: "text", required: true, derivedFrom: "title" },
       {
-        name: "questions",
-        label: "The questions",
+        name: "quote",
+        label: "Headline quote",
+        kind: "textarea",
+        required: true,
+        help: "One line they said, in their own words, that the page leads with. Never paraphrase it into a quote.",
+      },
+      { name: "intro", label: "Introduction", kind: "textarea", required: true, help: "One or two sentences introducing them to someone who has never heard of them." },
+      { name: "practiceAreas", label: "Areas of practice", kind: "list", group: BODY_GROUP, help: "One per line, e.g. Constitutional law." },
+      { name: "bio", label: "About them", kind: "textarea", group: BODY_GROUP, help: "A short profile. Leave a blank line between paragraphs." },
+      {
+        name: "conversation",
+        label: "The conversation",
         kind: "rows",
         group: BODY_GROUP,
         addLabel: "Add a question",
-        help: "Number the right answer from 1, counting down the options as you have written them. Always explain why it is right - a quiz that only marks an answer wrong teaches nothing.",
+        help: "What we asked and what they said, in the order it was asked. Leave a blank line between paragraphs of an answer.",
         columns: [
-          { name: "prompt", label: "Question", multiline: true },
-          { name: "options", label: "Options", multiline: true, help: "One per line." },
-          { name: "answer", label: "Right answer", help: "1 for the first option, 2 for the second, and so on." },
-          { name: "explanation", label: "Why", multiline: true },
+          { name: "question", label: "Question" },
+          { name: "answer", label: "Their answer", multiline: true },
         ],
       },
-      ...editorialFields,
-    ],
-  },
-  {
-    id: "checklists",
-    label: "Checklists",
-    singular: "Checklist",
-    description: "Printable checklists in the resource centre.",
-    icon: "list-checks",
-    appearsOn: "The resource centre (/resources).",
-    section: "learn",
-    hasReviewMeta: true,
-    fields: [
-      { name: "title", label: "Title", kind: "text", required: true },
-      { name: "description", label: "Description", kind: "textarea", required: true },
-      { name: "itemCount", label: "Items", kind: "number" },
-      { name: "slug", label: "Slug", kind: "text", required: true, derivedFrom: "title" },
+      { name: "advice", label: "Their word to Nigerians", kind: "textarea", group: BODY_GROUP, help: "One piece of advice for ordinary people, in their words. Optional." },
       {
-        name: "audience",
-        label: "Audience",
-        kind: "select",
-        options: [
-          { value: "citizens", label: "Citizens" },
-          { value: "business", label: "Business" },
-          { value: "professionals", label: "Professionals" },
-          { value: "learners", label: "Learners" },
-          { value: "viewers", label: "Viewers" },
-        ],
-        help: "Who the checklist is written for. Drives the audience filter in the resource centre.",
+        name: "watchHref",
+        label: "Full broadcast",
+        kind: "text",
+        group: PLACEMENT_GROUP,
+        help: "Optional. Where the full episode is on the site, e.g. /watch/a-moment-with-chief-ada-obi. Leave empty if it has not aired.",
       },
-      {
-        name: "items",
-        label: "The checklist",
-        kind: "rows",
-        group: BODY_GROUP,
-        addLabel: "Add a line",
-        help: "Lines sharing a stage are grouped under it on the page, in the order below.",
-        columns: [
-          { name: "group", label: "Stage" },
-          { name: "label", label: "Line" },
-          { name: "detail", label: "Detail", multiline: true },
-        ],
-      },
-      ...editorialFields,
     ],
   },
   {
@@ -1434,47 +1324,6 @@ export const collections: CollectionDefinition[] = [
           { name: "whatToCheck", label: "What to check in the wording", multiline: true },
         ],
       },
-      ...editorialFields,
-    ],
-  },
-  {
-    id: "industries",
-    label: "Industry hubs",
-    singular: "Industry hub",
-    description: "Sector hubs and the regulatory themes attached to each.",
-    icon: "hard-hat",
-    appearsOn: "Industry hubs (/business/industries).",
-    section: "business",
-    hasReviewMeta: true,
-    fields: [
-      { name: "name", label: "Name", kind: "text", required: true },
-      { name: "blurb", label: "Blurb", kind: "textarea", required: true },
-      { name: "slug", label: "Slug", kind: "text", required: true, derivedFrom: "name" },
-      { name: "icon", label: "Icon", kind: "text" },
-      { name: "overview", label: "Overview", kind: "list", group: BODY_GROUP, help: "Why the industry's legal profile differs from the general case. One paragraph per line." },
-      { name: "regulatoryThemes", label: "Regulatory themes", kind: "list", group: BODY_GROUP, help: "In general terms. Never an invented licensing regime. One per line." },
-      { name: "complianceTopics", label: "Compliance topic slugs", kind: "list", group: BODY_GROUP, help: "Slugs of compliance topics that apply to the sector. One per line." },
-      ...editorialFields,
-    ],
-  },
-  {
-    id: "ceo-briefings",
-    label: "CEO briefings",
-    singular: "CEO briefing",
-    description: "Law for CEOs - short strategic briefings for decision-makers.",
-    icon: "trending-up",
-    appearsOn: "Law for CEOs (/business/ceo).",
-    section: "business",
-    hasReviewMeta: true,
-    fields: [
-      { name: "title", label: "Title", kind: "text", required: true },
-      { name: "question", label: "Strategic question", kind: "text", required: true },
-      { name: "summary", label: "Summary", kind: "textarea", required: true },
-      { name: "readingMinutes", label: "Reading minutes", kind: "number" },
-      { name: "slug", label: "Slug", kind: "text", required: true, derivedFrom: "title" },
-      { name: "keyPoints", label: "Key points", kind: "list", group: BODY_GROUP, help: "The three to five points an executive needs. One per line." },
-      { name: "questionsForTheBoard", label: "Questions for the board", kind: "list", group: BODY_GROUP, help: "One per line." },
-      { name: "whereRiskLands", label: "Where risk lands", kind: "list", group: BODY_GROUP, help: "One per line." },
       ...editorialFields,
     ],
   },
@@ -1585,62 +1434,6 @@ export const collections: CollectionDefinition[] = [
     ],
   },
   {
-    id: "lawyer-listings",
-    label: "Directory listings",
-    singular: "Directory listing",
-    description:
-      "The lawyer directory. A listing may only leave 'Sample' once verification has actually confirmed the practitioner - never on the strength of what they told us.",
-    icon: "users",
-    appearsOn: "The lawyer directory (/lawyers).",
-    section: "legal-help",
-    hasReviewMeta: true,
-    fields: [
-      { name: "displayName", label: "Display name", kind: "text", required: true, help: "While the listing is a sample this is a practice and a location, never a person's name." },
-      {
-        name: "listingStatus",
-        label: "Verification status",
-        kind: "select",
-        options: [
-          { value: "sample", label: "Sample listing" },
-          { value: "pending-verification", label: "Pending verification" },
-          { value: "verified", label: "Verified" },
-        ],
-        help: "Set 'Verified' only after enrolment and current standing have been confirmed through the administrative process.",
-      },
-      { name: "focus", label: "Focus", kind: "text", required: true },
-      { name: "state", label: "State", kind: "text", required: true },
-      { name: "city", label: "City", kind: "text", required: true },
-      {
-        name: "availability",
-        label: "Availability",
-        kind: "select",
-        options: [
-          { value: "accepting", label: "Accepting enquiries" },
-          { value: "waitlist", label: "Waiting list" },
-          { value: "not-accepting", label: "Not accepting" },
-        ],
-      },
-      {
-        name: "experienceBand",
-        label: "Experience",
-        kind: "select",
-        options: [
-          { value: "1-5", label: "1-5 years" },
-          { value: "6-10", label: "6-10 years" },
-          { value: "11-20", label: "11-20 years" },
-          { value: "20+", label: "Over 20 years" },
-        ],
-      },
-      { name: "consultation", label: "Consultation", kind: "textarea", help: "How an approach is handled. Never a fee." },
-      { name: "slug", label: "Slug", kind: "text", required: true, derivedFrom: "displayName" },
-      { name: "practiceAreas", label: "Practice areas", kind: "list", group: BODY_GROUP, help: "One per line." },
-      { name: "languages", label: "Languages", kind: "list", group: BODY_GROUP, help: "One per line." },
-      { name: "about", label: "About", kind: "list", group: BODY_GROUP, help: "One paragraph per line. Never a claim we have not verified." },
-      { name: "credentials", label: "Credentials", kind: "list", group: BODY_GROUP, help: "Leave empty until a named practitioner has been verified. One per line." },
-      ...editorialFields,
-    ],
-  },
-  {
     id: "questions",
     label: "Public questions",
     singular: "Public question",
@@ -1733,8 +1526,8 @@ export const collections: CollectionDefinition[] = [
     description:
       "Guides that catch a reader at the moment of exposure - the contract in front of them, the call they have just taken.",
     icon: "shield-check",
-    appearsOn: "Stay Safe (/stay-safe).",
-    section: "your-rights",
+    appearsOn: "Stay Safe (/know-the-law/stay-safe).",
+    section: "know-the-law",
     hasReviewMeta: true,
     fields: [
       { name: "title", label: "Title", kind: "text", required: true },
@@ -1759,8 +1552,8 @@ export const collections: CollectionDefinition[] = [
     description:
       "Runs of Stay Safe guides featured as a section of their own, such as Before You Sign. A guide joins a series by naming it in its own Series field.",
     icon: "folder",
-    appearsOn: "Stay Safe (/stay-safe) — each published series is a section near the top of the page, showing the guides in it. Its 'Start the series' link opens the first of those guides.",
-    section: "your-rights",
+    appearsOn: "Stay Safe (/know-the-law/stay-safe) — each published series is a section near the top of the page, showing the guides in it. Its 'Start the series' link opens the first of those guides.",
+    section: "know-the-law",
     hasReviewMeta: false,
     fields: [
       {
@@ -1789,7 +1582,7 @@ export const collections: CollectionDefinition[] = [
       { name: "numeral", label: "Chapter number", kind: "text", required: true, locked: true, help: "The Roman numeral the Constitution uses, e.g. IV. It is also this chapter's web address, so it is not a free choice." },
       { name: "summary", label: "Summary", kind: "textarea", required: true, help: "What the chapter is for, in a sentence." },
       { name: "covers", label: "What it deals with", kind: "list", group: BODY_GROUP, help: "One per line." },
-      { name: "href", label: "Where to go next", kind: "text", group: PLACEMENT_GROUP, help: "A route on this platform a reader can follow from this chapter, e.g. /your-rights. Leave empty if there is nowhere to send them." },
+      { name: "href", label: "Where to go next", kind: "text", group: PLACEMENT_GROUP, help: "A route on this platform a reader can follow from this chapter, e.g. /know-the-law/your-rights. Leave empty if there is nowhere to send them." },
       { name: "hrefLabel", label: "Link label", kind: "text", group: PLACEMENT_GROUP },
     ],
   },
@@ -1836,7 +1629,7 @@ export const collections: CollectionDefinition[] = [
         name: "href",
         label: "Guide link",
         kind: "text",
-        help: "A rights guide or explainer on this site that covers this right, e.g. /your-rights/privacy. Shown as 'Read the guide'. Leave empty if there is none.",
+        help: "A rights guide or explainer on this site that covers this right, e.g. /know-the-law/your-rights/privacy. Shown as 'Read the guide'. Leave empty if there is none.",
       },
       {
         name: "section",
@@ -1846,24 +1639,6 @@ export const collections: CollectionDefinition[] = [
         locked: true,
         help: "Fixed. As the Constitution numbers it. It also links to the section's explanation in Chapter IV.",
       },
-    ],
-  },
-  {
-    id: "courts",
-    label: "Courts",
-    singular: "Court",
-    description:
-      "The court hierarchy. It drives the ladder on a case page and the court filter in the explorer, so a court removed here disappears from both.",
-    icon: "gavel",
-    appearsOn: "The Case Law Explorer (/cases) and every case page.",
-    section: "know-the-law",
-    hasReviewMeta: false,
-    fields: [
-      { name: "name", label: "Name", kind: "text", required: true },
-      { name: "courtId", label: "Internal id", kind: "text", required: true, locked: true, help: "The identity cases refer to this court by. Changing it would detach every case filed under it." },
-      { name: "rank", label: "Rank", kind: "number", required: true, help: "Where it sits in the hierarchy. 0 is the final court, and the numbers order the ladder." },
-      { name: "jurisdiction", label: "Jurisdiction", kind: "textarea", required: true, help: "What this court decides." },
-      { name: "bindingEffect", label: "Binding effect", kind: "textarea", required: true, help: "Whose decisions this court binds." },
     ],
   },
   {
@@ -1884,62 +1659,13 @@ export const collections: CollectionDefinition[] = [
     ],
   },
   {
-    id: "calendar-entries",
-    label: "Legal calendar",
-    singular: "Calendar entry",
-    description:
-      "Recurring legal obligations, described by what starts the clock rather than by a date. Never write a specific deadline here: the platform maintains no deadline source, and an out-of-date date is worse than none.",
-    icon: "calendar-days",
-    appearsOn: "The business legal calendar (/business/legal-calendar).",
-    section: "business",
-    hasReviewMeta: true,
-    fields: [
-      { name: "title", label: "Title", kind: "text", required: true },
-      { name: "trigger", label: "What starts the clock", kind: "text", required: true, help: "e.g. Your company's financial year end." },
-      { name: "timing", label: "Timing", kind: "text", required: true, help: "In general terms, e.g. within 42 days of the year end. Never an invented calendar date." },
-      { name: "summary", label: "Summary", kind: "textarea", required: true },
-      {
-        name: "cadence",
-        label: "Cadence",
-        kind: "select",
-        options: [
-          { value: "annual", label: "Annual" },
-          { value: "quarterly", label: "Quarterly" },
-          { value: "monthly", label: "Monthly" },
-          { value: "ongoing", label: "Ongoing" },
-          { value: "event-driven", label: "Event-driven" },
-        ],
-      },
-      { name: "icon", label: "Icon", kind: "text" },
-      { name: "whatToPrepare", label: "What to prepare", kind: "list", group: BODY_GROUP, help: "One per line." },
-      { name: "areaId", label: "Compliance area", kind: "text", required: true, group: WIRING_GROUP, help: "The id of the compliance area this belongs to. A value matching no area detaches the entry from the health check." },
-      ...editorialFields,
-    ],
-  },
-  {
-    id: "health-check",
-    label: "Health check questions",
-    singular: "Health check question",
-    description:
-      "The questions in the business legal health check. Each one belongs to a compliance area, and the answers are scored by area.",
-    icon: "stethoscope",
-    appearsOn: "The legal health check (/business/health-check).",
-    section: "business",
-    hasReviewMeta: false,
-    fields: [
-      { name: "prompt", label: "Question", kind: "textarea", required: true, help: "Write it so that yes always means the business is in the better position. A question that scores the other way inverts the result." },
-      { name: "help", label: "Help text", kind: "textarea", help: "Shown under the question, for a reader who is not sure what it is asking." },
-      { name: "areaId", label: "Compliance area", kind: "text", required: true, group: WIRING_GROUP, help: "The id of the compliance area this question scores. A value matching no area means the answer is scored against nothing." },
-    ],
-  },
-  {
     id: "profile-questions",
     label: "Business profile questions",
     singular: "Profile question",
     description:
       "The questions that build a business profile. Each answer switches on the compliance areas it makes relevant, which is what tailors the rest of the Business section.",
     icon: "clipboard-list",
-    appearsOn: "The business profile (/business-account) and the compliance centre.",
+    appearsOn: "The 'What applies to my company?' profiler on the Compliance Centre (/business/compliance).",
     section: "business",
     hasReviewMeta: false,
     fields: [
@@ -1987,28 +1713,18 @@ const titleField: Record<CollectionId, string> = {
   "business-guides": "title",
   media: "title",
   "media-series": "title",
-  glossary: "term",
-  quizzes: "title",
-  checklists: "title",
   "compliance-topics": "title",
   contracts: "name",
-  industries: "name",
-  "ceo-briefings": "title",
   "regulatory-updates": "title",
   "legal-problems": "title",
   "referral-routes": "name",
-  "lawyer-listings": "displayName",
   questions: "question",
-  cases: "title",
   "law-histories": "instrument",
   "law-entries": "title",
   "safety-guides": "title",
   "constitution-chapters": "title",
   "constitution-sections": "heading",
-  courts: "name",
   "alert-topics": "label",
-  "calendar-entries": "title",
-  "health-check": "prompt",
   "profile-questions": "label",
   programmes: "name",
   "footer-columns": "heading",
@@ -2016,6 +1732,8 @@ const titleField: Record<CollectionId, string> = {
   "donate-page": "title",
   "fundamental-rights": "title",
   "safety-series": "name",
+  leadership: "name",
+  "san-of-the-week": "name",
 };
 
 export function titleFieldFor(collection: CollectionId): string {

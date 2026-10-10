@@ -138,48 +138,12 @@ export function AmendmentSummary({
       </dl>
 
       <Link
-        href={`/know-the-law/amendments#${history.lawSlug}`}
+        href="#history"
         className="mt-4 inline-flex items-center gap-1.5 text-[0.84rem] font-bold text-foreground"
       >
         <span className="link-underline">See the full history</span>
         <ArrowUpRight className="size-3.5 text-brand-ink" />
       </Link>
     </div>
-  );
-}
-
-/** One instrument on the amendment tracker: heading, timeline, source note. */
-export function HistoryBlock({ history }: { history: LawHistory }) {
-  return (
-    <section
-      id={history.lawSlug}
-      className="scroll-mt-[calc(var(--chrome-h)+1.5rem)] rounded-2xl border border-hairline bg-surface p-6 sm:p-8"
-    >
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="min-w-0">
-          <p className="text-eyebrow text-brand-ink">
-            {history.versions.length} recorded version
-            {history.versions.length === 1 ? "" : "s"}
-          </p>
-          <h2 className="text-h3 mt-2 text-foreground">{history.instrument}</h2>
-        </div>
-        <Link
-          href={`/know-the-law/${history.category}/${history.lawSlug}`}
-          className="inline-flex h-10 shrink-0 items-center gap-2 rounded-xl border border-hairline bg-card px-4 text-[0.83rem] font-extrabold text-foreground transition-colors hover:border-primary/45"
-        >
-          Read the explainer
-          <ArrowUpRight className="size-3.5 text-brand-ink" />
-        </Link>
-      </div>
-
-      <VersionTimeline versions={history.versions} className="mt-6" />
-
-      <p className="mt-5 rounded-xl border border-hairline bg-card p-4 text-[0.85rem] leading-relaxed text-muted-foreground">
-        <span className="font-extrabold text-foreground">
-          Where to find the current text:{" "}
-        </span>
-        {history.whereToFindIt}
-      </p>
-    </section>
   );
 }

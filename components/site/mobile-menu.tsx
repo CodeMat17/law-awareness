@@ -97,20 +97,22 @@ export function MobileMenu({ open, onClose, groups }: MobileMenuProps) {
                       >
                         {group.label}
                       </Link>
-                      <button
-                        type="button"
-                        onClick={() => setExpanded(isOpen ? null : group.label)}
-                        aria-expanded={isOpen}
-                        aria-label={`${isOpen ? "Collapse" : "Expand"} ${group.label}`}
-                        className="inline-flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                      >
-                        <ChevronDown
-                          className={cn(
-                            "size-4 transition-transform duration-200",
-                            isOpen && "rotate-180"
-                          )}
-                        />
-                      </button>
+                      {group.links.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setExpanded(isOpen ? null : group.label)}
+                          aria-expanded={isOpen}
+                          aria-label={`${isOpen ? "Collapse" : "Expand"} ${group.label}`}
+                          className="inline-flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                        >
+                          <ChevronDown
+                            className={cn(
+                              "size-4 transition-transform duration-200",
+                              isOpen && "rotate-180"
+                            )}
+                          />
+                        </button>
+                      )}
                     </div>
 
                     <AnimatePresence initial={false}>

@@ -78,6 +78,20 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+
+  // Your Rights and Stay Safe now live under Know the Law, and Law & Society is
+  // now News. Old links, and any address an editor typed into the CMS before
+  // the move, still land.
+  async redirects() {
+    return [
+      { source: "/law-and-society", destination: "/news", permanent: true },
+      { source: "/law-and-society/:slug", destination: "/news/:slug", permanent: true },
+      { source: "/your-rights", destination: "/know-the-law/your-rights", permanent: true },
+      { source: "/your-rights/:slug", destination: "/know-the-law/your-rights/:slug", permanent: true },
+      { source: "/stay-safe", destination: "/know-the-law/stay-safe", permanent: true },
+      { source: "/stay-safe/:slug", destination: "/know-the-law/stay-safe/:slug", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

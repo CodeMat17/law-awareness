@@ -23,6 +23,11 @@ import { getBlock, type PageBlock } from "./blocks";
 import { normaliseRows, serialiseRows } from "./rows";
 import { contentTag } from "@/lib/content/convex-repository";
 import { isCloudinaryUrl } from "@/lib/media/cloudinary";
+import {
+  MAX_RICH_TEXT_LENGTH,
+  countForeignImages,
+  sanitizeRichText,
+} from "./rich-text";
 import type { WorkflowStatus } from "@/lib/content/types";
 
 /**
@@ -163,6 +168,29 @@ function collectFields(
       fields[field.name] = serialiseRows(
         normaliseRows(field.columns ?? [], trimmed)
       );
+      continue;
+    }
+
+    // Rich text is HTML from the browser, so it is the one field that could
+    // carry a script onto the site. It is stored only after the allow-list in
+    // lib/cms/rich-text.ts has rebuilt it. A photo that did not come through
+    // our uploader is refused out loud, rather than vanishing from the story.
+    if (field.kind === "richtext") {
+      if (trimmed.length > MAX_RICH_TEXT_LENGTH) {
+        return {
+          error: `${field.label} is too long to save. Split it into two stories.`,
+        };
+      }
+      if (countForeignImages(trimmed) > 0) {
+        return {
+          error: `${field.label} has a photo copied from another website. Remove it and add the photo with the photo button instead.`,
+        };
+      }
+      const clean = sanitizeRichText(trimmed);
+      if (field.required && clean.length === 0) {
+        return { error: `${field.label} is required.` };
+      }
+      fields[field.name] = clean;
       continue;
     }
 

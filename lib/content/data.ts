@@ -1,16 +1,14 @@
 import type {
   Article,
-  Checklist,
   ComplianceArea,
   EntryPoint,
   FooterColumn,
   IssueCategory,
-
   NavGroup,
   PlatformStat,
-  Quiz,
   TickerItem,
 } from "./types";
+import { sectionsToHtml } from "./news";
 import { programmeCategories } from "./programmes";
 
 /**
@@ -30,13 +28,12 @@ import { programmeCategories } from "./programmes";
 
 /**
  * Legal-knowledge seed (categories, law entries, rights guides, Stay Safe
- * guides, glossary) lives in ./knowledge — split out in Phase 2 for size alone.
+ * guides) lives in ./knowledge — split out in Phase 2 for size alone.
  * Re-exported here so every existing importer, the CMS included, is unaffected.
  */
 export {
   BEFORE_YOU_SIGN,
   featuredRights,
-  glossaryTerms,
   lawCategoryDefs,
   lawEntries,
   rightGuides,
@@ -52,17 +49,10 @@ export {
 export { businessAreas, businessGuideDetails, businessGuides } from "./business";
 export {
   alertTopics,
-  calendarEntries,
   complianceTopics,
-  healthCheckQuestions,
   profileQuestions,
 } from "./compliance";
-export {
-  ceoBriefings,
-  contractTypes,
-  industryHubs,
-  regulatoryUpdates,
-} from "./enterprise";
+export { contractTypes, regulatoryUpdates } from "./enterprise";
 
 /**
  * Media seed (Phase 4) lives in ./media. `mediaItems` is the card-sized
@@ -78,22 +68,18 @@ export {
 
 /**
  * Legal Help seed (Phase 5) lives in ./legal-help: problem pathways, the
- * referral architecture, directory listings and the moderated public Q&A.
+ * referral architecture and the moderated public Q&A.
  */
-export {
-  lawyerListings,
-  legalProblems,
-  publicQuestions,
-  referralRoutes,
-} from "./legal-help";
+export { legalProblems, publicQuestions, referralRoutes } from "./legal-help";
 
 /**
- * Professional/advanced seed (Phase 6) lives in ./case-law, ./constitution,
+ * Professional/advanced seed (Phase 6) lives in ./constitution,
  * ./constitution-sections and ./versions. Re-exported here so the CMS and the
  * repository keep one import surface.
  */
-export { caseRecords, courtProfiles } from "./case-law";
 export { constitutionChapters, fundamentalRights } from "./constitution";
+export { leadershipMembers } from "./leadership";
+export { sanFeatures } from "./san-of-the-week";
 export { constitutionSections } from "./constitution-sections";
 export { lawHistories } from "./versions";
 
@@ -119,12 +105,17 @@ export const navigation: NavGroup[] = [
         description: programme.blurb,
       })),
       {
-        label: "Law & Society",
-        href: "/law-and-society",
-        description: "Legal news and current affairs",
+        label: "SAN of the Week",
+        href: "/san-of-the-week",
+        description: "A moment with a Senior Advocate of Nigeria",
       },
-      { label: "Quizzes", href: "/quizzes", description: "Test what you know" },
     ],
+  },
+  // A single page, so it has no dropdown: the header links straight to it.
+  {
+    label: "News",
+    href: "/news",
+    links: [],
   },
   {
     label: "Know the Law",
@@ -136,9 +127,14 @@ export const navigation: NavGroup[] = [
         description: "Nigeria's highest law, explained simply",
       },
       {
-        label: "Constitutions of Africa & the USA",
-        href: "/constitutions",
-        description: "Every African constitution, and America's, side by side",
+        label: "Your Rights",
+        href: "/know-the-law/your-rights",
+        description: "Police stops, arrest, bail, privacy and work",
+      },
+      {
+        label: "Stay Safe",
+        href: "/know-the-law/stay-safe",
+        description: "Scams, signing papers, buying land and borrowing",
       },
       {
         label: "Criminal & Civil Law",
@@ -161,19 +157,9 @@ export const navigation: NavGroup[] = [
         description: "Online conduct, data and digital safety",
       },
       {
-        label: "Case law explorer",
-        href: "/cases",
-        description: "Court decisions explained in everyday words",
-      },
-      {
-        label: "Amendment tracker",
-        href: "/know-the-law/amendments",
-        description: "How each law has changed over time",
-      },
-      {
-        label: "Plain language glossary",
-        href: "/glossary",
-        description: "Legal words, explained simply",
+        label: "Constitutions of Africa & the USA",
+        href: "/constitutions",
+        description: "Every African constitution, and America's, side by side",
       },
       {
         label: "Full law library",
@@ -183,49 +169,9 @@ export const navigation: NavGroup[] = [
     ],
   },
   {
-    label: "Your Rights",
-    href: "/your-rights",
-    links: [
-      {
-        label: "If the police stop you",
-        href: "/your-rights/police-stop",
-        description: "What to say, what to carry, what to avoid",
-      },
-      {
-        label: "Arrest and detention",
-        href: "/your-rights/arrest-and-detention",
-        description: "Your freedom when you are held by the police",
-      },
-      {
-        label: "Bail",
-        href: "/your-rights/bail",
-        description: "How bail works and what it is not",
-      },
-      {
-        label: "Privacy and your data",
-        href: "/your-rights/privacy",
-        description: "Who can use your personal information, and how",
-      },
-      {
-        label: "At work",
-        href: "/your-rights/at-work",
-        description: "Pay, hours, dismissal and unfair treatment",
-      },
-      {
-        label: "All rights guides",
-        href: "/your-rights",
-      },
-    ],
-  },
-  {
     label: "Business",
     href: "/business",
     links: [
-      {
-        label: "Business Legal Health Check",
-        href: "/business/health-check",
-        description: "A quick check of how ready your business is",
-      },
       {
         label: "Compliance Centre",
         href: "/business/compliance",
@@ -246,44 +192,6 @@ export const navigation: NavGroup[] = [
         href: "/business/contracts",
         description: "What common contracts mean, term by term",
       },
-      {
-        label: "Business legal calendar",
-        href: "/business/legal-calendar",
-        description: "What your business must do, and when",
-      },
-      {
-        label: "Industry legal hubs",
-        href: "/business/industries",
-        description: "What changes because of your sector",
-      },
-      {
-        label: "Law for CEOs",
-        href: "/business/ceo",
-        description: "Short briefings on the biggest legal risks",
-      },
-    ],
-  },
-  {
-    label: "Stay Safe",
-    href: "/stay-safe",
-    links: [
-      {
-        label: "Before You Sign",
-        href: "/stay-safe/before-you-sign",
-        description: "Red flags in everyday documents",
-      },
-      {
-        label: "Online scams and fraud",
-        href: "/stay-safe/online-scams",
-      },
-      {
-        label: "Buying land or property",
-        href: "/stay-safe/buying-property",
-      },
-      {
-        label: "Borrowing and lending",
-        href: "/stay-safe/borrowing",
-      },
     ],
   },
   {
@@ -301,19 +209,9 @@ export const navigation: NavGroup[] = [
         description: "Ask, and get a public answer in everyday words",
       },
       {
-        label: "Lawyer directory",
-        href: "/lawyers",
-        description: "Find a legal professional",
-      },
-      {
         label: "Free and low-cost help",
         href: "/legal-help/legal-aid",
         description: "Legal aid, clinics and public offices",
-      },
-      {
-        label: "Resource centre",
-        href: "/resources",
-        description: "Templates, checklists and official links",
       },
     ],
   },
@@ -364,7 +262,8 @@ export const footerColumns: FooterColumn[] = [
       { label: "Programmes", href: "/programmes" },
       { label: "Watch", href: "/watch" },
       { label: "Listen", href: "/listen" },
-      { label: "Law & Society", href: "/law-and-society" },
+      { label: "SAN of the Week", href: "/san-of-the-week" },
+      { label: "News", href: "/news" },
     ],
   },
   {
@@ -372,21 +271,19 @@ export const footerColumns: FooterColumn[] = [
     heading: "Explore",
     links: [
       { label: "Know the Law", href: "/know-the-law" },
-      { label: "Your Rights", href: "/your-rights" },
+      { label: "Your Rights", href: "/know-the-law/your-rights" },
       { label: "Business & Enterprise", href: "/business" },
-      { label: "Stay Safe", href: "/stay-safe" },
-      { label: "Glossary", href: "/glossary" },
+      { label: "Stay Safe", href: "/know-the-law/stay-safe" },
     ],
   },
   {
     id: "footer-business",
     heading: "Business",
     links: [
-      { label: "Legal Health Check", href: "/business/health-check" },
       { label: "Compliance Centre", href: "/business/compliance" },
       { label: "Regulatory Watch", href: "/business/regulatory-watch" },
       { label: "Contract Knowledge Centre", href: "/business/contracts" },
-      { label: "Business legal calendar", href: "/business/legal-calendar" },
+      { label: "Before You Do This", href: "/business/guides" },
     ],
   },
   {
@@ -395,7 +292,7 @@ export const footerColumns: FooterColumn[] = [
     links: [
       { label: "Legal Help", href: "/legal-help" },
       { label: "Ask a Question", href: "/ask" },
-      { label: "Lawyer Directory", href: "/lawyers" },
+      { label: "Free and low-cost help", href: "/legal-help/legal-aid" },
       { label: "Contact", href: "/contact" },
       { label: "Donate", href: "/donate" },
     ],
@@ -488,7 +385,7 @@ export const entryPoints: EntryPoint[] = [
     audience: "citizens",
     eyebrow: "For everyone",
     promise: "Understand your rights",
-    href: "/your-rights",
+    href: "/know-the-law/your-rights",
     icon: "scale",
   },
   {
@@ -512,15 +409,15 @@ export const entryPoints: EntryPoint[] = [
     audience: "professionals",
     eyebrow: "For professionals",
     promise: "Follow legal news",
-    href: "/law-and-society",
+    href: "/news",
     icon: "gavel",
   },
   {
     id: "ep-5",
     audience: "learners",
     eyebrow: "For learners",
-    promise: "Learn legal words, simply",
-    href: "/glossary",
+    promise: "Read Nigeria's Constitution, simply",
+    href: "/constitution",
     icon: "book-open",
   },
   {
@@ -565,23 +462,21 @@ export const platformStats: PlatformStat[] = [
 /* -------------------------------------------------------------------------- */
 
 export const issueCategories: IssueCategory[] = [
-  { slug: "police", name: "Police", blurb: "Stops, questioning, station visits", icon: "siren", href: "/your-rights/police-stop" },
-  { slug: "arrest-bail", name: "Arrest & Bail", blurb: "Detention, charges, release", icon: "lock", href: "/your-rights/arrest-and-detention" },
+  { slug: "police", name: "Police", blurb: "Stops, questioning, station visits", icon: "siren", href: "/know-the-law/your-rights/police-stop" },
+  { slug: "arrest-bail", name: "Arrest & Bail", blurb: "Detention, charges, release", icon: "lock", href: "/know-the-law/your-rights/arrest-and-detention" },
   { slug: "property", name: "Property", blurb: "Rent, landlords, eviction", icon: "home", href: "/know-the-law/land-and-property" },
-  { slug: "work", name: "Work", blurb: "Pay, dismissal, treatment", icon: "hard-hat", href: "/your-rights/at-work" },
+  { slug: "work", name: "Work", blurb: "Pay, dismissal, treatment", icon: "hard-hat", href: "/know-the-law/your-rights/at-work" },
   { slug: "family", name: "Family", blurb: "Marriage, children, inheritance", icon: "heart", href: "/know-the-law/family-law" },
   { slug: "business", name: "Business", blurb: "Registration, partners, disputes", icon: "briefcase", href: "/business" },
   { slug: "contracts", name: "Contracts", blurb: "Agreements and what you owe", icon: "signature", href: "/business/contracts" },
-  { slug: "online-safety", name: "Online Safety", blurb: "Scams, harassment, fraud", icon: "shield", href: "/stay-safe/online-scams" },
-  { slug: "money-debt", name: "Money & Debt", blurb: "Loans, debt collectors, guarantors", icon: "banknote", href: "/stay-safe/borrowing" },
+  { slug: "online-safety", name: "Online Safety", blurb: "Scams, harassment, fraud", icon: "shield", href: "/know-the-law/stay-safe/online-scams" },
+  { slug: "money-debt", name: "Money & Debt", blurb: "Loans, debt collectors, guarantors", icon: "banknote", href: "/know-the-law/stay-safe/borrowing" },
   { slug: "consumer", name: "Consumer Rights", blurb: "Faulty goods, poor service", icon: "shopping-bag", href: "/know-the-law/consumer-protection" },
   { slug: "traffic", name: "Traffic", blurb: "Road stops, fines, accidents", icon: "car", href: "/know-the-law/traffic" },
-  { slug: "land", name: "Land", blurb: "Land papers, surveys, buying safely", icon: "map", href: "/stay-safe/buying-property" },
+  { slug: "land", name: "Land", blurb: "Land papers, surveys, buying safely", icon: "map", href: "/know-the-law/stay-safe/buying-property" },
   { slug: "court", name: "Court", blurb: "Process, hearings, what to expect", icon: "landmark", href: "/know-the-law/court-process" },
   { slug: "other", name: "Something else", blurb: "Start from a description", icon: "circle-question", href: "/legal-help/problem" },
 ];
-
-
 
 /* -------------------------------------------------------------------------- */
 /* Business                                                                    */
@@ -617,7 +512,7 @@ export const latestArticles: Article[] = [
     category: "Human Rights",
     readingMinutes: 11,
     publishedAt: "2026-09-05",
-    body: [
+    body: sectionsToHtml([
       {
         heading: "Where the rights live",
         paragraphs: [
@@ -660,7 +555,7 @@ export const latestArticles: Article[] = [
           "That qualification is where most real arguments happen. Whether a particular restriction is lawful is decided case by case, on evidence, by a court.",
         ],
       },
-    ],
+    ]),
     audiences: ["citizens", "learners"],
     meta: {
       status: "published",
@@ -682,7 +577,7 @@ export const latestArticles: Article[] = [
     category: "Data Protection",
     readingMinutes: 9,
     publishedAt: "2026-09-03",
-    body: [
+    body: sectionsToHtml([
       {
         heading: "The question is not how big you are",
         paragraphs: [
@@ -725,7 +620,7 @@ export const latestArticles: Article[] = [
           "Where a personal data breach occurs, the Act imposes notification duties — to the Nigeria Data Protection Commission and, where the risk to individuals is high, to the individuals themselves. Decide now who would make that call, because the clock runs from discovery.",
         ],
       },
-    ],
+    ]),
     audiences: ["business"],
     meta: {
       status: "published",
@@ -744,7 +639,7 @@ export const latestArticles: Article[] = [
     category: "Employment & Labour",
     readingMinutes: 8,
     publishedAt: "2026-09-01",
-    body: [
+    body: sectionsToHtml([
       {
         heading: "Why the document decides so much",
         paragraphs: [
@@ -786,7 +681,7 @@ export const latestArticles: Article[] = [
           "Read the termination clause before signing, not when it is being used. It is the clause whose meaning you will care about most and be least able to negotiate.",
         ],
       },
-    ],
+    ]),
     audiences: ["citizens", "business"],
     meta: {
       status: "published",
@@ -805,7 +700,7 @@ export const latestArticles: Article[] = [
     category: "Land & Property",
     readingMinutes: 10,
     publishedAt: "2026-08-29",
-    body: [
+    body: sectionsToHtml([
       {
         heading: "One principle explains most of the confusion",
         paragraphs: [
@@ -840,7 +735,7 @@ export const latestArticles: Article[] = [
           "The Act allows a right of occupancy to be revoked for overriding public interest, on the terms it sets out, with compensation provisions attached. Buyers should understand this exists rather than discover it later.",
         ],
       },
-    ],
+    ]),
     audiences: ["citizens", "business"],
     meta: {
       status: "published",
@@ -859,7 +754,7 @@ export const latestArticles: Article[] = [
     category: "Cybercrime & Digital Rights",
     readingMinutes: 7,
     publishedAt: "2026-08-27",
-    body: [
+    body: sectionsToHtml([
       {
         heading: "Not only for hackers",
         paragraphs: [
@@ -895,7 +790,7 @@ export const latestArticles: Article[] = [
           "Acting quickly matters more than acting perfectly. Funds are easiest to trace in the first hours.",
         ],
       },
-    ],
+    ]),
     audiences: ["citizens", "learners"],
     meta: {
       status: "published",
@@ -905,85 +800,5 @@ export const latestArticles: Article[] = [
         label: "Cybercrimes (Prohibition, Prevention, etc.) Act 2015",
       },
     },
-  },
-];
-
-
-/* -------------------------------------------------------------------------- */
-/* Learning                                                                    */
-/* -------------------------------------------------------------------------- */
-
-
-
-export const quizzes: Quiz[] = [
-  {
-    id: "qz-1",
-    slug: "know-your-rights",
-    title: "Know Your Rights",
-    description: "Ten situations, ten rights. How much of Chapter IV do you already know?",
-    questionCount: 10,
-    minutes: 6,
-    level: "starter",
-    meta: { status: "published", review: "educational", lastReviewed: REVIEWED },
-  },
-  {
-    id: "qz-2",
-    slug: "contract-basics",
-    title: "Contract Basics",
-    description: "Offer, acceptance, consideration - and the traps in everyday agreements.",
-    questionCount: 12,
-    minutes: 8,
-    level: "core",
-    meta: { status: "published", review: "educational", lastReviewed: REVIEWED },
-  },
-  {
-    id: "qz-3",
-    slug: "business-law",
-    title: "Business Law",
-    description: "Registration, duties and governance under CAMA 2020.",
-    questionCount: 12,
-    minutes: 9,
-    level: "core",
-    meta: { status: "published", review: "educational", lastReviewed: REVIEWED },
-  },
-  {
-    id: "qz-4",
-    slug: "online-safety",
-    title: "Online Safety",
-    description: "Scams, impersonation and staying on the right side of the Cybercrimes Act.",
-    questionCount: 10,
-    minutes: 6,
-    level: "starter",
-    meta: { status: "published", review: "educational", lastReviewed: REVIEWED },
-  },
-];
-
-export const checklists: Checklist[] = [
-  {
-    id: "cl-1",
-    slug: "starting-a-business",
-    title: "Starting a business",
-    description: "Structure, registration, records and the first commercial agreements.",
-    itemCount: 16,
-    audience: "business",
-    meta: { status: "published", review: "educational", lastReviewed: REVIEWED },
-  },
-  {
-    id: "cl-2",
-    slug: "signing-a-contract",
-    title: "Signing any contract",
-    description: "The read-through that catches most of what people later regret.",
-    itemCount: 14,
-    audience: "citizens",
-    meta: { status: "published", review: "educational", lastReviewed: REVIEWED },
-  },
-  {
-    id: "cl-3",
-    slug: "buying-property",
-    title: "Buying property",
-    description: "Title, searches, consent and the paperwork trail.",
-    itemCount: 18,
-    audience: "citizens",
-    meta: { status: "published", review: "educational", lastReviewed: REVIEWED },
   },
 ];

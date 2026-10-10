@@ -1,7 +1,6 @@
 import Link from "next/link";
 import {
   ArrowUpRight,
-  Clock,
   FileText,
   ListChecks,
   Newspaper,
@@ -11,16 +10,12 @@ import { cn } from "cn";
 import { FollowTopicButton } from "@/components/account/follow-topic-button";
 import { Icon } from "@/lib/icons";
 import { IconBadge, Pill, ReviewBadge } from "./primitives";
-import { TickList } from "./knowledge";
 import type {
   AlertTopic,
   BusinessArea,
-  CalendarEntry,
-  CeoBriefing,
   ComplianceTopic,
   ContractClause,
   ContractType,
-  IndustryHub,
   RegulatoryUpdate,
 } from "@/lib/content/types";
 
@@ -104,61 +99,6 @@ export function ContractCard({ contract }: { contract: ContractType }) {
   );
 }
 
-export function IndustryCard({ hub }: { hub: IndustryHub }) {
-  return (
-    <article className={cn(cardBase, "p-5 sm:p-6")}>
-      <IconBadge name={hub.icon} />
-      <h3 className="text-h4 mt-5 text-foreground">
-        <Link
-          href={`/business/industries/${hub.slug}`}
-          className="after:absolute after:inset-0"
-        >
-          {hub.name}
-        </Link>
-      </h3>
-      <p className="mt-2.5 text-[0.88rem] leading-relaxed text-muted-foreground">
-        {hub.blurb}
-      </p>
-      <div className="mt-auto flex items-center gap-2 pt-6 text-[0.78rem] font-bold text-muted-foreground">
-        <Scale className="size-3.5 text-brand-ink" />
-        {hub.regulatoryThemes.length} regulatory themes
-      </div>
-    </article>
-  );
-}
-
-export function BriefingCard({ briefing }: { briefing: CeoBriefing }) {
-  return (
-    <article className={cn(cardBase, "p-5 sm:p-6")}>
-      <div className="flex items-start justify-between gap-3">
-        <Pill tone="brand">Executive briefing</Pill>
-        <span className="inline-flex items-center gap-1.5 text-[0.75rem] font-bold text-muted-foreground">
-          <Clock className="size-3.5" />
-          {briefing.readingMinutes} min
-        </span>
-      </div>
-      <h3 className="text-h4 mt-5 text-foreground">
-        <Link
-          href={`/business/ceo/${briefing.slug}`}
-          className="after:absolute after:inset-0"
-        >
-          {briefing.title}
-        </Link>
-      </h3>
-      <p className="mt-2 text-[0.8rem] font-semibold text-brand-ink">
-        {briefing.question}
-      </p>
-      <p className="mt-3 text-[0.88rem] leading-relaxed text-muted-foreground">
-        {briefing.summary}
-      </p>
-      <div className="mt-auto flex items-center gap-2 pt-6 text-[0.78rem] font-bold text-muted-foreground">
-        <ListChecks className="size-3.5 text-brand-ink" />
-        {briefing.questionsForTheBoard.length} questions for the board
-      </div>
-    </article>
-  );
-}
-
 export function RegulatoryUpdateCard({
   update,
   topicLabel,
@@ -214,7 +154,7 @@ export function ReportAndExplanation({
   explanation: string[];
 }) {
   return (
-    <div className="grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline lg:grid-cols-2">
+    <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline lg:grid-cols-2">
       <div className="bg-surface p-5 sm:p-6">
         <p className="text-eyebrow flex items-center gap-2 text-muted-foreground">
           <Newspaper className="size-3.5" />
@@ -283,72 +223,6 @@ export function ClauseTable({ clauses }: { clauses: ContractClause[] }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Business legal calendar                                                     */
-/* -------------------------------------------------------------------------- */
-
-const cadenceLabel: Record<CalendarEntry["cadence"], string> = {
-  annual: "Annual",
-  quarterly: "Quarterly",
-  monthly: "Each pay run",
-  ongoing: "Ongoing",
-  "event-driven": "Event-driven",
-};
-
-/**
- * Calendar entries carry a cadence and a trigger, never a date.
- *
- * Spec section 24 forbids hard-coding legal deadlines without a maintained
- * source and review process, so each card names what starts the clock and the
- * page tells readers to confirm actual dates with the relevant authority.
- */
-export function CalendarCard({
-  entry,
-  areaName,
-}: {
-  entry: CalendarEntry;
-  areaName: string;
-}) {
-  return (
-    <article className="flex h-full flex-col rounded-2xl border border-hairline bg-card p-5 sm:p-6">
-      <div className="flex items-start justify-between gap-3">
-        <IconBadge name={entry.icon} />
-        <Pill tone="outline">{cadenceLabel[entry.cadence]}</Pill>
-      </div>
-      <h3 className="text-h4 mt-5 text-foreground">{entry.title}</h3>
-      <p className="mt-2.5 text-[0.88rem] leading-relaxed text-muted-foreground">
-        {entry.summary}
-      </p>
-
-      <dl className="mt-5 space-y-3 border-t border-hairline pt-4 text-[0.84rem]">
-        <div>
-          <dt className="text-eyebrow text-brand-ink">What starts the clock</dt>
-          <dd className="mt-1 leading-relaxed text-muted-foreground">
-            {entry.trigger}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-eyebrow text-muted-foreground">Timing</dt>
-          <dd className="mt-1 leading-relaxed text-muted-foreground">
-            {entry.timing}
-          </dd>
-        </div>
-      </dl>
-
-      <div className="mt-5">
-        <p className="text-eyebrow text-muted-foreground">What to prepare</p>
-        <div className="mt-3">
-          <TickList items={entry.whatToPrepare} tone="positive" />
-        </div>
-      </div>
-
-      <p className="mt-auto pt-5 text-[0.75rem] font-bold text-muted-foreground">
-        {areaName}
-      </p>
-    </article>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
 /* Law change alerts                                                           */
 /* -------------------------------------------------------------------------- */
 
@@ -368,7 +242,7 @@ export function CalendarCard({
  */
 export function AlertTopicGrid({ topics }: { topics: AlertTopic[] }) {
   return (
-    <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {topics.map((topic) => (
         <li key={topic.slug} className="flex">
           <div className="flex w-full flex-col rounded-xl border border-hairline bg-card p-4 transition-colors hover:border-primary/45">
@@ -449,7 +323,7 @@ export function GuideChecklist({
   items: { id: string; label: string; detail: string }[];
 }) {
   return (
-    <ol className="grid gap-3 sm:grid-cols-2">
+    <ol className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       {items.map((item, index) => (
         <li
           key={item.id}
@@ -469,24 +343,5 @@ export function GuideChecklist({
         </li>
       ))}
     </ol>
-  );
-}
-
-/** Compact "what applies here" strip used on industry and compliance pages. */
-export function ThemeList({ items }: { items: string[] }) {
-  return (
-    <ul className="grid gap-2.5 sm:grid-cols-2">
-      {items.map((item) => (
-        <li
-          key={item}
-          className="flex gap-3 rounded-xl border border-hairline bg-card p-4"
-        >
-          <Scale aria-hidden className="mt-0.5 size-4 shrink-0 text-brand-ink" />
-          <span className="text-[0.88rem] leading-relaxed text-muted-foreground">
-            {item}
-          </span>
-        </li>
-      ))}
-    </ul>
   );
 }

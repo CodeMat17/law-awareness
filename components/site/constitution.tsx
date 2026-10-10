@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, FileText, Landmark, Scale } from "lucide-react";
+import { FileText, Landmark, Scale } from "lucide-react";
 import { cn } from "cn";
 import type { ConstitutionSection } from "@/lib/content/types";
 import type { ConstitutionChapter } from "@/lib/content/constitution";
@@ -36,7 +36,7 @@ export function SectionPanel({
     <article
       id={`s-${section.number}`}
       className={cn(
-        "scroll-mt-[calc(var(--chrome-h)+1.5rem)] grid w-full gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline sm:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]",
+        "scroll-mt-[calc(var(--chrome-h)+1.5rem)] grid grid-cols-1 w-full gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline sm:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]",
         className
       )}
     >
@@ -159,15 +159,6 @@ export function ConstitutionNotice({ className }: { className?: string }) {
         take advice on how the courts have interpreted the provision you are
         relying on.
       </p>
-      <Link
-        href="/know-the-law/amendments"
-        className="mt-4 inline-flex items-center gap-1.5 text-[0.85rem] font-bold text-foreground"
-      >
-        <span className="link-underline">
-          Track the alterations and amendments
-        </span>
-        <ArrowUpRight className="size-3.5 text-brand-ink" />
-      </Link>
     </div>
   );
 }

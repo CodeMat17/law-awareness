@@ -53,7 +53,7 @@ export default async function ContactPage() {
               />
             </Reveal>
           )}
-          <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          <RevealGroup className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {routes.items.map((route) => (
               <RevealItem key={`${route.title}-${route.href}`} className="flex">
                 <article className="flex w-full flex-col rounded-2xl border border-hairline bg-card p-6">
@@ -78,7 +78,7 @@ export default async function ContactPage() {
       )}
 
       <Section tone="surface">
-        <div className="grid gap-12 lg:grid-cols-[1.35fr_minmax(0,1fr)] lg:gap-16">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.35fr_minmax(0,1fr)] lg:gap-16">
           <div>
             {form.title && (
               <Reveal>

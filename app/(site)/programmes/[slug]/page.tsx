@@ -96,7 +96,7 @@ export default async function ProgrammePage(
           />
         </Reveal>
         {items.length > 0 ? (
-          <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          <RevealGroup className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {items.map((item) => (
               <RevealItem key={item.id} className="flex">
                 <MediaDetailCard item={item} />
@@ -119,7 +119,7 @@ export default async function ProgrammePage(
           <Reveal>
             <SectionHeader eyebrow="Shows" title="Shows in this programme" />
           </Reveal>
-          <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <RevealGroup className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {seriesCounts.map(({ strand, count }) => (
               <RevealItem key={strand.id} className="flex">
                 <SeriesCard series={strand} itemCount={count} />
@@ -133,7 +133,7 @@ export default async function ProgrammePage(
         <Reveal>
           <SectionHeader eyebrow="Also on Law Awareness TV" title="More programmes" />
         </Reveal>
-        <RevealGroup className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <RevealGroup className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {others.map((item) => (
             <RevealItem key={item.slug} className="flex">
               <ProgrammeCard programme={item} variant="tile" />

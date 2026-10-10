@@ -4,7 +4,8 @@ import { useCallback, useRef, useState, useTransition } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CircleAlert, Loader2, Trash2, Upload } from "lucide-react";
 import { cn } from "cn";
-import { createUploadTicket, deleteAsset } from "@/lib/media/upload-actions";
+import { deleteAsset } from "@/lib/media/upload-actions";
+import { uploadAsset } from "@/lib/media/upload-client";
 import {
   MAX_UPLOAD_BYTES,
   formatBytes,
@@ -59,94 +60,22 @@ export function MediaUploadField({
 
   const upload = useCallback(
     async (file: File) => {
-      // Answered here before anything is sent, so an editor who picked the
-      // wrong file learns that instantly rather than after pushing 400MB up a
-      // hotel connection. The limit that binds is the server's - it refuses to
-      // sign - but being told late is its own kind of broken.
-      if (file.size > MAX_UPLOAD_BYTES[kind]) {
-        setPhase({
-          state: "error",
-          message: `That file is ${formatBytes(file.size)}. The limit is ${formatBytes(
-            MAX_UPLOAD_BYTES[kind]
-          )} — compress it and try again.`,
-        });
-        return;
-      }
-
       setPhase({ state: "signing" });
-
-      const result = await createUploadTicket(kind, {
-        bytes: file.size,
-        mimeType: file.type,
+      const result = await uploadAsset(file, kind, {
+        onProgress: (percent) => setPhase({ state: "uploading", percent }),
+        onRequest: (request) => {
+          requestRef.current = request;
+        },
       });
-      if (!result.ok) {
-        setPhase({ state: "error", message: result.message });
-        return;
-      }
-
-      const { ticket } = result;
-      const body = new FormData();
-      body.append("file", file);
-      body.append("api_key", ticket.apiKey);
-      body.append("timestamp", String(ticket.timestamp));
-      body.append("signature", ticket.signature);
-      body.append("folder", ticket.folder);
-      // Signed by the server, so Cloudinary honours it. Resizes the image on
-      // the way in rather than storing the original.
-      if (ticket.transformation) {
-        body.append("transformation", ticket.transformation);
-      }
-
-      // XHR rather than fetch: upload progress is the one thing fetch still
-      // cannot report, and progress is the point of this component.
-      const request = new XMLHttpRequest();
-      requestRef.current = request;
-      request.open("POST", ticket.endpoint);
-
-      request.upload.addEventListener("progress", (event) => {
-        if (!event.lengthComputable) return;
-        setPhase({
-          state: "uploading",
-          percent: Math.round((event.loaded / event.total) * 100),
-        });
-      });
-
-      request.addEventListener("load", () => {
-        requestRef.current = null;
-        if (request.status < 200 || request.status >= 300) {
-          setPhase({
-            state: "error",
-            message: "Cloudinary rejected the upload. Try again.",
-          });
-          return;
-        }
-        try {
-          const payload = JSON.parse(request.responseText) as {
-            secure_url?: string;
-          };
-          if (!payload.secure_url) throw new Error("no url");
-          setValue(payload.secure_url);
-          setPhase({ state: "idle" });
-        } catch {
-          setPhase({
-            state: "error",
-            message: "Cloudinary returned something unexpected.",
-          });
-        }
-      });
-
-      request.addEventListener("error", () => {
-        requestRef.current = null;
-        setPhase({ state: "error", message: "The upload failed. Try again." });
-      });
-
-      request.addEventListener("abort", () => {
-        requestRef.current = null;
+      requestRef.current = null;
+      if (result.ok) {
+        setValue(result.url);
         setPhase({ state: "idle" });
-      });
-
-      setPhase({ state: "uploading", percent: 0 });
-      request.send(body);
+      } else if (result.aborted) {
+        setPhase({ state: "idle" });
+      } else {
+        setPhase({ state: "error", message: result.message });
+      }
     },
     [kind]
   );

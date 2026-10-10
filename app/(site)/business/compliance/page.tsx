@@ -69,10 +69,10 @@ export default async function ComplianceCentrePage() {
             <ArrowRight className="size-4" />
           </Link>
           <Link
-            href="/business/health-check"
+            href="/business/regulatory-watch"
             className="inline-flex h-12 items-center gap-2 rounded-xl border border-hairline bg-card px-5 text-[0.9rem] font-extrabold text-foreground transition-colors hover:border-primary/45"
           >
-            Run the health check
+            What changed recently
           </Link>
         </div>
       </PageHeader>

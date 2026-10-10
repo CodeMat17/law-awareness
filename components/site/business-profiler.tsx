@@ -55,7 +55,7 @@ export function BusinessProfiler({ questions, topics }: BusinessProfilerProps) {
   }, [answers, questions, topics]);
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-12">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-12">
       <div className="rounded-2xl border border-hairline bg-card p-6 sm:p-8">
         <ol className="space-y-8">
           {questions.map((question, questionIndex) => (
@@ -172,10 +172,10 @@ export function BusinessProfiler({ questions, topics }: BusinessProfilerProps) {
               </ul>
 
               <Link
-                href="/business/health-check"
+                href="/business/guides"
                 className="mt-6 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-[0.88rem] font-extrabold text-primary-foreground transition-opacity hover:opacity-90"
               >
-                Run the health check
+                Read the Before You Do This guides
                 <ArrowRight className="size-4" />
               </Link>
             </>

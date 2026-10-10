@@ -224,7 +224,7 @@ export function DoAndDont({
   shouldNotDo: string[];
 }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div className="rounded-2xl border border-hairline bg-card p-5">
         <p className="text-eyebrow text-brand-ink">What you should do</p>
         <div className="mt-4">
@@ -264,7 +264,7 @@ export function Misconceptions({ items }: { items: Misconception[] }) {
 
 export function Examples({ items }: { items: LawExample[] }) {
   return (
-    <ul className="grid gap-4 sm:grid-cols-2">
+    <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
       {items.map((item) => (
         <li
           key={item.situation}
@@ -301,7 +301,7 @@ export function ProvisionSplit({
     <div className="space-y-4">
       <div className="grid gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline">
         {provisions.map((provision) => (
-          <div key={provision.id} className="grid bg-card sm:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
+          <div key={provision.id} className="grid grid-cols-1 bg-card sm:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
             <div className="border-b border-hairline bg-surface p-5 sm:border-r sm:border-b-0">
               <p className="text-eyebrow flex items-center gap-2 text-muted-foreground">
                 <Scale className="size-3.5" />
@@ -351,10 +351,10 @@ export function LawyerPanel({ items }: { items: string[] }) {
       </div>
       <div className="mt-5 flex flex-wrap gap-2.5">
         <Link
-          href="/lawyers"
+          href="/legal-help/legal-aid"
           className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-[0.88rem] font-extrabold text-primary-foreground transition-opacity hover:opacity-90"
         >
-          Find a lawyer
+          Free and low-cost help
         </Link>
         <Link
           href="/legal-help/problem"
@@ -449,7 +449,7 @@ export function RelatedContent({
           {description}
         </p>
       )}
-      <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+      <ul className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {items.map((item) => (
           <li key={item.id}>
             <Link
@@ -512,7 +512,7 @@ export function KnowledgeLayout({
   aside: React.ReactNode;
 }) {
   return (
-    <div className="rail grid gap-10 py-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14 lg:py-16">
+    <div className="rail grid grid-cols-1 gap-10 py-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14 lg:py-16">
       <div className="min-w-0 space-y-10">{children}</div>
       <aside className="space-y-4 lg:sticky lg:top-[calc(var(--chrome-h)+1.5rem)] lg:self-start">
         {aside}

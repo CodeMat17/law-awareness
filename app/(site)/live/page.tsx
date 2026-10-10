@@ -46,7 +46,7 @@ export default async function LivePage() {
                 aria-hidden
                 className="absolute -top-24 -right-16 size-80 rounded-full bg-primary/20 blur-[90px]"
               />
-              <div className="relative grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+              <div className="relative grid grid-cols-1 gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-end">
                 <div>
                   <div className="flex flex-wrap items-center gap-2.5">
                     <LiveStatusPill status="live" />
@@ -99,7 +99,7 @@ export default async function LivePage() {
               description="Free and open. No registration is required to watch."
             />
           </Reveal>
-          <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <RevealGroup className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {upcoming.map((event) => (
               <RevealItem key={event.id} className="flex">
                 <LiveEventCard event={event} />
@@ -122,7 +122,7 @@ export default async function LivePage() {
           />
         </Reveal>
         {archive.length > 0 ? (
-          <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <RevealGroup className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {archive.map((event) => (
               <RevealItem key={event.id} className="flex">
                 <LiveEventCard event={event} />

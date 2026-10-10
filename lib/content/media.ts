@@ -390,7 +390,6 @@ export const videos: MediaDetail[] = [
     related: {
       laws: ["fundamental-rights-chapter-iv", "enforcing-fundamental-rights"],
       rights: ["fair-hearing"],
-      terms: ["fundamental-rights", "habeas-corpus"],
       articles: ["chapter-iv-explained"],
     },
     meta: mediaMeta({
@@ -671,7 +670,6 @@ export const videos: MediaDetail[] = [
     related: {
       laws: ["how-a-criminal-case-moves"],
       rights: ["arrest-and-detention", "bail"],
-      terms: ["bail", "subpoena"],
     },
     meta: mediaMeta({ label: "Administration of Criminal Justice Act 2015" }),
   },
@@ -752,7 +750,6 @@ export const videos: MediaDetail[] = [
       compliance: ["intellectual-property"],
       contracts: ["service-agreement"],
       updates: ["copyright-act-2022"],
-      industries: ["media"],
     },
     meta: mediaMeta({ label: "Copyright Act 2022" }),
   },
@@ -856,7 +853,6 @@ export const podcastEpisodes: MediaDetail[] = [
       safety: ["tenancy-agreement", "buying-property"],
       laws: ["land-use-act-and-title"],
       contracts: ["lease-agreement"],
-      terms: ["trespass"],
       articles: ["land-use-act-basics"],
     },
     meta: mediaMeta({ label: "Land Use Act 1978" }),
@@ -1106,7 +1102,6 @@ export const podcastEpisodes: MediaDetail[] = [
       safety: ["online-scams"],
       laws: ["cybercrimes-act"],
       articles: ["cybercrimes-act-everyday"],
-      terms: ["negligence"],
     },
     meta: mediaMeta({
       label: "Cybercrimes (Prohibition, Prevention etc.) Act 2015",

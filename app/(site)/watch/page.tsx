@@ -110,7 +110,7 @@ export default async function WatchPage() {
               description="Each show runs in order, episode by episode."
             />
           </Reveal>
-          <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <RevealGroup className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {seriesCounts.map(({ strand, count }) => (
               <RevealItem key={strand.id} className="flex">
                 <SeriesCard series={strand} itemCount={count} />
@@ -129,7 +129,7 @@ export default async function WatchPage() {
               description="Picked by our editors. We do not publish view counts."
             />
           </Reveal>
-          <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          <RevealGroup className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {trending.map((item) => (
               <RevealItem key={item.id} className="flex">
                 <MediaDetailCard item={item} />

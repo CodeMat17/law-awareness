@@ -106,7 +106,7 @@ export default async function ConstitutionPage() {
             description="Knowing which chapter a question belongs to is most of the work of finding the answer."
           />
         </Reveal>
-        <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+        <RevealGroup className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {chapters.map((chapter) => (
             <RevealItem key={chapter.numeral} className="flex">
               <ChapterCard
@@ -181,17 +181,11 @@ export default async function ConstitutionPage() {
         <Reveal delay={0.12} className="mt-8">
           <div className="flex flex-wrap gap-2.5">
             <Link
-              href="/your-rights"
+              href="/know-the-law/your-rights"
               className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-[0.88rem] font-extrabold text-primary-foreground transition-opacity hover:opacity-90"
             >
               Your Rights
               <ArrowRight className="size-4" />
-            </Link>
-            <Link
-              href="/cases"
-              className="inline-flex h-11 items-center gap-2 rounded-xl border border-hairline bg-card px-5 text-[0.88rem] font-extrabold text-foreground transition-colors hover:border-primary/45"
-            >
-              Case Law Explorer
             </Link>
             <Link
               href="/constitutions"
