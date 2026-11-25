@@ -17,10 +17,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/san-of-the-week" },
 };
 
-// The feature changes on Monday without anyone saving anything - a feature
-// dated for next week goes up when its week starts - so the page is checked
-// hourly rather than only when the CMS fires.
-export const revalidate = 3600;
+// Rebuilt only when Convex changes: a CMS save, or scripts/revalidate.mjs after
+// an edit made outside the admin. A feature published early for a future week
+// stays hidden until the next such rebuild after its week starts.
+export const revalidate = false;
 
 const TRAIL = [{ label: "Home", href: "/" }, { label: "SAN of the Week" }];
 

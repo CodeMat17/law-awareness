@@ -53,3 +53,7 @@ for (const [index, name] of batches.entries()) {
 }
 
 process.stdout.write("\n");
+
+// The admin never saw these writes, so the cached site has to be told.
+const { revalidateSite } = await import("./revalidate.mjs");
+await revalidateSite();

@@ -105,7 +105,7 @@ const fetchPage = (path: string) =>
       });
     },
     ["content", "page", path],
-    { tags: [contentTag("pages")], revalidate: 3600 }
+    { tags: [contentTag("pages")], revalidate: false }
   )();
 
 /**
@@ -119,7 +119,7 @@ const fetchPagesExist = unstable_cache(
     return await fetchQuery(api.content.hasPublished, { collection: "pages" });
   },
   ["content", "pages-exist"],
-  { tags: [contentTag("pages")], revalidate: 3600 }
+  { tags: [contentTag("pages")], revalidate: false }
 );
 
 export async function getPage(path: string): Promise<ResolvedPage | null> {
@@ -155,7 +155,7 @@ const fetchPages = unstable_cache(
     });
   },
   ["content", "pages"],
-  { tags: [contentTag("pages")], revalidate: 3600 }
+  { tags: [contentTag("pages")], revalidate: false }
 );
 
 export async function getPages(): Promise<ResolvedPage[]> {

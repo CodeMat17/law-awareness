@@ -15,8 +15,9 @@ import { ogImages } from "@/lib/seo";
 // a redeploy, and a slug that matches nothing still reaches notFound().
 export const dynamicParams = true;
 
-// A feature dated for a future week answers 404 until its week starts.
-export const revalidate = 3600;
+// Rebuilt only when Convex changes. A feature dated for a future week answers
+// 404 until the first rebuild after its week starts.
+export const revalidate = false;
 
 export async function generateStaticParams() {
   const features = await getContent().getSanFeatures();
